@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+.vs
+
+CharactorAnimation/Debug/
+CharactorAnimation/Chapter2/Debug/
