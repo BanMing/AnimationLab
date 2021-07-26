@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Resource.h"
 //#include "d3dx12.h"
-#include <Windows.h>
+#include <windows.h>
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")
@@ -17,7 +16,7 @@ class Application
 public:
 	Application();
 	~Application();
-	HRESULT Init(HINSTANCE hInstance, bool windowed);
+	HRESULT Init(HINSTANCE hInstance, bool windowed, WNDPROC wndProc);
 	void Update(float deltaTime);
 	void Render();
 	void Cleanup();
