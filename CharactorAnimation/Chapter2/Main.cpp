@@ -23,10 +23,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd, int sh
 	Application app;
 
 	// Initialize it
-	if (FAILED(app.Init(hInstance, true)))
+	/*if (FAILED(app.Init(hInstance, true)))
 	{
 		return FALSE;
-	}
+	}*/
 
 	// Start the windows message loop
 	MSG msg;

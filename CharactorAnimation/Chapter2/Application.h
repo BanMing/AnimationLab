@@ -1,7 +1,9 @@
 #pragma once
 
-//#include "d3dx12.h"
 #include <windows.h>
+#include <wrl.h>
+#include <dxgi1_4.h>
+#include <d3d12.h>
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib, "d3dcompiler.lib")
@@ -28,6 +30,7 @@ public:
 
 private:
 	HWND m_mainWindow;
-	bool m_deviceLost;
-	// D3DPRESENT_PARAMETERS m_present;
+	
+	Microsoft::WRL::ComPtr<ID3D12Device> m_d3dDevice;
+	Microsoft::WRL::ComPtr<IDXGIFactory4> m_dxgiFactory;
 };

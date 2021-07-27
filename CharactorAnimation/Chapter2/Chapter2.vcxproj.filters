@@ -18,6 +18,9 @@
     <ClInclude Include="Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -26,17 +29,12 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Chapter2.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Chapter2.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
