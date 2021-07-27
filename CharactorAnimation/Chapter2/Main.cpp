@@ -1,17 +1,16 @@
 #include "Application.h"
 
-
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	//User specified events
 	switch (msg)
 	{
-	case WM_CREATE:
-		break;
+		case WM_CREATE:
+			break;
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
 	}
 
 	//Default events
@@ -50,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd, int sh
 			DWORD t = GetTickCount();
 			float deltaTime = (t - startTime) * 0.001f;
 
-			// Update the application 
+			// Update the application
 			app.Update(deltaTime);
 
 			// Render the application
