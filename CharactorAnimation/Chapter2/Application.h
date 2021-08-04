@@ -20,23 +20,26 @@ public:
 	Application();
 	~Application();
 
-	HRESULT Init(HINSTANCE hInstance, bool windowed, WNDPROC wndProc);
+	bool Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc);
 	bool InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc);
 	bool InitDirect3D();
 	void CreateCommandObjects();
 	void CreateSwapChain();
 	void CreateRtvAndDsvDescriptorHeaps();
 
-	void Update(float deltaTime);
-	void Render();
-
 	void Cleanup();
 	void Quit();
 
-	void DeviceLost();
-	void DeviceGained();
+public:
+	virtual void OnResize();
+	virtual void Update(float deltaTime);
+	virtual void Render();
 
-private:
+private :
+	void SwapChainRender();
+
+
+protected:
 	static const int SwapChainBufferCount = 2;
 
 	HWND m_mainWindow;
@@ -56,12 +59,19 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_directCmdListAlloc;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
 
+	int m_currBackBuffer = 0;
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_swapChainBuffer[SwapChainBufferCount];
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthStencilBuffer;
+
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_dsvHeap;
 
 	UINT m_rtvDescriptorSize = 0;
 	UINT m_dsvDescriptorSize = 0;
 	UINT m_cbvSrvUavDescriptorSize = 0;
+
+	D3D12_VIEWPORT m_screenViewport;
+	D3D12_RECT m_scissorRect;
 
 	// Derived class should set these in derived constructor to customize starting values.
 	std::wstring m_appTile = L"Charactor Animation";

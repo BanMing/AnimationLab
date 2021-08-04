@@ -10,19 +10,19 @@ Application::~Application()
 
 #pragma region Initialize
 
-HRESULT Application::Init(HINSTANCE hInstance, bool windowed, WNDPROC wndProc)
+bool Application::Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc)
 {
 	if (!InitMainWindow(hInstance, wndProc))
 	{
-		return FALSE;
+		return false;
 	}
 
-	SetCursor(NULL);
-	ShowWindow(m_mainWindow, SW_SHOW);
-	UpdateWindow(m_mainWindow);
+	if (!InitDirect3D())
+	{
+		return false;
+	}
 
-	// Create IDirect3D12 Interface
-	// Direct3DCrea
+	OnResize();
 }
 
 bool Application::InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc)
@@ -65,12 +65,13 @@ bool Application::InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 	if (!m_mainWindow)
 	{
 		MessageBox(0, L"CreateWindow Failed.", 0, 0);
+		return  false;
 	}
 
 	ShowWindow(m_mainWindow, SW_SHOW);
 	UpdateWindow(m_mainWindow);
 
-	return false;
+	return true;
 }
 
 bool Application::InitDirect3D()
@@ -178,13 +179,23 @@ void Application::CreateRtvAndDsvDescriptorHeaps()
 #pragma endregion
 
 
-void Application::Update(float deltaTime)
+void Application::OnResize()
 {
+	assert(m_d3dDevice);
+	assert(m_swapChain);
+	assert(m_directCmdListAlloc);
+
+	// Update the viewport transform to cover the client area.
+	m_screenViewport.TopLeftX = 0;
+	m_screenViewport.TopLeftY = 0;
+	m_screenViewport.Width = static_cast<float>(m_windowWidth);
+	m_screenViewport.Height = static_cast<float>(m_windowHeight);
+	m_screenViewport.MinDepth = 0.0f;
+	m_screenViewport.MaxDepth = 1.0f;
+
+	m_scissorRect = { 0,0,m_windowWidth,m_windowHeight };
 }
 
-void Application::Render()
-{
-}
 
 void Application::Cleanup()
 {
@@ -193,12 +204,27 @@ void Application::Cleanup()
 void Application::Quit()
 {
 	DestroyWindow(m_mainWindow);
+	PostQuitMessage(0);
 }
 
-void Application::DeviceLost()
+
+#pragma region Private Method
+
+void Application::SwapChainRender()
 {
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
+	for (UINT i = 0; i < SwapChainBufferCount; i++)
+	{
+		// Get the ith buffer in the swap chain.
+		m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_swapChainBuffer[i]));
+
+		// Create a RTV for this buffer
+		m_d3dDevice->CreateRenderTargetView(m_swapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
+
+		// Next entry in heap.
+		rtvHeapHandle.ptr += 1 * m_rtvDescriptorSize;
+	}
 }
 
-void Application::DeviceGained()
-{
-}
+
+#pragma endregion
