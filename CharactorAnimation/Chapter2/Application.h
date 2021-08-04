@@ -35,7 +35,8 @@ public:
 	virtual void Update(float deltaTime);
 	virtual void Render();
 
-private :
+private:
+	void ResetSwapChain();
 	void SwapChainRender();
 
 
@@ -76,6 +77,9 @@ protected:
 	// Derived class should set these in derived constructor to customize starting values.
 	std::wstring m_appTile = L"Charactor Animation";
 	std::wstring m_windowClassName = L"MainWnd";
+	D3D_DRIVER_TYPE m_d3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
+	DXGI_FORMAT m_backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DXGI_FORMAT m_depthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	int m_windowWidth = 800;
 	int m_windowHeight = 600;
 };

@@ -94,7 +94,7 @@ bool Application::InitDirect3D()
 
 	// Set render quality
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
-	msQualityLevels.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	msQualityLevels.Format = m_backBufferFormat;
 	msQualityLevels.SampleCount = 4;
 	msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	msQualityLevels.NumQualityLevels = 0;
@@ -139,7 +139,7 @@ void Application::CreateSwapChain()
 	sd.BufferDesc.Height = m_windowHeight;
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
-	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.Format = m_backBufferFormat;
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	sd.SampleDesc.Count = m_4xMsaaState ? 4 : 1;
 	sd.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
@@ -210,6 +210,23 @@ void Application::Quit()
 
 #pragma region Private Method
 
+#pragma region Swap Chain
+
+void Application::ResetSwapChain()
+{
+	// Release the previous resources we will be recreating
+	for (UINT i = 0; i < SwapChainBufferCount; i++)
+	{
+		m_swapChainBuffer[i].Reset();
+	}
+	m_depthStencilBuffer.Reset();
+
+	// Resize the swap chain.
+	m_swapChain->ResizeBuffers(SwapChainBufferCount, m_windowWidth, m_windowHeight, m_backBufferFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+
+	m_currBackBuffer = 0;
+}
+
 void Application::SwapChainRender()
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
@@ -226,5 +243,6 @@ void Application::SwapChainRender()
 	}
 }
 
+#pragma endregion
 
 #pragma endregion
