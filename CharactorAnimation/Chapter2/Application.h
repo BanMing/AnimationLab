@@ -1,5 +1,7 @@
 #pragma once
 
+#include "D3dx12.h"
+
 #include <windows.h>
 #include <wrl.h>
 #include <dxgi1_4.h>
@@ -22,10 +24,6 @@ public:
 
 	bool Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc);
 	bool InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc);
-	bool InitDirect3D();
-	void CreateCommandObjects();
-	void CreateSwapChain();
-	void CreateRtvAndDsvDescriptorHeaps();
 
 	void Cleanup();
 	void Quit();
@@ -35,10 +33,26 @@ public:
 	virtual void Update(float deltaTime);
 	virtual void Render();
 
+protected:
+	ID3D12Resource* CurrentBackBuffer() const;
+	D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView()const;
+	D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView()const;
+
+	bool InitDirect3D();
+	void CreateCommandObjects();
+	void CreateSwapChain();
+	void CreateRtvAndDsvDescriptorHeaps();
+
+	void FlushCommandQueue();
+
 private:
 	void ResetSwapChain();
 	void SwapChainRender();
 
+	void CreateDepthBufferView();
+	D3D12_RESOURCE_DESC CreateDepthStencilDesc();
+
+	void CreateViewportScissor();
 
 protected:
 	static const int SwapChainBufferCount = 2;

@@ -8,6 +8,27 @@ Application::~Application()
 {
 }
 
+#pragma region Get Method
+
+ID3D12Resource* Application::CurrentBackBuffer()const
+{
+	return m_swapChainBuffer[m_currBackBuffer].Get();
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE Application::CurrentBackBufferView()const
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE res;
+	res.ptr = m_rtvHeap->GetCPUDescriptorHandleForHeapStart().ptr + m_currBackBuffer * m_rtvDescriptorSize;
+	return res;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE Application::DepthStencilView()const
+{
+	return m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+#pragma endregion
+
 #pragma region Initialize
 
 bool Application::Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc)
@@ -178,6 +199,29 @@ void Application::CreateRtvAndDsvDescriptorHeaps()
 
 #pragma endregion
 
+void Application::FlushCommandQueue()
+{
+	// Advance the fence value to mark commands up to this fence point.
+	m_currentFence++;
+
+	// Add an instruction to the command queue to set a new fence point.
+	// Because we are on the GPU timeline, the new fence point won`t be set until the GPU finishes 
+	// processing all the commands prior to this Signal().
+	m_commandQueue->Signal(m_fence.Get(), m_currentFence);
+
+	// Wait until the GPU has completed commands up to this fence point.
+	if (m_fence->GetCompletedValue() < m_currentFence)
+	{
+		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+
+		// Fire event when GPU hits current fence.
+		m_fence->SetEventOnCompletion(m_currentFence, eventHandle);
+
+		// Wait until the GPU hits current fence event is fired.
+		WaitForSingleObject(eventHandle, INFINITE);
+		CloseHandle(eventHandle);
+	}
+}
 
 void Application::OnResize()
 {
@@ -185,17 +229,25 @@ void Application::OnResize()
 	assert(m_swapChain);
 	assert(m_directCmdListAlloc);
 
+	// Flush before changing any resources.
+	FlushCommandQueue();
+
+	m_commandList->Reset(m_directCmdListAlloc.Get(), nullptr);
+
+	ResetSwapChain();
+
+	SwapChainRender();
+
+	CreateDepthBufferView();
+
+	// Execute the resize commands.
+	m_commandList->Close();
+	ID3D12CommandList* cmdsLists[] = { m_commandList.Get() };
+	m_commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
 	// Update the viewport transform to cover the client area.
-	m_screenViewport.TopLeftX = 0;
-	m_screenViewport.TopLeftY = 0;
-	m_screenViewport.Width = static_cast<float>(m_windowWidth);
-	m_screenViewport.Height = static_cast<float>(m_windowHeight);
-	m_screenViewport.MinDepth = 0.0f;
-	m_screenViewport.MaxDepth = 1.0f;
-
-	m_scissorRect = { 0,0,m_windowWidth,m_windowHeight };
+	CreateViewportScissor();
 }
-
 
 void Application::Cleanup()
 {
@@ -206,7 +258,6 @@ void Application::Quit()
 	DestroyWindow(m_mainWindow);
 	PostQuitMessage(0);
 }
-
 
 #pragma region Private Method
 
@@ -244,5 +295,78 @@ void Application::SwapChainRender()
 }
 
 #pragma endregion
+
+#pragma region Depth/Stencil
+
+void Application::CreateDepthBufferView()
+{
+	D3D12_CLEAR_VALUE optClear;
+	optClear.Format = m_depthStencilFormat;
+	optClear.DepthStencil.Depth = 1.0f;
+	optClear.DepthStencil.Stencil = 0;
+
+	D3D12_HEAP_PROPERTIES heapProperties;
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	heapProperties.CreationNodeMask = 1;
+	heapProperties.VisibleNodeMask = 1;
+
+	m_d3dDevice->CreateCommittedResource(&heapProperties,
+										 D3D12_HEAP_FLAG_NONE,
+										 &CreateDepthStencilDesc(),
+										 D3D12_RESOURCE_STATE_COMMON,
+										 &optClear,
+										 IID_PPV_ARGS(m_depthStencilBuffer.GetAddressOf()));
+
+	// Create descriptor to mip level 0 of entire resource using the format of the resource.
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Format = m_depthStencilFormat;
+	dsvDesc.Texture2D.MipSlice = 0;
+	m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
+
+	// Traansition the Resource from its initial state to be used as a depth buffer
+	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_depthStencilBuffer.Get(),
+																			D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+}
+
+D3D12_RESOURCE_DESC Application::CreateDepthStencilDesc()
+{
+	D3D12_RESOURCE_DESC depthStencilDesc;
+	depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthStencilDesc.Alignment = 0;
+	depthStencilDesc.Width = m_windowWidth;
+	depthStencilDesc.Height = m_windowHeight;
+	depthStencilDesc.DepthOrArraySize = 1;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+
+	depthStencilDesc.SampleDesc.Count = m_4xMsaaState ? 4 : 1;
+	depthStencilDesc.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
+	depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	return depthStencilDesc;
+}
+
+#pragma endregion
+
+#pragma region Viewport & ScissorRect
+void Application::CreateViewportScissor()
+{
+	m_screenViewport.TopLeftX = 0;
+	m_screenViewport.TopLeftY = 0;
+	m_screenViewport.Width = static_cast<float>(m_windowWidth);
+	m_screenViewport.Height = static_cast<float>(m_windowHeight);
+	m_screenViewport.MinDepth = 0.0f;
+	m_screenViewport.MaxDepth = 1.0f;
+
+	m_scissorRect = { 0,0,m_windowWidth,m_windowHeight };
+}
+
+#pragma endregion
+
 
 #pragma endregion
