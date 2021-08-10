@@ -21,6 +21,9 @@
     <ClInclude Include="D3dx12.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FirstApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">

@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "FirstApp.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -20,7 +20,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd, int showCmd)
 {
 	// Create a new Application object
-	Application app;
+	FirstApp app;
 
 	// Initialize it
 	if (app.Initialize(hInstance, true, WndProc))
@@ -64,4 +64,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd, int sh
 		// ... and Quit
 		return (int)msg.wParam;
 	}
+
+	return 0;
 }
