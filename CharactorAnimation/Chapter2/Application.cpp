@@ -100,6 +100,13 @@ bool Application::InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 bool Application::InitDirect3D()
 {
+#if defined(DEBUG) || defined(_DEBUG) 
+	// Enable the D3D12 debug layer.
+	Microsoft::WRL::ComPtr<ID3D12Debug> debugController;
+	D3D12GetDebugInterface(IID_PPV_ARGS(&debugController));
+	debugController->EnableDebugLayer();
+#endif // DEBUG
+
 	CreateDXGIFactory1(IID_PPV_ARGS(&m_dxgiFactory));
 
 	// Try to create hardware device
@@ -177,11 +184,11 @@ void Application::CreateSwapChain()
 	sd.BufferCount = SwapChainBufferCount;
 	sd.OutputWindow = m_mainWindow;
 	sd.Windowed = true;
-	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	// Note: Swap chain uses queue to preform flush.
-	m_dxgiFactory->CreateSwapChain(m_commandQueue.Get(), &sd, m_swapChain.GetAddressOf());
+	HRESULT res = m_dxgiFactory->CreateSwapChain(m_commandQueue.Get(), &sd, m_swapChain.GetAddressOf());
 }
 
 void Application::CreateRtvAndDsvDescriptorHeaps()
@@ -232,8 +239,12 @@ void Application::FlushCommandQueue()
 	}
 }
 
-void Application::Update(float deltaTime) {}
-void Application::Render() {}
+void Application::Update(float deltaTime)
+{
+}
+void Application::Render()
+{
+}
 
 void Application::OnResize()
 {
