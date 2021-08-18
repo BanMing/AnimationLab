@@ -352,8 +352,9 @@ void Application::CreateDepthBufferView()
 	m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
 
 	// Traansition the Resource from its initial state to be used as a depth buffer
-	D3D12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_depthStencilBuffer.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-	m_commandList->ResourceBarrier(1, &resourceBarrier);
+	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_depthStencilBuffer.Get(),
+																			D3D12_RESOURCE_STATE_COMMON,
+																			D3D12_RESOURCE_STATE_DEPTH_WRITE));
 }
 
 D3D12_RESOURCE_DESC Application::CreateDepthStencilDesc()

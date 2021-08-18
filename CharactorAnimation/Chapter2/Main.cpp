@@ -23,7 +23,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd, int sh
 	FirstApp app;
 
 	// Initialize it
-	if (app.Initialize(hInstance, true, WndProc))
+	if (!app.Initialize(hInstance, true, WndProc))
 	{
 		return FALSE;
 	}
@@ -58,12 +58,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd, int sh
 			startTime = t;
 		}
 
-		// Release all resources
-		app.Cleanup();
-
-		// ... and Quit
-		return (int)msg.wParam;
 	}
 
-	return 0;
+	// Release all resources
+	app.Cleanup();
+
+	// ... and Quit
+	return (int)msg.wParam;
 }
