@@ -47,7 +47,7 @@ void FirstApp::Render()
 
 	// Clear the back buffer and depth buffer.
 	m_commandList->ClearRenderTargetView(CurrentBackBufferView(),
-										 DirectX::Colors::LightSteelBlue,
+										 DirectX::Colors::BurlyWood,
 										 0,
 										 nullptr);
 

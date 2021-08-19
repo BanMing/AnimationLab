@@ -49,6 +49,7 @@ bool Application::Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc
 	return true;
 }
 
+
 bool Application::InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 {
 	WNDCLASS wc;							// Create Window Class
@@ -74,14 +75,16 @@ bool Application::InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 	RECT rc = { 0, 0, m_windowWidth, m_windowHeight };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
 
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
 
 	m_mainWindow = CreateWindow(m_windowClassName.c_str(),  // Window class to use
 								m_appTile.c_str(),          // Tile
 								WS_OVERLAPPEDWINDOW,		// Style
-								0,							// X
-								0,							// Y
-								rc.right - rc.left,			// Width
-								rc.top - rc.bottom,			// Height
+								CW_USEDEFAULT,				// X
+								CW_USEDEFAULT,				// Y
+								width,						// Width
+								height,						// Height
 								nullptr,					// Parent Window
 								nullptr,					// Menu
 								hInstance,					// Application Instance
@@ -228,7 +231,7 @@ void Application::FlushCommandQueue()
 	// Wait until the GPU has completed commands up to this fence point.
 	if (m_fence->GetCompletedValue() < m_currentFence)
 	{
-		HANDLE eventHandle = CreateEventEx(nullptr, 0, 0, EVENT_ALL_ACCESS);
+		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
 
 		// Fire event when GPU hits current fence.
 		m_fence->SetEventOnCompletion(m_currentFence, eventHandle);
@@ -289,7 +292,7 @@ void Application::Quit()
 void Application::ResetSwapChain()
 {
 	// Release the previous resources we will be recreating
-	for (UINT i = 0; i < SwapChainBufferCount; i++)
+	for (int i = 0; i < SwapChainBufferCount; i++)
 	{
 		m_swapChainBuffer[i].Reset();
 	}
@@ -304,7 +307,7 @@ void Application::ResetSwapChain()
 void Application::SwapChainRender()
 {
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
-	for (UINT i = 0; i < SwapChainBufferCount; i++)
+	for (int i = 0; i < SwapChainBufferCount; i++)
 	{
 		// Get the ith buffer in the swap chain.
 		m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_swapChainBuffer[i]));
@@ -328,15 +331,8 @@ void Application::CreateDepthBufferView()
 	optClear.DepthStencil.Depth = 1.0f;
 	optClear.DepthStencil.Stencil = 0;
 
-	D3D12_HEAP_PROPERTIES heapProperties;
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	heapProperties.CreationNodeMask = 1;
-	heapProperties.VisibleNodeMask = 1;
-
 	D3D12_RESOURCE_DESC depthStencilDesc = CreateDepthStencilDesc();
-	m_d3dDevice->CreateCommittedResource(&heapProperties,
+	m_d3dDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 										 D3D12_HEAP_FLAG_NONE,
 										 &depthStencilDesc,
 										 D3D12_RESOURCE_STATE_COMMON,
