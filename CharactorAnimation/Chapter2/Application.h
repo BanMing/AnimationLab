@@ -9,6 +9,7 @@
 #include <DirectXColors.h>
 #include <cassert>
 #include <string>
+#include <fstream>
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib, "d3dcompiler.lib")
@@ -97,4 +98,7 @@ protected:
 	DXGI_FORMAT m_depthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	int m_windowWidth = 800;
 	int m_windowHeight = 600;
+
+	// Debug
+	ofstream  m_debugFile;
 };

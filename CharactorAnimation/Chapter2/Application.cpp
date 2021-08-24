@@ -2,10 +2,15 @@
 
 Application::Application()
 {
+	m_debugFile = ofstream("Debug.log");
 }
 
 Application::~Application()
 {
+	if (m_debugFile.good())
+	{
+		m_debugFile.close();
+	}
 }
 
 #pragma region Get Method
@@ -34,13 +39,17 @@ D3D12_CPU_DESCRIPTOR_HANDLE Application::DepthStencilView()const
 
 bool Application::Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc)
 {
+	m_debugFile << "Application Started \n";
+
 	if (!InitMainWindow(hInstance, wndProc))
 	{
+		m_debugFile << "Initialize Window - FAILED \n";
 		return false;
 	}
 
 	if (!InitDirect3D())
 	{
+		m_debugFile << "Initialize Direct3D - FAILED \n";
 		return false;
 	}
 
