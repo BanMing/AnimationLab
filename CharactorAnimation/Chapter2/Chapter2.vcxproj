@@ -140,6 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="D3DUtil.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="D3dx12.h">
       <SubType>
       </SubType>
