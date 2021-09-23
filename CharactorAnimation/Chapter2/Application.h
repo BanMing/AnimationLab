@@ -24,13 +24,13 @@ public:
 	Application();
 	~Application();
 
-	bool Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc);
 	bool InitMainWindow(HINSTANCE hInstance, WNDPROC wndProc);
 
 	void Cleanup();
 	void Quit();
 
 public:
+	virtual bool Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc);
 	virtual void OnResize();
 	virtual void Update(float deltaTime);
 	virtual void Render();

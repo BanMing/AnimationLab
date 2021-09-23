@@ -15,7 +15,15 @@ public:
 	FirstApp();
 	~FirstApp();
 
+	virtual bool Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc) override;
 	virtual void OnResize() override;
 	virtual void Update(float deltaTime) override;
 	virtual void Render() override;
+
+	void BuildDescriptorHeaps();
+	void BuildConstantBuffers();
+	void BuildRootSignature();
+	void BuildShadersAndInputLayout();
+	void BuildBoxGeometry();
+	void BuildPSO();
 };

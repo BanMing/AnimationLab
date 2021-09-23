@@ -65,3 +65,9 @@ Microsoft::WRL::ComPtr<ID3D12Resource> CreateDefaultBuffer(ID3D12Device* device,
 
 	return defaultBuffer;
 }
+
+
+UINT  CalcConstantBufferBytesSize(UINT byteSize)
+{
+	return (byteSize + 255) & ~255;
+}

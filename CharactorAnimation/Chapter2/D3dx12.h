@@ -11,9 +11,127 @@
 
 struct CD3DX12_DEFAULT {};
 extern const DECLSPEC_SELECTANY CD3DX12_DEFAULT D3D12_DEFAULT;
+//------------------------------------------------------------------------------------------------
+inline bool operator==(const D3D12_VIEWPORT& l, const D3D12_VIEWPORT& r)
+{
+	return l.TopLeftX == r.TopLeftX && l.TopLeftY == r.TopLeftY && l.Width == r.Width &&
+		l.Height == r.Height && l.MinDepth == r.MinDepth && l.MaxDepth == r.MaxDepth;
+}
+
+//------------------------------------------------------------------------------------------------
+inline bool operator!=(const D3D12_VIEWPORT& l, const D3D12_VIEWPORT& r)
+{
+	return !(l == r);
+}
+
+//------------------------------------------------------------------------------------------------
+struct CD3DX12_RECT : public D3D12_RECT
+{
+	CD3DX12_RECT()
+	{}
+	explicit CD3DX12_RECT(const D3D12_RECT& o) :
+		D3D12_RECT(o)
+	{}
+	explicit CD3DX12_RECT(
+		LONG Left,
+		LONG Top,
+		LONG Right,
+		LONG Bottom)
+	{
+		left = Left;
+		top = Top;
+		right = Right;
+		bottom = Bottom;
+	}
+	~CD3DX12_RECT() {}
+	operator const D3D12_RECT& () const { return *this; }
+};
+
+//------------------------------------------------------------------------------------------------
+struct CD3DX12_BOX : public D3D12_BOX
+{
+	CD3DX12_BOX()
+	{}
+	explicit CD3DX12_BOX(const D3D12_BOX& o) :
+		D3D12_BOX(o)
+	{}
+	explicit CD3DX12_BOX(
+		LONG Left,
+		LONG Right)
+	{
+		left = Left;
+		top = 0;
+		front = 0;
+		right = Right;
+		bottom = 1;
+		back = 1;
+	}
+	explicit CD3DX12_BOX(
+		LONG Left,
+		LONG Top,
+		LONG Right,
+		LONG Bottom)
+	{
+		left = Left;
+		top = Top;
+		front = 0;
+		right = Right;
+		bottom = Bottom;
+		back = 1;
+	}
+	explicit CD3DX12_BOX(
+		LONG Left,
+		LONG Top,
+		LONG Front,
+		LONG Right,
+		LONG Bottom,
+		LONG Back)
+	{
+		left = Left;
+		top = Top;
+		front = Front;
+		right = Right;
+		bottom = Bottom;
+		back = Back;
+	}
+	~CD3DX12_BOX() {}
+	operator const D3D12_BOX& () const { return *this; }
+};
+inline bool operator==(const D3D12_BOX& l, const D3D12_BOX& r)
+{
+	return l.left == r.left && l.top == r.top && l.front == r.front &&
+		l.right == r.right && l.bottom == r.bottom && l.back == r.back;
+}
+inline bool operator!=(const D3D12_BOX& l, const D3D12_BOX& r)
+{
+	return !(l == r);
+}
 
 //------------------------------------------------------------------------------------------------
 
+struct CD3DX12_TEXTURE_COPY_LOCATION : public D3D12_TEXTURE_COPY_LOCATION
+{
+	CD3DX12_TEXTURE_COPY_LOCATION()
+	{}
+	explicit CD3DX12_TEXTURE_COPY_LOCATION(const D3D12_TEXTURE_COPY_LOCATION& o) :
+		D3D12_TEXTURE_COPY_LOCATION(o)
+	{}
+	CD3DX12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes) { pResource = pRes; }
+	CD3DX12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes, D3D12_PLACED_SUBRESOURCE_FOOTPRINT const& Footprint)
+	{
+		pResource = pRes;
+		Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+		PlacedFootprint = Footprint;
+	}
+	CD3DX12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes, UINT Sub)
+	{
+		pResource = pRes;
+		Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		SubresourceIndex = Sub;
+	}
+};
+
+//------------------------------------------------------------------------------------------------
 struct CD3DX12_RESOURCE_BARRIER : public D3D12_RESOURCE_BARRIER
 {
 	CD3DX12_RESOURCE_BARRIER()
@@ -176,6 +294,48 @@ inline bool operator!=(const D3D12_HEAP_PROPERTIES& l, const D3D12_HEAP_PROPERTI
 {
 	return !(l == r);
 }
+inline UINT8 D3D12GetFormatPlaneCount(
+	_In_ ID3D12Device* pDevice,
+	DXGI_FORMAT Format
+)
+{
+	D3D12_FEATURE_DATA_FORMAT_INFO formatInfo = { Format };
+	if (FAILED(pDevice->CheckFeatureSupport(D3D12_FEATURE_FORMAT_INFO, &formatInfo, sizeof(formatInfo))))
+	{
+		return 0;
+	}
+	return formatInfo.PlaneCount;
+}
+
+//------------------------------------------------------------------------------------------------
+inline UINT D3D12CalcSubresource(UINT MipSlice, UINT ArraySlice, UINT PlaneSlice, UINT MipLevels, UINT ArraySize)
+{
+	return MipSlice + ArraySlice * MipLevels + PlaneSlice * MipLevels * ArraySize;
+}
+
+//------------------------------------------------------------------------------------------------
+// Row-by-row memcpy
+inline void MemcpySubresource(
+	_In_ const D3D12_MEMCPY_DEST* pDest,
+	_In_ const D3D12_SUBRESOURCE_DATA* pSrc,
+	SIZE_T RowSizeInBytes,
+	UINT NumRows,
+	UINT NumSlices)
+{
+	for (UINT z = 0; z < NumSlices; ++z)
+	{
+		BYTE* pDestSlice = reinterpret_cast<BYTE*>(pDest->pData) + pDest->SlicePitch * z;
+		const BYTE* pSrcSlice = reinterpret_cast<const BYTE*>(pSrc->pData) + pSrc->SlicePitch * z;
+		for (UINT y = 0; y < NumRows; ++y)
+		{
+			memcpy(pDestSlice + pDest->RowPitch * y,
+				   pSrcSlice + pSrc->RowPitch * y,
+				   RowSizeInBytes);
+		}
+	}
+}
+
+//------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------------------
 

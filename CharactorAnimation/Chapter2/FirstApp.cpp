@@ -15,6 +15,34 @@ FirstApp::~FirstApp()
 {
 }
 
+bool FirstApp::Initialize(HINSTANCE hInstance, bool windowed, WNDPROC wndProc)
+{
+	if (!Application::Initialize(hInstance, windowed, wndProc))
+	{
+		return false;
+	}
+
+	// Reset the command list to prep for initialization commands.
+	m_commandList->Reset(m_directCmdListAlloc.Get(), nullptr);
+
+	BuildDescriptorHeaps();
+	BuildConstantBuffers();
+	BuildRootSignature();
+	BuildShadersAndInputLayout();
+	BuildBoxGeometry();
+	BuildPSO();
+
+	// Execute the initialization commands.
+	m_commandList->Close();
+	ID3D12CommandList* cmdsLists[] = { m_commandList.Get() };
+	m_commandQueue->ExecuteCommandLists(_countof(cmdsLists),cmdsLists);
+
+	// Wait until initialization is complete
+	FlushCommandQueue();
+
+	return true;
+}
+
 void FirstApp::OnResize()
 {
 	Application::OnResize();
@@ -77,3 +105,32 @@ void FirstApp::Render()
 	// Later we will show how to organize our readering code so we do not have to wait per frame
 	FlushCommandQueue();
 }
+
+
+#pragma region Build Reader Config
+
+void FirstApp::BuildDescriptorHeaps()
+{
+}
+
+void FirstApp::BuildConstantBuffers()
+{
+}
+
+void FirstApp::BuildRootSignature()
+{
+}
+
+void FirstApp::BuildShadersAndInputLayout()
+{
+}
+
+void FirstApp::BuildBoxGeometry()
+{
+}
+
+void FirstApp::BuildPSO()
+{
+}
+
+#pragma endregion
