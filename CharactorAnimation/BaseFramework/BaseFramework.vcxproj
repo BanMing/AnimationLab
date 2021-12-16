@@ -168,6 +168,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="D3DUtil.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="FirstApp.cpp">
       <SubType>
       </SubType>
