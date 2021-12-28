@@ -32,12 +32,17 @@
 *.app
 .vs
 
-CharactorAnimation/Debug/
-CharactorAnimation/Chapter2/Debug/
-CharactorAnimation/Chapter2/x64/
-CharactorAnimation/TestWin32/Debug/
-CharactorAnimation/x64/
+**/x64/
+**/**/x64/
+
+**/TestWin32/
+
+**/Debug/
+**/**/Debug/
 
 Games103/Library/
 Games103/Logs/
 Games103/Temp/
+
+
+
