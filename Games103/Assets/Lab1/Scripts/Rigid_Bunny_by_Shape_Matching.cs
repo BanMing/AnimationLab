@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
 {
+    private const float linear_decay = 0.999f; // for velocity decay
+    private const float min_velocity = 0.1f;
+    private const float un = 0.3f; // spring factor  [0,1]
+    private const float ut = 0.5f; // friction factor
     private readonly Vector3 g = new Vector3(0, -9.8f, 0);
 
     public bool launched = false;
     private Vector3[] X;
-    private Vector3[] Y;
     private Vector3[] Q;
     private Vector3[] V;
     private Matrix4x4 QQt = Matrix4x4.zero;
@@ -16,7 +19,6 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
     {
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         V = new Vector3[mesh.vertices.Length];
-        Y = new Vector3[mesh.vertices.Length];
         X = mesh.vertices;
         Q = mesh.vertices;
 
@@ -164,8 +166,37 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         return res;
     }
 
+    // In this function, update v and w by the impulse due to the collision with
+    //a plane <P, N>
+    private void Collision_Impulse(Vector3 P, Vector3 N)
+    {
+        for (int i = 0; i < X.Length; i++)
+        {
+            bool isCollision = Vector3.Dot(X[i] - P, N) < 0;
+            if (!isCollision) { continue; }
+
+            bool isV = Vector3.Dot(V[i], N) < 0;
+            if (!isV) { continue; }
+
+            Vector3 vn_i = Vector3.Dot(V[i], N) * N;
+            Vector3 vt_i = V[i] - vn_i;
+
+            vn_i = vn_i.magnitude < min_velocity ? Vector3.zero : vn_i;
+            vt_i = vt_i.magnitude < min_velocity ? Vector3.zero : vt_i;
+
+            float a = Mathf.Max(1 - ut * (1 + un) * vn_i.magnitude / vt_i.magnitude, 0);
+
+            Vector3 vn_new_i = -un * vn_i;
+            Vector3 vt_new_i = a * vt_i;
+
+            V[i] = vn_new_i + vt_new_i;
+        }
+    }
+
     private void Collision(float inv_dt)
     {
+        Collision_Impulse(new Vector3(0, 0.01f, 0), new Vector3(0, 1, 0));
+        Collision_Impulse(new Vector3(2, 0, 0), new Vector3(-1, 0, 0));
     }
 
     // Update is called once per frame
@@ -182,9 +213,9 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         Vector3 c = Vector3.zero;
         for (int i = 0; i < V.Length; i++)
         {
-            V[i] += dt * g;
-            Y[i] = X[i] + dt * V[i];
-            c += Y[i];
+            V[i] = (V[i] + dt * g) * linear_decay;
+            X[i] += dt * V[i];
+            c += X[i];
         }
         c /= V.Length;
 
@@ -193,18 +224,15 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
 
         // Step 3: Use shape matching to get new translation c and
         // new rotation R. Update the mesh by c and R.
-        //Shape Matching (translation)
-        //Shape Matching (rotation)
-
         Matrix4x4 A = Matrix4x4.zero;
         for (int i = 0; i < V.Length; i++)
         {
             Matrix4x4 temp = Matrix4x4.zero;
-            temp.SetColumn(0, Y[i] - c);
+            temp.SetColumn(0, X[i] - c);
 
             Matrix4x4 qt = Matrix4x4.zero;
             qt.SetRow(0, Q[i]);
-            A = Add_Matrix(A, qt * temp);
+            A = Add_Matrix(A, temp * qt);
         }
 
         A[3, 3] = 1;
@@ -213,27 +241,5 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         Matrix4x4 R = Get_Rotation(A);
 
         Update_Mesh(c, R, 1 / dt);
-        //Vector3 pos = Vector3.zero;
-        //for (int i = 0; i < X.Length; i++)
-        //{
-        //    pos += X[i];
-        //}
-        //transform.position = pos / X.Length;
-    }
-
-    private Vector3 x = new Vector3(1, 2, 3);
-    private Vector3 y = new Vector3(2, 3, 4);
-    private void OnGUI()
-    {
-        if (GUILayout.Button("Test"))
-        {
-            Matrix4x4 xm = Matrix4x4.zero;
-            xm.SetColumn(0, x);
-
-            Matrix4x4 ym = Matrix4x4.zero;
-            ym.SetRow(0, y);
-
-            Debug.Log((xm * ym).ToString());
-        }
     }
 }
