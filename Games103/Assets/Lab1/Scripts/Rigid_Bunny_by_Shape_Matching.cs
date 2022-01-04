@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
@@ -12,7 +10,6 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
     private Vector3[] Q;
     private Vector3[] V;
     private Matrix4x4 QQt = Matrix4x4.zero;
-
 
     // Start is called before the first frame update
     private void Start()
@@ -106,7 +103,6 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
             float I_u = lambda + Mathf.Sqrt(-lambda2 + I_c + 2 * III_u / lambda);
             float II_u = (I_u * I_u - I_c) * 0.5f;
 
-
             float inv_rate, factor;
             inv_rate = 1 / (I_u * II_u - III_u);
             factor = I_u * III_u * inv_rate;
@@ -157,6 +153,17 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         mesh.vertices = X;
     }
 
+    private Matrix4x4 Add_Matrix(Matrix4x4 a, Matrix4x4 b)
+    {
+        Matrix4x4 res = Matrix4x4.zero;
+        for (int i = 0; i < 4; i++)
+        {
+            Vector4 column = a.GetColumn(i) + b.GetColumn(i);
+            res.SetColumn(i, column);
+        }
+        return res;
+    }
+
     private void Collision(float inv_dt)
     {
     }
@@ -164,6 +171,11 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!launched)
+        {
+            return;
+        }
+
         float dt = 0.015f;
 
         //Step 1: run a simple particle system.
@@ -176,23 +188,52 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         }
         c /= V.Length;
 
-        Matrix4x4 A = Matrix4x4.zero;
-        for (int i = 0; i < V.Length; i++)
-        {
-            //(Q[i] - c) *
-        }
-        Matrix4x4 R = Get_Rotation(A);
-
         //Step 2: Perform simple particle collision.
         Collision(1 / dt);
 
-        // Step 3: Use shape matching to get new translation c and 
+        // Step 3: Use shape matching to get new translation c and
         // new rotation R. Update the mesh by c and R.
         //Shape Matching (translation)
-        transform.position = c;
         //Shape Matching (rotation)
-        //transform.rotation = Quaternion..;
+
+        Matrix4x4 A = Matrix4x4.zero;
+        for (int i = 0; i < V.Length; i++)
+        {
+            Matrix4x4 temp = Matrix4x4.zero;
+            temp.SetColumn(0, Y[i] - c);
+
+            Matrix4x4 qt = Matrix4x4.zero;
+            qt.SetRow(0, Q[i]);
+            A = Add_Matrix(A, qt * temp);
+        }
+
+        A[3, 3] = 1;
+        A *= QQt.inverse;
+
+        Matrix4x4 R = Get_Rotation(A);
 
         Update_Mesh(c, R, 1 / dt);
+        //Vector3 pos = Vector3.zero;
+        //for (int i = 0; i < X.Length; i++)
+        //{
+        //    pos += X[i];
+        //}
+        //transform.position = pos / X.Length;
+    }
+
+    private Vector3 x = new Vector3(1, 2, 3);
+    private Vector3 y = new Vector3(2, 3, 4);
+    private void OnGUI()
+    {
+        if (GUILayout.Button("Test"))
+        {
+            Matrix4x4 xm = Matrix4x4.zero;
+            xm.SetColumn(0, x);
+
+            Matrix4x4 ym = Matrix4x4.zero;
+            ym.SetRow(0, y);
+
+            Debug.Log((xm * ym).ToString());
+        }
     }
 }
