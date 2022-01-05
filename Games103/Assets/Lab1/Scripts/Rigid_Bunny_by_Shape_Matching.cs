@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
@@ -6,13 +7,20 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
     private const float min_velocity = 0.1f;
     private const float un = 0.3f; // spring factor  [0,1]
     private const float ut = 0.5f; // friction factor
+    private const float dt = 0.015f;
+
     private readonly Vector3 g = new Vector3(0, -9.8f, 0);
 
     public bool launched = false;
+
+    private float inv_dt = 0;
     private Vector3[] X;
     private Vector3[] Q;
     private Vector3[] V;
+    private Vector3 c;
+    private Matrix4x4 A;
     private Matrix4x4 QQt = Matrix4x4.zero;
+    private Matrix4x4 QQt_i = Matrix4x4.zero;
 
     // Start is called before the first frame update
     private void Start()
@@ -44,11 +52,14 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
             QQt[2, 2] += Q[i][2] * Q[i][2];
         }
         QQt[3, 3] = 1;
+        QQt_i = QQt.inverse;
 
         for (int i = 0; i < X.Length; i++)
             V[i][0] = 4.0f;
 
-        Update_Mesh(transform.position, Matrix4x4.Rotate(transform.rotation), 0);
+        Update_Mesh(transform.position, Matrix4x4.Rotate(transform.rotation));
+
+        inv_dt = 1 / dt;
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;
     }
@@ -142,7 +153,7 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
 
     // Update the mesh vertices according to translation c and rotation R.
     // It also updates the velocity.
-    private void Update_Mesh(Vector3 c, Matrix4x4 R, float inv_dt)
+    private void Update_Mesh(Vector3 c, Matrix4x4 R)
     {
         for (int i = 0; i < Q.Length; i++)
         {
@@ -155,15 +166,18 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         mesh.vertices = X;
     }
 
-    private Matrix4x4 Add_Matrix(Matrix4x4 a, Matrix4x4 b)
+    private void CalculateAStep1(int i)
     {
-        Matrix4x4 res = Matrix4x4.zero;
-        for (int i = 0; i < 4; i++)
-        {
-            Vector4 column = a.GetColumn(i) + b.GetColumn(i);
-            res.SetColumn(i, column);
-        }
-        return res;
+        Vector3 yi_c = X[i] - c;
+        A[0, 0] += yi_c[0] * Q[i][0];
+        A[0, 1] += yi_c[0] * Q[i][1];
+        A[0, 2] += yi_c[0] * Q[i][2];
+        A[1, 0] += yi_c[1] * Q[i][0];
+        A[1, 1] += yi_c[1] * Q[i][1];
+        A[1, 2] += yi_c[1] * Q[i][2];
+        A[2, 0] += yi_c[2] * Q[i][0];
+        A[2, 1] += yi_c[2] * Q[i][1];
+        A[2, 2] += yi_c[2] * Q[i][2];
     }
 
     // In this function, update v and w by the impulse due to the collision with
@@ -193,7 +207,7 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         }
     }
 
-    private void Collision(float inv_dt)
+    private void Collision()
     {
         Collision_Impulse(new Vector3(0, 0.01f, 0), new Vector3(0, 1, 0));
         Collision_Impulse(new Vector3(2, 0, 0), new Vector3(-1, 0, 0));
@@ -207,39 +221,45 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
             return;
         }
 
-        float dt = 0.015f;
-
         //Step 1: run a simple particle system.
-        Vector3 c = Vector3.zero;
+        UnityEngine.Profiling.Profiler.BeginSample("Particle System");
+        c = Vector3.zero;
         for (int i = 0; i < V.Length; i++)
         {
             V[i] = (V[i] + dt * g) * linear_decay;
+            //V[i] *= linear_decay;
             X[i] += dt * V[i];
             c += X[i];
         }
         c /= V.Length;
+        UnityEngine.Profiling.Profiler.EndSample();
 
+        UnityEngine.Profiling.Profiler.BeginSample("Collision");
         //Step 2: Perform simple particle collision.
-        Collision(1 / dt);
+        Collision();
+        UnityEngine.Profiling.Profiler.EndSample();
 
         // Step 3: Use shape matching to get new translation c and
         // new rotation R. Update the mesh by c and R.
-        Matrix4x4 A = Matrix4x4.zero;
-        for (int i = 0; i < V.Length; i++)
-        {
-            Matrix4x4 temp = Matrix4x4.zero;
-            temp.SetColumn(0, X[i] - c);
+        UnityEngine.Profiling.Profiler.BeginSample("Get A Step 1");
 
-            Matrix4x4 qt = Matrix4x4.zero;
-            qt.SetRow(0, Q[i]);
-            A = Add_Matrix(A, temp * qt);
-        }
+        A = Matrix4x4.zero;
+        Parallel.For(0, V.Length, CalculateAStep1);
 
+        UnityEngine.Profiling.Profiler.EndSample();
+
+        UnityEngine.Profiling.Profiler.BeginSample("Get A Step 2");
         A[3, 3] = 1;
-        A *= QQt.inverse;
+        A *= QQt_i;
+        UnityEngine.Profiling.Profiler.EndSample();
 
+        UnityEngine.Profiling.Profiler.BeginSample("Get Rotation");
         Matrix4x4 R = Get_Rotation(A);
+        UnityEngine.Profiling.Profiler.EndSample();
 
-        Update_Mesh(c, R, 1 / dt);
+        UnityEngine.Profiling.Profiler.BeginSample("Update Mesh");
+        Update_Mesh(c, R);
+        UnityEngine.Profiling.Profiler.EndSample();
     }
+
 }
