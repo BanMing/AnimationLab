@@ -57,7 +57,6 @@ public class implicit_model : MonoBehaviour
         mesh.uv = UV;
         mesh.RecalculateNormals();
 
-
         //Construct the original E
         int[] _E = new int[triangles.Length * 2];
         for (int i = 0; i < triangles.Length; i += 3)
@@ -161,22 +160,12 @@ public class implicit_model : MonoBehaviour
         Vector3[] X = mesh.vertices;
 
         //Handle colllision.
-        bool isCollision = false;
         Vector3 c = sphereGo.transform.position;
         for (int i = 0; i < X.Length; i++)
         {
-            if ((c - X[i]).sqrMagnitude <= sphere_r_sqr)
+            if ((i != 0 && i != 20) && (c - X[i]).sqrMagnitude <= sphere_r_sqr)
             {
-                isCollision = true;
-                break;
-            }
-        }
-
-        if (isCollision)
-        {
-            for (int i = 0; i < X.Length; i++)
-            {
-                Vector3 x_i= c + sphere_r * (X[i] - c) / (X[i] - c).magnitude;
+                Vector3 x_i = c + sphere_r * (X[i] - c) / (X[i] - c).magnitude;
                 V[i] += (x_i - X[i]) / t;
                 X[i] = x_i;
             }
@@ -188,26 +177,21 @@ public class implicit_model : MonoBehaviour
     void Get_Gradient(Vector3[] X, Vector3[] X_hat, float t, Vector3[] G)
     {
         //Momentum and Gravity.
-        Vector3[] Momentum = new Vector3[X.Length];
         for (int i = 0; i < X.Length; i++)
         {
-            //Momentum[i]=spring_k*(X[i]-L[i])
-            V[i] += t * gravity;
+            if (i != 0 && i != 20)
+            {
+                G[i] = mass * (X[i] - X_hat[i]) / (t * t) - mass * gravity;
+            }
         }
 
         //Spring Force.
-        for (int i = 0; i < X.Length; i++)
-        {
-            G[i] = mass * (X[i] - X_hat[i]) / (t * t);
-        }
-
         for (int e = 0; e < E.Length / 2; e++)
         {
             int i = E[e * 2 + 0];
             int j = E[e * 2 + 1];
             float l_ij = (X[i] - X[j]).magnitude;
-            Vector3 f = -spring_k * (l_ij - L[e]) * (X[i] - X[j]) / l_ij;
-
+            Vector3 f = spring_k * (1 - L[e] / l_ij) * (X[i] - X[j]);
             G[i] += f;
             G[j] -= f;
         }
@@ -216,17 +200,27 @@ public class implicit_model : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetKey("r"))
+        {
+            Start();
+        }
+
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         Vector3[] X = mesh.vertices;
         Vector3[] last_X = new Vector3[X.Length];
+        Vector3[] old_X = new Vector3[X.Length];
         Vector3[] X_hat = new Vector3[X.Length];
         Vector3[] G = new Vector3[X.Length];
 
         //Initial Setup.
         for (int i = 0; i < X.Length; i++)
         {
-            V[i] *= damping;
-            X_hat[i] = X[i] + t * V[i];
+            if ((i != 0 && i != 20))
+            {
+                V[i] = (V[i] + t * gravity) * damping;
+                X_hat[i] = X[i] + t * V[i];
+                X[i] = X_hat[i];
+            }
         }
 
         for (int k = 0; k < 32; k++)
@@ -236,11 +230,43 @@ public class implicit_model : MonoBehaviour
             //Update X by gradient.
             for (int i = 0; i < X.Length; i++)
             {
-                X[i] += X[i] - G[i] / (mass / (t * t) + 4 * spring_k);
+                if ((i != 0 && i != 20))
+                {
+                    X[i] = X[i] - G[i] / (mass / (t * t) + 4 * spring_k);
+                }
             }
         }
 
-        //Finishing.
+        // Finally
+        for (int i = 0; i < X.Length; i++)
+        {
+            V[i] += (X[i] - X_hat[i]) / t;
+        }
+        
+        //Chebyshev Acceleration
+        //for (int k = 0; k < 32; k++)
+        //{
+        //    float w = 1;
+        //    if (k == 0)
+        //    {
+        //        w = 1;
+        //    }
+        //    else if (k == 1)
+        //    {
+        //        w = 2 / (2 - rho * rho);
+        //    }
+        //    else
+        //    {
+        //        w = 4 / (4 - rho * rho * w);
+        //    }
+
+        //    for (int i = 0; i < X.Length; i++)
+        //    {
+        //        old_X[i] = X[i];
+        //        X[i] = w * X[i] + (1 - w) * last_X[i];
+        //        last_X[i] = old_X[i];
+        //    }
+        //}
 
         mesh.vertices = X;
 
