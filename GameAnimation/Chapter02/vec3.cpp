@@ -1,5 +1,4 @@
 #include "vec3.h"
-#include<cmath>
 
 vec3 operator+(const vec3& l, const vec3& r)
 {
@@ -116,5 +115,61 @@ vec3 reflect(const vec3& a, const vec3& b)
 
 vec3 cross(const vec3& l, const vec3& r)
 {
-	return vec3();
+	return vec3(
+		l.y * r.z - l.z * r.y,
+		l.z * r.x - l.x * r.z,
+		l.x * r.y - l.y * r.x
+	);
+}
+
+// liner interpolating
+vec3 lerp(const vec3& s, const vec3& e, float t)
+{
+	return vec3(
+		s.x + (e.x - s.x) * t,
+		s.y + (e.y - s.y) * t,
+		s.z + (e.z - s.z) * t
+	);
+}
+
+// Interpolating on the shorest arc : spherical linear interpolation
+vec3 slerp(const vec3& s, const vec3& e, float t)
+{
+	if (t < 0.01f)
+	{
+		return lerp(s, e, t);
+	}
+
+	vec3 from = normalized(s);
+	vec3 to = normalized(e);
+	float theta = angle(from, to);
+	float sin_theta = sinf(theta);
+
+	float a = sinf((1.0f - t) * theta) / sin_theta;
+	float b = sinf(t * theta) / sin_theta;
+
+	return from * a + to * b;
+}
+
+vec3 nlerp(const vec3& s, const vec3& e, float t)
+{
+	vec3 linear(
+		s.x + (e.x - s.x) * t,
+		s.y + (e.y - s.y) * t,
+		s.z + (e.z - s.z) * t
+	);
+
+	return normalized(linear);
+}
+
+bool operator== (const vec3& l, const vec3& r)
+{
+	vec3 diff(l - r);
+
+	return lenSq(diff) < VEC3_EPSILON;
+}
+
+bool operator!=(const vec3& l, const vec3& r)
+{
+	return !(l == r);
 }
