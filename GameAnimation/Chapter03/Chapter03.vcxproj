@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{2b35958b-fed1-4dfb-b58c-567d2f06e9f5}</ProjectGuid>
-    <RootNamespace>Chapter02</RootNamespace>
+    <ProjectGuid>{55f7017a-f73f-4481-a758-572609788d5a}</ProjectGuid>
+    <RootNamespace>Chapter03</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,13 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="vec2.h" />
-    <ClInclude Include="vec3.h" />
-    <ClInclude Include="vec4.h" />
+    <ProjectReference Include="..\Chapter02\Chapter02.vcxproj">
+      <Project>{2b35958b-fed1-4dfb-b58c-567d2f06e9f5}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mat4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="vec3.cpp" />
+    <ClCompile Include="mat4.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,7 +25,7 @@ struct TVec4
 	{
 	}
 
-	inline TVec4(T* fv) : x(fv[0])y(fv[1]), x(fv[2])y(fv[3])
+	inline TVec4(T* fv) : x(fv[0]), y(fv[1]), z(fv[2]), w(fv[3])
 	{
 	}
 };
