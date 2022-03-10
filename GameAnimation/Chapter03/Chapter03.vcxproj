@@ -139,14 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chapter02\Chapter02.vcxproj">
-      <Project>{2b35958b-fed1-4dfb-b58c-567d2f06e9f5}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="..\Chapter02\vec2.h" />
+    <ClInclude Include="..\Chapter02\vec3.h" />
+    <ClInclude Include="..\Chapter02\vec4.h" />
     <ClInclude Include="mat4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Chapter02\vec3.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mat4.cpp" />
   </ItemGroup>

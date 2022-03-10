@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0d1a3e91-bf15-4a69-859d-6651d62979a6}</ProjectGuid>
-    <RootNamespace>Chapter04</RootNamespace>
+    <ProjectGuid>{79965990-76ed-4d89-b514-84f104718f26}</ProjectGuid>
+    <RootNamespace>Main</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,11 +139,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="quat.h" />
+    <ClInclude Include="3rd\glad\glad.h" />
+    <ClInclude Include="3rd\glad\khrplatform.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="math\mat4.h" />
+    <ClInclude Include="math\quat.h" />
+    <ClInclude Include="math\vec2.h" />
+    <ClInclude Include="math\vec3.h" />
+    <ClInclude Include="math\vec4.h" />
+    <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="quat.cpp" />
+    <ClCompile Include="3rd\glad\glad.c" />
+    <ClCompile Include="math\mat4.cpp" />
+    <ClCompile Include="math\quat.cpp" />
+    <ClCompile Include="math\vec3.cpp" />
+    <ClCompile Include="test.cpp" />
+    <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

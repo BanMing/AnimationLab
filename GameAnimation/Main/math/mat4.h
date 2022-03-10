@@ -1,8 +1,8 @@
 #ifndef _H_MAT4_
 #define _H_MAT4_
 
-#include "../Chapter02/vec4.h"
-#include "../Chapter02/vec3.h"
+#include "vec4.h"
+#include "vec3.h"
 
 #define MAT4_EPSILON 0.000001f
 struct mat4
