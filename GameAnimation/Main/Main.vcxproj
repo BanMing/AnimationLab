@@ -147,14 +147,18 @@
     <ClInclude Include="math\vec2.h" />
     <ClInclude Include="math\vec3.h" />
     <ClInclude Include="math\vec4.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="test.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\glad\glad.c" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
     <ClCompile Include="math\vec3.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

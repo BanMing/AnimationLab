@@ -108,3 +108,24 @@ Transform mat4ToTransform(const mat4& m)
 
 	return out;
 }
+
+
+// transform all the vertices using the Transform structure(or a matrix) 
+// to properly display the model
+vec3 transformPoint(const Transform& a, const vec3& b)
+{
+	vec3  out;
+	out = a.rotation * (a.scale * b);
+	out = a.position + out;
+
+	return  out;
+}
+
+// no need add the position
+vec3 transformPoint(const Transform& a, const vec3& b) 
+{
+	vec3 out;
+	out = a.position * (a.scale * b);
+
+	return out;
+}
