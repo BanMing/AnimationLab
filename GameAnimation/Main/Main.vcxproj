@@ -142,6 +142,7 @@
     <ClInclude Include="3rd\glad\glad.h" />
     <ClInclude Include="3rd\glad\khrplatform.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Attribute.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
     <ClInclude Include="math\vec2.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\glad\glad.c" />
+    <ClCompile Include="Attribute.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
     <ClCompile Include="math\vec3.cpp" />
