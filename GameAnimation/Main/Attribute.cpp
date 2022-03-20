@@ -96,3 +96,20 @@ void Attribute<quat>::SetAttribPointer(unsigned int slot)
 {
 	glVertexAttribPointer(slot, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 }
+
+template<typename T>
+void Attribute<T>::BindTo(unsigned int slot)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
+	glEnableVertexAttribArray(slot);
+	SetAttribPointer(slot);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+template<typename T>
+void Attribute<T>::UnBindFrom(unsigned int slot)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
+	glDisableVertexAttribArray(slot);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}

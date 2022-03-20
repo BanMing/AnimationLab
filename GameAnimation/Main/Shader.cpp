@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "3rd/glad/glad.h";
+#include "3rd/glad/glad.h"
 
 #include<fstream>
 #include<sstream>
@@ -13,6 +13,7 @@ Shader::Shader()
 Shader::Shader(const std::string& vertex, const std::string& fragment)
 {
 	mHandle = glCreateProgram();
+	Load(vertex, fragment);
 }
 
 Shader::~Shader()
@@ -39,7 +40,7 @@ unsigned int Shader::CompileVertexShader(const std::string& vertex)
 
 	int success = 0;
 	glGetShaderiv(v_shader, GL_COMPILE_STATUS, &success);
-	if (success)
+	if (!success)
 	{
 		char infoLog[512];
 		glGetShaderInfoLog(v_shader, 512, NULL, infoLog);
@@ -138,7 +139,7 @@ void Shader::PopulateUniforms()
 	glUseProgram(mHandle);
 	glGetProgramiv(mHandle, GL_ACTIVE_UNIFORMS, &count);
 
-	for (int i = 0; i < length; i++)
+	for (int i = 0; i < count; i++)
 	{
 		memset(name, 0, sizeof(char) * 128);
 		glGetActiveUniform(mHandle, (GLuint)i, 128, &length, &size, &type, name);
@@ -157,7 +158,7 @@ void Shader::PopulateUniforms()
 				while (true)
 				{
 					memset(testName, 0, sizeof(char) * 256);
-					sprintf(testName, "%s[%d]", uniformName.c_str(), uniformIndex++);
+					sprintf_s(testName, "%s[%d]", uniformName.c_str(), uniformIndex++);
 					int uniformLocation = glGetUniformLocation(mHandle, testName);
 					if (uniformLocation < 0)
 					{

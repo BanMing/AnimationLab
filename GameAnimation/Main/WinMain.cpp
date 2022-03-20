@@ -12,6 +12,7 @@
 
 #include "Application.h"
 #include "test.h"
+#include "samples/Chapter06Sample01.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -21,9 +22,9 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 #pragma comment( linker, "/subsystem:console" )
 int main(int argc, const char** argv)
 {
-	test_vec3();
-	return 0;
-	//return WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOWDEFAULT);
+	//test_vec3();
+	//return 0;
+	return WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOWDEFAULT);
 }
 #else
 #pragma comment( linker, "/subsystem:windows" )
@@ -46,7 +47,7 @@ GLuint gVertexArrayObject = 0;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-	gApplication = new Application();
+	gApplication = new Chapter06Sample01();
 	WNDCLASSEX wndclass;
 	wndclass.cbSize = sizeof(WNDCLASSEX);
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
@@ -162,10 +163,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 		DWORD thisTick = GetTickCount();
 		float deltaTime = float(thisTick - lastTick) * 0.001f;
 		lastTick = thisTick;
+		// Update
 		if (gApplication != 0)
 		{
 			gApplication->Update(deltaTime);
 		}
+
+		// Render
 		if (gApplication != 0)
 		{
 			RECT clientRect;

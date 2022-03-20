@@ -141,27 +141,53 @@
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h" />
     <ClInclude Include="3rd\glad\khrplatform.h" />
+    <ClInclude Include="3rd\stb\stb_image.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Attribute.h" />
+    <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="Draw.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
     <ClInclude Include="math\vec2.h" />
     <ClInclude Include="math\vec3.h" />
     <ClInclude Include="math\vec4.h" />
+    <ClInclude Include="samples\Chapter06Sample01.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="test.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Uniform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\glad\glad.c" />
+    <ClCompile Include="3rd\stb\std_image.cpp" />
     <ClCompile Include="Attribute.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="Draw.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
     <ClCompile Include="math\vec3.cpp" />
+    <ClCompile Include="samples\Chapter06Sample01.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\dq.gltf" />
+    <None Include="Assets\IKCourse.gltf" />
+    <None Include="Assets\Woman.gltf" />
+    <None Include="Shaders\lit.frag" />
+    <None Include="Shaders\static.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\dq.png" />
+    <Image Include="Assets\uv.png" />
+    <Image Include="Assets\Woman.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

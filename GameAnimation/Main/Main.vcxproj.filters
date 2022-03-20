@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -22,14 +18,36 @@
     <Filter Include="Source Files\math">
       <UniqueIdentifier>{1a2375fc-ba42-48d1-b266-508864a6e68b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\3rd\stb">
+      <UniqueIdentifier>{c6ebd4e3-9493-488c-a957-2817e2dc9a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{8a2d8348-968d-4b60-9906-74c3b942650c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\samples">
+      <UniqueIdentifier>{38de3a79-c977-4d90-8f49-d2194d037b20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{b0a988d5-fcef-4033-8122-4a1c44cc5542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
     <Filter Include="Header Files\3rd">
       <UniqueIdentifier>{f1dfaa4f-5caf-4c69-a5d9-fdf894da09c5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\3rd\glad">
       <UniqueIdentifier>{79d13671-d78f-4888-bdd3-3b053fa7c43d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\3rd\stb">
+      <UniqueIdentifier>{0e4de45f-ec95-41da-8403-faf6b8ae5748}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\math">
       <UniqueIdentifier>{0992aca9-8906-4654-8fd4-7ab581cd0637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\samples">
+      <UniqueIdentifier>{c78d50a8-b5d4-46fd-bf40-171b19a5444e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +77,27 @@
     </ClCompile>
     <ClCompile Include="Attribute.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Uniform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\stb\std_image.cpp">
+      <Filter>Source Files\3rd\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="samples\Chapter06Sample01.cpp">
+      <Filter>Source Files\samples</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,5 +137,54 @@
     <ClInclude Include="Attribute.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Uniform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\stb\stb_image.h">
+      <Filter>Header Files\3rd\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="samples\Chapter06Sample01.h">
+      <Filter>Header Files\samples</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\static.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\lit.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\dq.gltf">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\IKCourse.gltf">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Woman.gltf">
+      <Filter>Assets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\dq.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\uv.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Woman.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

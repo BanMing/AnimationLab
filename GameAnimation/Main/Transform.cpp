@@ -122,7 +122,7 @@ vec3 transformPoint(const Transform& a, const vec3& b)
 }
 
 // no need add the position
-vec3 transformPoint(const Transform& a, const vec3& b) 
+vec3 transformVector(const Transform& a, const vec3& b) 
 {
 	vec3 out;
 	out = a.position * (a.scale * b);
