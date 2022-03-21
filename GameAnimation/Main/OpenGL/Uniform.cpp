@@ -1,10 +1,10 @@
 #include "Uniform.h"
-#include "3rd/glad/glad.h"
-#include "math/vec2.h"
-#include "math/vec3.h"
-#include "math/vec4.h"
-#include "math/quat.h"
-#include "math/mat4.h"
+#include "../3rd/glad/glad.h"
+#include "../Math/vec2.h"
+#include "../Math/vec3.h"
+#include "../Math/vec4.h"
+#include "../Math/quat.h"
+#include "../Math/mat4.h"
 
 template Uniform<int>;
 template Uniform<ivec4>;
@@ -18,8 +18,7 @@ template Uniform<mat4>;
 
 #define UNIFORM_IMPL(gl_func, tType, dType) \
 template<> \
-void Uniform<tType>::Set(unsigned int slot, tType* data, unsigned int length) \
-{ \
+void Uniform<tType>::Set(unsigned int slot, tType* data, unsigned int length) { \
     gl_func(slot, (GLsizei)length, (dType*)&data[0]); \
 }
 

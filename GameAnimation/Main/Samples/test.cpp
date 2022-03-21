@@ -1,5 +1,5 @@
 #include "test.h"
-#include "math/vec3.h"
+#include "Math/vec3.h"
 #include<iostream>
 
 void test_vec3()

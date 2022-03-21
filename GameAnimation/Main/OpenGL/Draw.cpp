@@ -1,5 +1,5 @@
 #include "Draw.h"
-#include "3rd/glad/glad.h"
+#include "../3rd/glad/glad.h"
 #include <iostream>
 
 static GLenum DrawModeToGLEnum(DrawMode input)

@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "3rd/glad/glad.h"
+#include "../3rd/glad/glad.h"
 
 #include<fstream>
 #include<sstream>
@@ -37,18 +37,17 @@ unsigned int Shader::CompileVertexShader(const std::string& vertex)
 	const char* v_source = vertex.c_str();
 	glShaderSource(v_shader, 1, &v_source, NULL);
 	glCompileShader(v_shader);
-
 	int success = 0;
 	glGetShaderiv(v_shader, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
 		char infoLog[512];
 		glGetShaderInfoLog(v_shader, 512, NULL, infoLog);
-		std::cout << "Vertex compilation failed.\n";
+		std::cout << "ERROR: Vertex compilation failed.\n";
 		std::cout << "\t" << infoLog << "\n";
 		glDeleteShader(v_shader);
 		return 0;
-	}
+	};
 	return v_shader;
 }
 
@@ -58,7 +57,6 @@ unsigned int Shader::CompileFragmentShader(const std::string& fragment)
 	const char* f_source = fragment.c_str();
 	glShaderSource(f_shader, 1, &f_source, NULL);
 	glCompileShader(f_shader);
-
 	int success = 0;
 	glGetShaderiv(f_shader, GL_COMPILE_STATUS, &success);
 	if (!success)
@@ -78,7 +76,6 @@ bool Shader::LinkShaders(unsigned int vertex, unsigned int fragment)
 	glAttachShader(mHandle, vertex);
 	glAttachShader(mHandle, fragment);
 	glLinkProgram(mHandle);
-
 	int success = 0;
 	glGetProgramiv(mHandle, GL_LINK_STATUS, &success);
 	if (!success)
@@ -98,7 +95,6 @@ bool Shader::LinkShaders(unsigned int vertex, unsigned int fragment)
 	return true;
 }
 
-
 //enumerates all the attributes stored inside the shader program, 
 //then stores them as a key - value pair, 
 //where the key is the name of the attributeand the value is its location
@@ -113,7 +109,7 @@ void Shader::PopulateAttributes()
 	glUseProgram(mHandle);
 	glGetProgramiv(mHandle, GL_ACTIVE_ATTRIBUTES, &count);
 
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; ++i)
 	{
 		memset(name, 0, sizeof(char) * 128);
 		glGetActiveAttrib(mHandle, (GLuint)i, 128, &length, &size, &type, name);
@@ -139,7 +135,7 @@ void Shader::PopulateUniforms()
 	glUseProgram(mHandle);
 	glGetProgramiv(mHandle, GL_ACTIVE_UNIFORMS, &count);
 
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; ++i)
 	{
 		memset(name, 0, sizeof(char) * 128);
 		glGetActiveUniform(mHandle, (GLuint)i, 128, &length, &size, &type, name);
@@ -149,11 +145,10 @@ void Shader::PopulateUniforms()
 		{
 			std::string uniformName = name;
 			std::size_t found = uniformName.find('[');
-
 			if (found != std::string::npos)
 			{
 				uniformName.erase(uniformName.begin() + found, uniformName.end());
-				// Population subsripted name too
+				// Populate subscripted names too
 				unsigned int uniformIndex = 0;
 				while (true)
 				{
@@ -170,6 +165,7 @@ void Shader::PopulateUniforms()
 			mUniforms[uniformName] = uniform;
 		}
 	}
+
 	glUseProgram(0);
 }
 

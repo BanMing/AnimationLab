@@ -1,5 +1,5 @@
 #include "IndexBuffer.h"
-#include "3rd/glad/glad.h"
+#include "../3rd/glad/glad.h"
 
 IndexBuffer::IndexBuffer()
 {

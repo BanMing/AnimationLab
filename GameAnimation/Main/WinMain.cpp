@@ -1,29 +1,25 @@
+#pragma warning(disable : 28251)
+#pragma warning(disable : 28159)
+
 #define _CRT_SECURE_NO_WARNINGS
-
 #define WIN32_LEAN_AND_MEAN
-
 #define WIN32_EXTRA_LEAN
 
-
+#include "3rd/glad/glad.h"
+#undef APIENTRY
 #include <windows.h>
 #include <iostream>
-
-#include "3rd/glad/glad.h"
-
 #include "Application.h"
-#include "test.h"
+
 #include "samples/Chapter06Sample01.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-
 #if _DEBUG
 #pragma comment( linker, "/subsystem:console" )
 int main(int argc, const char** argv)
 {
-	//test_vec3();
-	//return 0;
 	return WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOWDEFAULT);
 }
 #else
@@ -98,8 +94,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	WGL_CONTEXT_MINOR_VERSION_ARB, 3,
 	WGL_CONTEXT_FLAGS_ARB, 0,
 	WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-	0,
-	};
+	0,};
 
 	HGLRC hglrc = wglCreateContextAttribsARB(hdc, 0, attribList);
 
@@ -163,13 +158,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 		DWORD thisTick = GetTickCount();
 		float deltaTime = float(thisTick - lastTick) * 0.001f;
 		lastTick = thisTick;
-		// Update
 		if (gApplication != 0)
 		{
 			gApplication->Update(deltaTime);
 		}
-
-		// Render
 		if (gApplication != 0)
 		{
 			RECT clientRect;
@@ -206,8 +198,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
 	return (int)msg.wParam;
 }
-
-
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -253,3 +243,4 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
+

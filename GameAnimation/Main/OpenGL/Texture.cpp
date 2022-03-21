@@ -1,6 +1,6 @@
 #include "Texture.h"
-#include "3rd/glad/glad.h"
-#include "3rd/stb/stb_image.h"
+#include "../3rd/glad/glad.h"
+#include "../3rd/stb/stb_image.h"
 
 Texture::Texture()
 {
@@ -21,12 +21,12 @@ Texture::~Texture()
 	glDeleteTextures(1, &mHandle);
 }
 
+
 void Texture::Load(const char* path)
 {
 	glBindTexture(GL_TEXTURE_2D, mHandle);
 
 	int width, height, channels;
-	//4=RGBA
 	unsigned char* data = stbi_load(path, &width, &height, &channels, 4);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);

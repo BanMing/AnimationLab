@@ -1,10 +1,10 @@
 #include "Attribute.h"
 
-#include "3rd/glad/glad.h"
-#include "math/vec2.h"
-#include "math/vec3.h"
-#include "math/vec4.h"
-#include "math/quat.h"
+#include "../3rd/glad/glad.h"
+#include "../Math/vec2.h"
+#include "../Math/vec3.h"
+#include "../Math/vec4.h"
+#include "../Math/quat.h"
 
 template Attribute<int>;
 template Attribute<float>;
@@ -28,22 +28,11 @@ Attribute<T>::~Attribute()
 }
 
 template<typename T>
-unsigned int Attribute<T>::Count()
-{
-	return mCount;
-}
-
-template<typename T>
-unsigned int Attribute<T>::GetHandle()
-{
-	return mHandle;
-}
-
-template<typename T>
 void Attribute<T>::Set(T* inputArray, unsigned int arrayLength)
 {
 	mCount = arrayLength;
 	unsigned int size = sizeof(T);
+
 	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
 	glBufferData(GL_ARRAY_BUFFER, size * mCount, inputArray, GL_STREAM_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -53,6 +42,35 @@ template<typename T>
 void Attribute<T>::Set(std::vector<T>& input)
 {
 	Set(&input[0], (unsigned int)input.size());
+}
+
+template<typename T>
+void Attribute<T>::BindTo(unsigned int slot)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
+	glEnableVertexAttribArray(slot);
+	SetAttribPointer(slot);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+template<typename T>
+void Attribute<T>::UnBindFrom(unsigned int slot)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
+	glDisableVertexAttribArray(slot);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+template<typename T>
+unsigned int Attribute<T>::Count()
+{
+	return mCount;
+}
+
+template<typename T>
+unsigned int Attribute<T>::GetHandle()
+{
+	return mHandle;
 }
 
 template<>
@@ -95,21 +113,4 @@ template<>
 void Attribute<quat>::SetAttribPointer(unsigned int slot)
 {
 	glVertexAttribPointer(slot, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-}
-
-template<typename T>
-void Attribute<T>::BindTo(unsigned int slot)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
-	glEnableVertexAttribArray(slot);
-	SetAttribPointer(slot);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-template<typename T>
-void Attribute<T>::UnBindFrom(unsigned int slot)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, mHandle);
-	glDisableVertexAttribArray(slot);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -1,13 +1,13 @@
 #include "Chapter06Sample01.h"
-#include "../math/mat4.h"
-#include "../math/quat.h"
-#include "../Uniform.h"
-#include "../Draw.h"
+#include "../Math/mat4.h"
+#include "../Math/quat.h"
+#include "../OpenGL/Uniform.h"
+#include "../OpenGL/Draw.h"
 
 void Chapter06Sample01::Initialize()
 {
 	mRotation = 0.0f;
-	mShader = new Shader("Shaders/static.vert","Shaders/lit.frag");
+	mShader = new Shader("Shaders/static.vert", "Shaders/lit.frag");
 	mDisplayTexture = new Texture("Assets/uv.png");
 
 	mVertexPositions = new Attribute<vec3>();
@@ -73,6 +73,8 @@ void Chapter06Sample01::Render(float inAspectRatio)
 	mDisplayTexture->Set(mShader->GetUniform("tex0"), 0);
 
 	Draw(*mIndexBuffer, DrawMode::Triangles);
+
+	mDisplayTexture->UnSet(0);
 
 	mVertexPositions->UnBindFrom(mShader->GetAttribute("position"));
 	mVertexNormals->UnBindFrom(mShader->GetAttribute("normal"));

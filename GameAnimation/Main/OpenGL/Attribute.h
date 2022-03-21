@@ -21,7 +21,6 @@ public:
 	Attribute();
 	~Attribute();
 
-public:
 	void Set(T* inputArray, unsigned int arrayLength);
 	void Set(std::vector<T>& input);
 

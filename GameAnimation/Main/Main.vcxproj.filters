@@ -15,9 +15,6 @@
     <Filter Include="Source Files\3rd\glad">
       <UniqueIdentifier>{d63b21a8-9ccc-47fc-8025-f40dbbb88168}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\math">
-      <UniqueIdentifier>{1a2375fc-ba42-48d1-b266-508864a6e68b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\3rd\stb">
       <UniqueIdentifier>{c6ebd4e3-9493-488c-a957-2817e2dc9a7b}</UniqueIdentifier>
     </Filter>
@@ -49,6 +46,15 @@
     <Filter Include="Header Files\samples">
       <UniqueIdentifier>{c78d50a8-b5d4-46fd-bf40-171b19a5444e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\OpenGL">
+      <UniqueIdentifier>{3add66dc-d53f-4d08-b04c-a580e8f19210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OpenGL">
+      <UniqueIdentifier>{a5b35a78-6847-4148-a0c9-ff581ca9a5b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{1a2375fc-ba42-48d1-b266-508864a6e68b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -58,43 +64,16 @@
       <Filter>Source Files\3rd\glad</Filter>
     </ClCompile>
     <ClCompile Include="math\mat4.cpp">
-      <Filter>Source Files\math</Filter>
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="math\quat.cpp">
-      <Filter>Source Files\math</Filter>
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="math\vec3.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Attribute.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Uniform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="3rd\stb\std_image.cpp">
       <Filter>Source Files\3rd\stb</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugDraw.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="samples\Chapter06Sample01.cpp">
       <Filter>Source Files\samples</Filter>
@@ -125,35 +104,8 @@
     <ClInclude Include="math\vec4.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Attribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Uniform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="3rd\stb\stb_image.h">
       <Filter>Header Files\3rd\stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugDraw.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="samples\Chapter06Sample01.h">
       <Filter>Header Files\samples</Filter>
