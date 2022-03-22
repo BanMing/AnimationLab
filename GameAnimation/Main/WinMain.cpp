@@ -9,9 +9,9 @@
 #undef APIENTRY
 #include <windows.h>
 #include <iostream>
-#include "Application.h"
+#include "Samples/Application.h"
 
-#include "samples/Chapter06Sample01.h"
+#include "Samples/Chapter06Sample01.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

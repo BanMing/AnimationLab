@@ -21,9 +21,6 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{8a2d8348-968d-4b60-9906-74c3b942650c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\samples">
-      <UniqueIdentifier>{38de3a79-c977-4d90-8f49-d2194d037b20}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets">
       <UniqueIdentifier>{b0a988d5-fcef-4033-8122-4a1c44cc5542}</UniqueIdentifier>
     </Filter>
@@ -40,12 +37,6 @@
     <Filter Include="Header Files\3rd\stb">
       <UniqueIdentifier>{0e4de45f-ec95-41da-8403-faf6b8ae5748}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\math">
-      <UniqueIdentifier>{0992aca9-8906-4654-8fd4-7ab581cd0637}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\samples">
-      <UniqueIdentifier>{c78d50a8-b5d4-46fd-bf40-171b19a5444e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\OpenGL">
       <UniqueIdentifier>{3add66dc-d53f-4d08-b04c-a580e8f19210}</UniqueIdentifier>
     </Filter>
@@ -54,6 +45,27 @@
     </Filter>
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{1a2375fc-ba42-48d1-b266-508864a6e68b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Samples">
+      <UniqueIdentifier>{38de3a79-c977-4d90-8f49-d2194d037b20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Samples">
+      <UniqueIdentifier>{c78d50a8-b5d4-46fd-bf40-171b19a5444e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{0992aca9-8906-4654-8fd4-7ab581cd0637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3rd\cgltf">
+      <UniqueIdentifier>{e1295175-b2d9-4a68-9986-7828cb8d1699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd\cgltf">
+      <UniqueIdentifier>{76c9dce5-cb3f-4168-b007-3679a18abffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GLTF">
+      <UniqueIdentifier>{b5211d1a-a72a-498c-a0b8-6619908cd865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GLTF">
+      <UniqueIdentifier>{84b8ba76-82b9-463f-a3bf-d9cb162e0463}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,13 +88,37 @@
       <Filter>Source Files\3rd\stb</Filter>
     </ClCompile>
     <ClCompile Include="samples\Chapter06Sample01.cpp">
-      <Filter>Source Files\samples</Filter>
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Attribute.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\DebugDraw.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Draw.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\IndexBuffer.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Shader.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Texture.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Uniform.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\cgltf\cgltf.c">
+      <Filter>Source Files\3rd\cgltf</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTF\GLTFLoader.cpp">
+      <Filter>Source Files\GLTF</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="3rd\glad\glad.h">
       <Filter>Header Files\3rd\glad</Filter>
     </ClInclude>
@@ -90,25 +126,55 @@
       <Filter>Header Files\3rd\glad</Filter>
     </ClInclude>
     <ClInclude Include="math\mat4.h">
-      <Filter>Header Files\math</Filter>
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="math\quat.h">
-      <Filter>Header Files\math</Filter>
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="math\vec2.h">
-      <Filter>Header Files\math</Filter>
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="math\vec3.h">
-      <Filter>Header Files\math</Filter>
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="math\vec4.h">
-      <Filter>Header Files\math</Filter>
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="3rd\stb\stb_image.h">
       <Filter>Header Files\3rd\stb</Filter>
     </ClInclude>
     <ClInclude Include="samples\Chapter06Sample01.h">
-      <Filter>Header Files\samples</Filter>
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Application.h">
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Attribute.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\DebugDraw.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Draw.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\IndexBuffer.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Shader.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Texture.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Uniform.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\cgltf\cgltf.h">
+      <Filter>Header Files\3rd\cgltf</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTF\GLTFLoader.h">
+      <Filter>Header Files\GLTF</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

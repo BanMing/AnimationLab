@@ -1,14 +1,14 @@
 #ifndef _H_CHAPTER06_SAMPLE01_
 #define _H_CHAPTER06_SAMPLE01_
 
-#include "../math/vec3.h"
-#include "../math/vec2.h"
+#include "../Math/vec3.h"
+#include "../Math/vec2.h"
 
-#include "../Application.h"
-#include "../Shader.h"
-#include "../Attribute.h"
-#include "../IndexBuffer.h"
-#include "../Texture.h"
+#include "Application.h"
+#include "../OpenGL/Shader.h"
+#include "../OpenGL/Attribute.h"
+#include "../OpenGL/IndexBuffer.h"
+#include "../OpenGL/Texture.h"
 
 class Chapter06Sample01 :public Application
 {
