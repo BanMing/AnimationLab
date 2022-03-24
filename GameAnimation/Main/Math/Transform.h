@@ -2,8 +2,8 @@
 #ifndef _H_TRANSFORM_
 #define _H_TRANSFORM_
 
-#include "Math/vec3.h"
-#include "Math/quat.h"
+#include "vec3.h"
+#include "quat.h"
 
 struct Transform
 {

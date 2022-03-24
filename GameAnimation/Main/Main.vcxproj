@@ -143,6 +143,8 @@
     <ClInclude Include="3rd\glad\glad.h" />
     <ClInclude Include="3rd\glad\khrplatform.h" />
     <ClInclude Include="3rd\stb\stb_image.h" />
+    <ClInclude Include="Animation\Frame.h" />
+    <ClInclude Include="Animation\Interpolation.h" />
     <ClInclude Include="GLTF\GLTFLoader.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
@@ -163,6 +165,7 @@
     <ClCompile Include="3rd\cgltf\cgltf.c" />
     <ClCompile Include="3rd\glad\glad.c" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
+    <ClCompile Include="Animation\Frame.cpp" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
