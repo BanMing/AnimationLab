@@ -123,7 +123,10 @@
     <ClCompile Include="GLTF\GLTFLoader.cpp">
       <Filter>Source Files\GLTF</Filter>
     </ClCompile>
-    <ClCompile Include="Animation\Frame.cpp">
+    <ClCompile Include="Animation\Track.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\TransformTrack.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>
@@ -189,6 +192,12 @@
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Animation\Frame.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Track.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\TransformTrack.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
