@@ -1,6 +1,6 @@
 #include "Track.h"
 #include <iostream>
-#include <assert.h>
+//#include <assert.h>
 
 template Track<float, 1>;
 template Track<vec3, 3>;
@@ -8,7 +8,7 @@ template Track<quat, 4>;
 
 namespace TrackHelpers
 {
-	inline float Interpolation(float a, float b, float t)
+	inline float Interpolate(float a, float b, float t)
 	{
 		return a + (b - a) * t;
 	}
@@ -78,8 +78,8 @@ T Track<T, N>::Sample(float time, bool looping)
 template<typename T, int N>
 Frame<N>& Track<T, N>::operator[](unsigned int index)
 {
-	assert(mFrames.size() > index, "frames out of range index");
-	assert(index > 0, "index should greater than 0");
+	//assert(mFrames.size() > index, "frames out of range index");
+	//assert(index > 0, "index should greater than 0");
 	return mFrames[index];
 }
 
@@ -136,8 +136,8 @@ int Track<T, N>::FrameIndex(float time, bool looping)
 
 	if (looping)
 	{
-		float startTime = mFrames[0].mTimes;
-		float endTime = mFrames[size - 1].mTimes;
+		float startTime = mFrames[0].mTime;
+		float endTime = mFrames[size - 1].mTime;
 		float duration = endTime - startTime;
 
 		if (duration < 0.0f)
@@ -192,8 +192,8 @@ float Track<T, N>::AdjustTimeToFitTrack(float time, bool looping)
 		return 0.0f;
 	}
 
-	float startTime = mFrames[0].mTimes;
-	float endTime = mFrames[size - 1].mTimes;
+	float startTime = mFrames[0].mTime;
+	float endTime = mFrames[size - 1].mTime;
 	float duration = endTime - startTime;
 	if (duration <= 0.0f)
 	{
@@ -260,7 +260,6 @@ T Track<T, N>::SampleLinear(float time, bool looping)
 	{
 		return T();
 	}
-
 	int nextFrame = thisFrame + 1;
 
 	float trackTime = AdjustTimeToFitTrack(time, looping);
@@ -269,7 +268,6 @@ T Track<T, N>::SampleLinear(float time, bool looping)
 	{
 		return T();
 	}
-
 	// will not be nagetive,cause by FrameIndex function
 	float t = (trackTime - mFrames[thisFrame].mTime) / frameDelta;
 

@@ -162,6 +162,7 @@
     <ClInclude Include="OpenGL\Uniform.h" />
     <ClInclude Include="Samples\Application.h" />
     <ClInclude Include="samples\Chapter06Sample01.h" />
+    <ClInclude Include="Samples\Chapter08Sample01.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\cgltf\cgltf.c" />
@@ -181,6 +182,7 @@
     <ClCompile Include="OpenGL\Texture.cpp" />
     <ClCompile Include="OpenGL\Uniform.cpp" />
     <ClCompile Include="samples\Chapter06Sample01.cpp" />
+    <ClCompile Include="Samples\Chapter08Sample01.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>

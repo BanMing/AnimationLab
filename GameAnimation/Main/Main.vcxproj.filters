@@ -129,6 +129,9 @@
     <ClCompile Include="Animation\TransformTrack.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter08Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="Animation\TransformTrack.h">
       <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter08Sample01.h">
+      <Filter>Header Files\Samples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

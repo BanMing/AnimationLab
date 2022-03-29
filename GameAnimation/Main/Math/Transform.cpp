@@ -1,13 +1,15 @@
 #include "Transform.h"
 #include<cmath>
 
+//  To get transformation of b in a local space
 Transform combine(const Transform& a, const Transform& b)
 {
 	Transform out;
 
 	out.scale = a.scale * b.scale;
 	out.rotation = b.rotation * a.rotation;
-
+	
+	// combine position order: scale first,rotate second, and translate last.
 	out.position = a.rotation * (a.scale * b.position);
 	out.position = a.position + out.position;
 

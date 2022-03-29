@@ -7,6 +7,7 @@ class Frame
 {
 public:
 	float mValue[N];
+	// both in and out tangents
 	float mIn[N];
 	float mOut[N];
 	float mTime;
