@@ -72,6 +72,28 @@ void DebugDraw::Push(const vec3& v)
 	mPoints.push_back(v);
 }
 
+void DebugDraw::FromPose(const Pose& pose)
+{
+	unsigned int requiredVerts = 0;
+	unsigned int numJoints = pose.Size();
+	for (int i = 0; i < numJoints; i++)
+	{
+		if (pose.GetParent(i)>=0)
+		{
+			requiredVerts += 2;
+		}
+	}
+	mPoints.resize(requiredVerts);
+	for (int i = 0; i < numJoints; i++)
+	{
+		if (pose.GetParent(i) >= 0)
+		{
+			mPoints.push_back(pose.GetGlobalTransform(i).position);
+			mPoints.push_back(pose.GetGlobalTransform(pose.GetParent(i)).position);
+		}
+	}
+}
+
 void DebugDraw::UpdateOpenGLBuffers()
 {
 	mAttribs->Set(mPoints);

@@ -31,7 +31,7 @@ Pose& Pose::operator=(const Pose& p)
 
 	if (p.mJoints.size() > 0)
 	{
-		memcpy(&mJoints[0], &p.mJoints[0], sizeof(int) * mJoints.size());
+		memcpy(&mJoints[0], &p.mJoints[0], sizeof(Transform) * mJoints.size());
 	}
 
 	if (p.mParents.size() > 0)
@@ -48,12 +48,12 @@ void Pose::Resize(unsigned int size)
 	mJoints.resize(size);
 }
 
-unsigned int Pose::Size()
+unsigned int Pose::Size() const
 {
 	return mJoints.size();
 }
 
-Transform Pose::GetLocalTransform(unsigned int index)
+Transform Pose::GetLocalTransform(unsigned int index) const
 {
 	return mJoints[index];
 }
@@ -63,7 +63,7 @@ void Pose::SetLocalTransform(unsigned int index, const Transform& transform)
 	mJoints[index] = transform;
 }
 
-Transform Pose::GetGlobalTransform(unsigned int index)
+Transform Pose::GetGlobalTransform(unsigned int index) const
 {
 	Transform result = mJoints[index];
 	for (int parent = mParents[index]; parent >= 0; parent = mParents[parent])
@@ -74,12 +74,12 @@ Transform Pose::GetGlobalTransform(unsigned int index)
 	return result;
 }
 
-Transform Pose::operator[](unsigned int index)
+Transform Pose::operator[](unsigned int index) const
 {
 	return GetGlobalTransform(index);
 }
 
-void Pose::GetMatrixPalette(std::vector<mat4>& out)
+void Pose::GetMatrixPalette(std::vector<mat4>& out)const
 {
 	unsigned int size = Size();
 	if (out.size() != size)
@@ -94,7 +94,7 @@ void Pose::GetMatrixPalette(std::vector<mat4>& out)
 	}
 }
 
-int Pose::GetParent(unsigned int index)
+int Pose::GetParent(unsigned int index) const
 {
 	return mParents[index];
 }

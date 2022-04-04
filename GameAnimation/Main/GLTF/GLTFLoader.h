@@ -2,7 +2,15 @@
 #define _H_GLTFLOADER_
 
 #include "../3rd/cgltf/cgltf.h"
+#include "../Animation/Pose.h"
+#include "../Animation/Clip.h"
+#include <string>
+#include <vector>
 
 cgltf_data* LoadGLTFFile(const char* path);
 void FreeGLTFFile(cgltf_data* data);
+Pose LoadRestPose(cgltf_data* data);
+// useful for debugging
+std::vector<std::string> LoadJointNames(cgltf_data* data);
+std::vector<Clip> LoadAnimationClips(cgltf_data* data);
 #endif

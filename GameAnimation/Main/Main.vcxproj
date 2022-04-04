@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -143,8 +143,10 @@
     <ClInclude Include="3rd\glad\glad.h" />
     <ClInclude Include="3rd\glad\khrplatform.h" />
     <ClInclude Include="3rd\stb\stb_image.h" />
+    <ClInclude Include="Animation\Clip.h" />
     <ClInclude Include="Animation\Frame.h" />
     <ClInclude Include="Animation\Interpolation.h" />
+    <ClInclude Include="Animation\Pose.h" />
     <ClInclude Include="Animation\Track.h" />
     <ClInclude Include="Animation\TransformTrack.h" />
     <ClInclude Include="GLTF\GLTFLoader.h" />
@@ -163,16 +165,20 @@
     <ClInclude Include="Samples\Application.h" />
     <ClInclude Include="samples\Chapter06Sample01.h" />
     <ClInclude Include="Samples\Chapter08Sample01.h" />
+    <ClInclude Include="Samples\Chapter09Sample01.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\cgltf\cgltf.c" />
     <ClCompile Include="3rd\glad\glad.c" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
+    <ClCompile Include="Animation\Clip.cpp" />
+    <ClCompile Include="Animation\Pose.cpp" />
     <ClCompile Include="Animation\Track.cpp" />
     <ClCompile Include="Animation\TransformTrack.cpp" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
+    <ClCompile Include="Math\Transform.cpp" />
     <ClCompile Include="math\vec3.cpp" />
     <ClCompile Include="OpenGL\Attribute.cpp" />
     <ClCompile Include="OpenGL\DebugDraw.cpp" />
@@ -183,6 +189,7 @@
     <ClCompile Include="OpenGL\Uniform.cpp" />
     <ClCompile Include="samples\Chapter06Sample01.cpp" />
     <ClCompile Include="Samples\Chapter08Sample01.cpp" />
+    <ClCompile Include="Samples\Chapter09Sample01.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>

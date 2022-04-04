@@ -6,10 +6,10 @@
 #include "TransformTrack.h"
 #include "Pose.h"
 
-// each joint has a transform track to record its transformation
 class Clip
 {
 protected:
+	// each joint has a transform track to record its transformation
 	std::vector<TransformTrack> mTracks;
 	std::string mName;
 	float mStartTime;
@@ -25,8 +25,19 @@ public:
 	unsigned int GetIdAtIndex(unsigned int index);
 	void SetIdAtIndex(unsigned int index, unsigned int id);
 	unsigned int Size();
+	// find transformation of all joints at time,return adjust time
 	float Sample(Pose& outPose, float time);
 	TransformTrack& operator[](unsigned int index);
+	// loops through all the TransformTrack objects and sets the start/end time
+	// of the animation clip based on the tracks that make up the clip.
+	void RecalculateDuration();
+	std::string& GetName();
+	void SetName(const std::string& inNewName);
+	float GetDuration();
+	float GetStartTime();
+	float GetEndTime();
+	bool GetLooping();
+	void SetLooping(bool inLooping);
 };
 
 #endif 

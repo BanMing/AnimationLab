@@ -4,29 +4,26 @@
 #include "Track.h"
 #include "../Math/Transform.h"
 
-// vector3 -> VTRACK , quaternion -> QTRACK
-template <typename VTRACK, typename QTRACK>
-class TTransformTrack
+class TransformTrack
 {
 protected:
 	// We only track the bone(joint) what we need to save memory
 	unsigned int mId;
-	VTRACK mPosition;
-	QTRACK mRotation;
-	VTRACK mScale;
+	VectorTrack mPosition;
+	QuaternionTrack mRotation;
+	VectorTrack mScale;
 
 public:
-	TTransformTrack();
+	TransformTrack();
 	unsigned int GetId();
 	void SetId(unsigned int id);
-	VTRACK& GetPositionTrack();
-	QTRACK& GetRotationTrack();
-	VTRACK& GetScaleTrack();
+	VectorTrack& GetPositionTrack();
+	QuaternionTrack& GetRotationTrack();
+	VectorTrack& GetScaleTrack();
 	float GetStartTime();
 	float GetEndTime();
 	bool IsValid();
 	Transform Sample(const Transform& ref, float time, bool looping);
 };
 
-typedef TTransformTrack<VectorTrack, QuaternionTrack> TransformTrack;
 #endif

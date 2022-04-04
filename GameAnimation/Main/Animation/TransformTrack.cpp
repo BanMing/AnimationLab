@@ -1,49 +1,46 @@
 #include "TransformTrack.h"
 
-template <typename VTRACK, typename QTRACK>
-TTransformTrack<VTRACK, QTRACK>::TTransformTrack()
+
+TransformTrack::TransformTrack()
 {
 	mId = 0;
 }
 
-template <typename VTRACK, typename QTRACK>
-unsigned int TTransformTrack<VTRACK, QTRACK>::GetId()
+
+unsigned int TransformTrack::GetId()
 {
 	return mId;
 }
 
-template <typename VTRACK, typename QTRACK>
-void TTransformTrack<VTRACK, QTRACK>::SetId(unsigned int id)
+void TransformTrack::SetId(unsigned int id)
 {
 	mId = id;
 }
 
-template <typename VTRACK, typename QTRACK>
-VTRACK& TTransformTrack<VTRACK, QTRACK>::GetPositionTrack()
+VectorTrack& TransformTrack::GetPositionTrack()
 {
 	return mPosition;
 }
 
-template <typename VTRACK, typename QTRACK>
-QTRACK& TTransformTrack<VTRACK, QTRACK>::GetRotationTrack()
+
+QuaternionTrack& TransformTrack::GetRotationTrack()
 {
 	return mRotation;
 }
 
-template <typename VTRACK, typename QTRACK>
-VTRACK& TTransformTrack<VTRACK, QTRACK>::GetScaleTrack()
+VectorTrack& TransformTrack::GetScaleTrack()
 {
 	return mScale;
 }
 
-template <typename VTRACK, typename QTRACK>
-bool TTransformTrack<VTRACK, QTRACK>::IsValid()
+
+bool TransformTrack::IsValid()
 {
 	return mPosition.Size() > 1 || mRotation.Size() > 1 || mScale.Size() > 1;
 }
 
-template <typename VTRACK, typename QTRACK>
-float TTransformTrack<VTRACK, QTRACK>::GetStartTime()
+
+float TransformTrack::GetStartTime()
 {
 	float result = 0.0f;
 	bool isSet = false;
@@ -76,8 +73,8 @@ float TTransformTrack<VTRACK, QTRACK>::GetStartTime()
 	return result;
 }
 
-template <typename VTRACK, typename QTRACK>
-float TTransformTrack<VTRACK, QTRACK>::GetEndTime()
+
+float TransformTrack::GetEndTime()
 {
 	float result = 0.0f;
 	bool isSet = false;
@@ -108,11 +105,11 @@ float TTransformTrack<VTRACK, QTRACK>::GetEndTime()
 	return result;
 }
 
-template <typename VTRACK, typename QTRACK>
-Transform TTransformTrack<VTRACK, QTRACK>::Sample(const Transform& ref,
-												  float time, bool looping)
+
+Transform TransformTrack::Sample(const Transform& ref, float time, bool looping)
 {
-	Transform result = ref; // Assign default values
+	// Assign default values,some track doesn`t  have any track
+	Transform result = ref;
 	if (mPosition.Size() > 1)
 	{ // Only assign if animated
 		result.position = mPosition.Sample(time, looping);

@@ -17,16 +17,16 @@ public:
 	Pose& operator=(const Pose& p);
 	Pose(unsigned int numJoints);
 	void Resize(unsigned int size);
-	unsigned int Size();
-	int GetParent(unsigned int index);
+	unsigned int Size() const;
+	int GetParent(unsigned int index) const;
 	void SetParent(unsigned int index, int parent);
-	Transform GetLocalTransform(unsigned int index);
+	Transform GetLocalTransform(unsigned int index) const;
 	void SetLocalTransform(unsigned int index, const Transform& transform);
-	Transform GetGlobalTransform(unsigned int index);
-	Transform operator[](unsigned int index);
+	Transform GetGlobalTransform(unsigned int index) const;
+	Transform operator[](unsigned int index) const;
 
 	// For OpenGL,joints convert into a linear array of matrices.
-	void GetMatrixPalette(std::vector<mat4>& out);
+	void GetMatrixPalette(std::vector<mat4>& out) const;
 
 	bool operator==(const Pose& other);
 	bool operator!=(const Pose& other);

@@ -5,6 +5,8 @@
 #include "Attribute.h"
 #include "../Math/vec3.h"
 #include "../Math/mat4.h"
+#include "../Animation/Pose.h"
+
 #include <vector>
 
 
@@ -31,6 +33,8 @@ public:
 	void Resize(unsigned int newSize);
 	vec3& operator[](unsigned int index);
 	void Push(const vec3& v);
+
+	void FromPose(const Pose& pose);
 
 	void UpdateOpenGLBuffers();
 	void Draw(DebugDrawMode mode, const vec3& color, const mat4& mvp);

@@ -132,6 +132,18 @@
     <ClCompile Include="Samples\Chapter08Sample01.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter09Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Clip.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Pose.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Transform.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -205,6 +217,15 @@
     </ClInclude>
     <ClInclude Include="Samples\Chapter08Sample01.h">
       <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter09Sample01.h">
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Clip.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Pose.h">
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
