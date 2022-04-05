@@ -21,7 +21,7 @@ void Chapter09Sample01::Initialize()
 	unsigned int numUIClips = (unsigned int)mClips.size();
 	for (unsigned int i = 0; i < numUIClips; ++i)
 	{
-		if (mClips[i].GetName() == "Walking")
+		if (mClips[i].GetName() == "Running")
 		{
 			mCurrentClip = i;
 			break;

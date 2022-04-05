@@ -37,4 +37,4 @@ mat4 transformToMat4(const Transform& t);
 Transform mat4ToTransform(const mat4& m);
 
 vec3 transformPoint(const Transform& a, const vec3& b);
-vec3 transformPoint(const Transform& a, const vec3& b);
+vec3 transformVector(const Transform& a, const vec3& b);

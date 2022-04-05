@@ -146,7 +146,9 @@
     <ClInclude Include="Animation\Clip.h" />
     <ClInclude Include="Animation\Frame.h" />
     <ClInclude Include="Animation\Interpolation.h" />
+    <ClInclude Include="Animation\Mesh.h" />
     <ClInclude Include="Animation\Pose.h" />
+    <ClInclude Include="Animation\Skeleton.h" />
     <ClInclude Include="Animation\Track.h" />
     <ClInclude Include="Animation\TransformTrack.h" />
     <ClInclude Include="GLTF\GLTFLoader.h" />
@@ -172,7 +174,9 @@
     <ClCompile Include="3rd\glad\glad.c" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
     <ClCompile Include="Animation\Clip.cpp" />
+    <ClCompile Include="Animation\Mesh.cpp" />
     <ClCompile Include="Animation\Pose.cpp" />
+    <ClCompile Include="Animation\Skeleton.cpp" />
     <ClCompile Include="Animation\Track.cpp" />
     <ClCompile Include="Animation\TransformTrack.cpp" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />

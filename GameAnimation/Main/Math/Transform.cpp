@@ -1,7 +1,8 @@
 #include "Transform.h"
 #include<cmath>
 
-//  To get transformation of b in a local space
+// To get transformation of b in a local space
+// a = parent transform, b = child (or current) transfom 
 Transform combine(const Transform& a, const Transform& b)
 {
 	Transform out;
@@ -111,9 +112,7 @@ Transform mat4ToTransform(const mat4& m)
 	return out;
 }
 
-
-// transform all the vertices using the Transform structure(or a matrix) 
-// to properly display the model
+// move/get point b into a space
 vec3 transformPoint(const Transform& a, const vec3& b)
 {
 	vec3  out;
@@ -123,7 +122,7 @@ vec3 transformPoint(const Transform& a, const vec3& b)
 	return  out;
 }
 
-// no need add the position
+// move/get vector b into a space, no need add the position
 vec3 transformVector(const Transform& a, const vec3& b) 
 {
 	vec3 out;
