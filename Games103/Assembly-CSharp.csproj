@@ -61,6 +61,7 @@
     <Compile Include="Assets\Lab2\Scripts\PBD_model.cs" />
     <Compile Include="Assets\Lab2\Scripts\implicit_model.cs" />
     <Compile Include="Assets\Lab1\Scripts\Rigid_Bunny_by_Shape_Matching.cs" />
+    <Compile Include="Assets\Scenes\SampleTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Lab2\Mats\cloth_shader.shader" />

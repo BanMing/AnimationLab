@@ -122,7 +122,7 @@ vec3 transformPoint(const Transform& a, const vec3& b)
 	return  out;
 }
 
-// move/get vector b into a space, no need add the position
+// move/get vector b into a space
 vec3 transformVector(const Transform& a, const vec3& b) 
 {
 	vec3 out;
