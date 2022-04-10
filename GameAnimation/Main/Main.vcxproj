@@ -168,6 +168,7 @@
     <ClInclude Include="samples\Chapter06Sample01.h" />
     <ClInclude Include="Samples\Chapter08Sample01.h" />
     <ClInclude Include="Samples\Chapter09Sample01.h" />
+    <ClInclude Include="Samples\Chapter10Sample01.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\cgltf\cgltf.c" />
@@ -194,6 +195,7 @@
     <ClCompile Include="samples\Chapter06Sample01.cpp" />
     <ClCompile Include="Samples\Chapter08Sample01.cpp" />
     <ClCompile Include="Samples\Chapter09Sample01.cpp" />
+    <ClCompile Include="Samples\Chapter10Sample01.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +203,7 @@
     <None Include="Assets\IKCourse.gltf" />
     <None Include="Assets\Woman.gltf" />
     <None Include="Shaders\lit.frag" />
+    <None Include="Shaders\skinned.vert" />
     <None Include="Shaders\static.vert" />
   </ItemGroup>
   <ItemGroup>

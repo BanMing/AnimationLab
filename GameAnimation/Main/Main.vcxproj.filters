@@ -147,8 +147,11 @@
     <ClCompile Include="Animation\Skeleton.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter10Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
     <ClCompile Include="Animation\Mesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,8 +239,11 @@
     <ClInclude Include="Animation\Skeleton.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Samples\Chapter10Sample01.h">
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
     <ClInclude Include="Animation\Mesh.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +261,9 @@
     </None>
     <None Include="Assets\Woman.gltf">
       <Filter>Assets</Filter>
+    </None>
+    <None Include="Shaders\skinned.vert">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

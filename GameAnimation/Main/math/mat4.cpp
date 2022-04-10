@@ -171,7 +171,7 @@ mat4 inverse(const mat4& m)
 	float det = determinant(m);
 
 	if (det == 0.0f)
-	{
+	{ 
 		// Epsilon check would need to be REALLY small
 		std::cout << "WARNING: Trying to invert a matrix with a zero determinant\n";
 		return mat4();

@@ -60,14 +60,15 @@ vec3 normalized(const vec3& v)
 	float lenSq = v.x * v.x + v.y * v.y + v.z * v.z;
 	if (lenSq < VEC3_EPSILON)
 	{
-		return vec3();
+		return v;
 	}
+	float invLen = 1.0f / sqrtf(lenSq);
 
-	float invLen = (1.0f / sqrtf(lenSq));
-
-	return vec3(v.x * invLen,
-				v.y * invLen,
-				v.z * invLen);
+	return vec3(
+		v.x * invLen,
+		v.y * invLen,
+		v.z * invLen
+	);
 }
 
 // retrun angles in radians

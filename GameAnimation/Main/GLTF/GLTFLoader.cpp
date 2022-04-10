@@ -146,8 +146,6 @@ namespace GLTFHelpers
 			int  index = i * componentCount;
 			switch (attribType)
 			{
-			case cgltf_attribute_type_invalid:
-				break;
 			case cgltf_attribute_type_position:
 				positions.push_back(vec3(values[index + 0], values[index + 1], values[index + 2]));
 				break;
@@ -161,12 +159,8 @@ namespace GLTFHelpers
 				normals.push_back(normalized(normal));
 			}
 			break;
-			case cgltf_attribute_type_tangent:
-				break;
 			case cgltf_attribute_type_texcoord:
 				texCoords.push_back(vec2(values[index + 0], values[index + 1]));
-				break;
-			case cgltf_attribute_type_color:
 				break;
 			case cgltf_attribute_type_joints:
 			{
@@ -324,45 +318,40 @@ Pose LoadBindPose(cgltf_data* data)
 	Pose restPose = LoadRestPose(data);
 	unsigned int numBones = restPose.Size();
 	std::vector<Transform> worldBindPose(numBones);
-	for (unsigned int i = 0; i < numBones; i++)
+	for (unsigned int i = 0; i < numBones; ++i)
 	{
 		worldBindPose[i] = restPose.GetGlobalTransform(i);
 	}
-
-	unsigned int numSkins = data->skins_count;
-	for (unsigned int i = 0; i < numSkins; i++)
+	unsigned int numSkins = (unsigned int)data->skins_count;
+	for (unsigned int i = 0; i < numSkins; ++i)
 	{
 		cgltf_skin* skin = &(data->skins[i]);
 		std::vector<float> invBindAccessor;
-		// 16 = 4x4 matrix
 		GLTFHelpers::GetScalarValues(invBindAccessor, 16, *skin->inverse_bind_matrices);
 
-		// Set the world bind pose
 		unsigned int numJoints = (unsigned int)skin->joints_count;
-		for (unsigned int j = 0; j < numJoints; j++)
+		for (unsigned int j = 0; j < numJoints; ++j)
 		{
 			// Read the ivnerse bind matrix of the joint
 			float* matrix = &(invBindAccessor[j * 16]);
 			mat4 invBindMatrix = mat4(matrix);
-			// invert,conevert to transform
+			// invert, convert to transform
 			mat4 bindMatrix = inverse(invBindMatrix);
 			Transform bindTransform = mat4ToTransform(bindMatrix);
-			//Set that transform in the worldBindPose
+			// Set that transform in the worldBindPose.
 			cgltf_node* jointNode = skin->joints[j];
 			int jointIndex = GLTFHelpers::GetNodeIndex(jointNode, data->nodes, numBones);
 			worldBindPose[jointIndex] = bindTransform;
 		} // end for each joint
 	} // end for each skin
-
 	// Convert the world bind pose to a regular bind pose
 	Pose bindPose = restPose;
-	for (unsigned int i = 0; i < numBones; i++)
+	for (unsigned int i = 0; i < numBones; ++i)
 	{
 		Transform current = worldBindPose[i];
 		int p = bindPose.GetParent(i);
 		if (p >= 0)
-		{
-			// Bring into parent space
+		{ // Bring into parent space
 			Transform parent = worldBindPose[p];
 			current = combine(inverse(parent), current);
 		}
@@ -370,7 +359,7 @@ Pose LoadBindPose(cgltf_data* data)
 	}
 
 	return bindPose;
-}
+} // End LoadBindPose function
 
 Skeleton LoadSkeleton(cgltf_data* data)
 {
@@ -407,7 +396,7 @@ std::vector<Mesh> LoadMeshes(cgltf_data* data)
 				cgltf_attribute* attribute = &primitive->attributes[k];
 				GLTFHelpers::MeshFromAttribute(mesh, *attribute, node->skin, nodes, nodeCount);
 			}
-			if (primitive->indices!=0)
+			if (primitive->indices != 0)
 			{
 				unsigned int indexCount = (unsigned int)primitive->indices->count;
 				std::vector<unsigned int>& indices = mesh.GetIndices();

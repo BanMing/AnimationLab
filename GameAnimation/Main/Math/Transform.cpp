@@ -9,7 +9,7 @@ Transform combine(const Transform& a, const Transform& b)
 
 	out.scale = a.scale * b.scale;
 	out.rotation = b.rotation * a.rotation;
-	
+
 	// combine position order: scale first,rotate second, and translate last.
 	out.position = a.rotation * (a.scale * b.position);
 	out.position = a.position + out.position;
@@ -21,14 +21,14 @@ Transform combine(const Transform& a, const Transform& b)
 Transform inverse(const Transform& t)
 {
 	Transform inv;
+
 	inv.rotation = inverse(t.rotation);
 
-	inv.scale.x = fabs(t.scale.x) < VEC3_EPSILON ? 0.0f : 1.0f / inv.scale.x;
-	inv.scale.y = fabs(t.scale.y) < VEC3_EPSILON ? 0.0f : 1.0f / inv.scale.y;
-	inv.scale.z = fabs(t.scale.z) < VEC3_EPSILON ? 0.0f : 1.0f / inv.scale.z;
+	inv.scale.x = fabs(t.scale.x) < VEC3_EPSILON ? 0.0f : 1.0f / t.scale.x;
+	inv.scale.y = fabs(t.scale.y) < VEC3_EPSILON ? 0.0f : 1.0f / t.scale.y;
+	inv.scale.z = fabs(t.scale.z) < VEC3_EPSILON ? 0.0f : 1.0f / t.scale.z;
 
 	vec3 invTranslation = t.position * -1.0f;
-
 	inv.position = inv.rotation * (inv.scale * invTranslation);
 
 	return inv;
@@ -123,7 +123,7 @@ vec3 transformPoint(const Transform& a, const vec3& b)
 }
 
 // move/get vector b into a space
-vec3 transformVector(const Transform& a, const vec3& b) 
+vec3 transformVector(const Transform& a, const vec3& b)
 {
 	vec3 out;
 	out = a.position * (a.scale * b);

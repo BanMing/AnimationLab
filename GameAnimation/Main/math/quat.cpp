@@ -39,7 +39,7 @@ quat fromTo(const vec3& from, const vec3& to)
 	vec3 half = normalized(f + t);
 	vec3 axis = cross(f, half);
 
-	return quat(axis.x, axis.y, axis.z, dot(half, axis));
+	return quat(axis.x, axis.y, axis.z, dot(f, half));
 }
 
 vec3 getAxis(const quat& quat)
@@ -96,9 +96,11 @@ quat operator*(const quat& Q1, const quat& Q2)
 // vector rotates by quaternion ,get a vector
 vec3 operator*(const quat& q, const vec3& v)
 {
-	return q.vector * 2.0f * dot(q.vector, v) +
-		v * (q.scalar * q.scalar - dot(q.vector, q.vector)) +
-		cross(q.vector, v) * 2.0f * q.scalar;
+
+	vec3 a = q.vector * 2.0f * dot(q.vector, v);
+	vec3 b = v * (q.scalar * q.scalar - dot(q.vector, q.vector));
+	vec3 c = cross(q.vector, v) * 2.0f * q.scalar;
+	return a + b + c;
 }
 
 quat operator-(const quat& q)
