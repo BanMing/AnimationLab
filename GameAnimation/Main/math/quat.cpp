@@ -97,10 +97,9 @@ quat operator*(const quat& Q1, const quat& Q2)
 vec3 operator*(const quat& q, const vec3& v)
 {
 
-	vec3 a = q.vector * 2.0f * dot(q.vector, v);
-	vec3 b = v * (q.scalar * q.scalar - dot(q.vector, q.vector));
-	vec3 c = cross(q.vector, v) * 2.0f * q.scalar;
-	return a + b + c;
+	return  q.vector * 2.0f * dot(q.vector, v) +
+		v * (q.scalar * q.scalar - dot(q.vector, q.vector)) +
+		cross(q.vector, v) * 2.0f * q.scalar;
 }
 
 quat operator-(const quat& q)
