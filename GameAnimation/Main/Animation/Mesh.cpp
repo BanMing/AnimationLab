@@ -178,7 +178,44 @@ void Mesh::UnBind(int position, int normal, int texCoord, int weight, int influc
 		mInfluenceAttrib->UnBindFrom(influcence);
 	}
 }
+#if 1
+// skin a vertex is to linearly blend matrices into a single skin matrix
+// then transform the vertex by this skin matrix
+void Mesh::CPUSkin(Skeleton& skeleton, Pose& pose)
+{
+	unsigned int numVerts = (unsigned int)mPosition.size();
+	if (numVerts == 0)
+	{
+		return;
+	}
 
+	mSkinnedPosition.resize(numVerts);
+	mSkinnedNormal.resize(numVerts);
+
+	pose.GetMatrixPalette(mPosePalette);
+	std::vector<mat4> invBindPosePalette = skeleton.GetInvBindPose();
+
+	for (unsigned int i = 0; i < numVerts; i++)
+	{
+		ivec4& j = mInfluences[i];
+		vec4& w = mWeights[i];
+
+		mat4 m0 = (mPosePalette[j.x] * invBindPosePalette[j.x]) * w.x;
+		mat4 m1 = (mPosePalette[j.y] * invBindPosePalette[j.y]) * w.y;
+		mat4 m2 = (mPosePalette[j.z] * invBindPosePalette[j.z]) * w.z;
+		mat4 m3 = (mPosePalette[j.w] * invBindPosePalette[j.w]) * w.w;
+
+		mat4 skin = m0 + m1 + m2 + m3;
+
+		mSkinnedPosition[i] = transformPoint(skin, mPosition[i]);
+		mSkinnedNormal[i] = transformPoint(skin, mNormal[i]);
+	}
+
+	mPosAttrib->Set(mSkinnedPosition);
+	mNormAttrib->Set(mNormal);
+}
+#else
+// use transform combine
 void Mesh::CPUSkin(Skeleton& skeleton, Pose& pose)
 {
 	unsigned int numVerts = mPosition.size();
@@ -219,3 +256,4 @@ void Mesh::CPUSkin(Skeleton& skeleton, Pose& pose)
 	mPosAttrib->Set(mSkinnedPosition);
 	mNormAttrib->Set(mSkinnedNormal);
 }
+#endif

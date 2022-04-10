@@ -14,7 +14,7 @@
 // Maintain a copy of the mesh data on the CPU as well as on the GPU
 class Mesh
 {
-	//define each vertex
+	//define each vertex of mesh
 protected:
 	std::vector<vec3> mPosition;
 	std::vector<vec3> mNormal;
