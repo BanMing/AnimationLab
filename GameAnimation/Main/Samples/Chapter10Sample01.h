@@ -1,5 +1,5 @@
-#ifndef _H_CHAPTER08_SAMPLE01_
-#define _H_CHAPTER08_SAMPLE01_
+#ifndef _H_CHAPTER10_SAMPLE01_
+#define _H_CHAPTER10_SAMPLE01_
 
 #include "Application.h"
 #include "../Animation/Clip.h"

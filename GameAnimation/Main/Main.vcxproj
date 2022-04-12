@@ -169,6 +169,7 @@
     <ClInclude Include="Samples\Chapter08Sample01.h" />
     <ClInclude Include="Samples\Chapter09Sample01.h" />
     <ClInclude Include="Samples\Chapter10Sample01.h" />
+    <ClInclude Include="Samples\Chapter10Sample02.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\cgltf\cgltf.c" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Samples\Chapter08Sample01.cpp" />
     <ClCompile Include="Samples\Chapter09Sample01.cpp" />
     <ClCompile Include="Samples\Chapter10Sample01.cpp" />
+    <ClCompile Include="Samples\Chapter10Sample02.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>

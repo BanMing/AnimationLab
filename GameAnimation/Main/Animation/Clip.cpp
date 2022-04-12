@@ -20,7 +20,7 @@ float Clip::Sample(Pose& outPose, float time)
 	for (unsigned int i = 0; i < size; i++)
 	{
 		unsigned int joint = mTracks[i].GetId();//Joint
-		Transform local = outPose.GetGlobalTransform(joint);
+		Transform local = outPose.GetLocalTransform(joint);
 		Transform animated = mTracks[i].Sample(local, time, mLooping);
 		outPose.SetLocalTransform(joint, animated);
 	}

@@ -1,5 +1,5 @@
-#ifndef _H_CHAPTER08_SAMPLE01_
-#define _H_CHAPTER08_SAMPLE01_
+#ifndef _H_CHAPTER09_SAMPLE01_
+#define _H_CHAPTER09_SAMPLE01_
 
 #include "Application.h"
 #include "../OpenGL/DebugDraw.h"

@@ -153,6 +153,9 @@
     <ClCompile Include="Animation\Mesh.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter10Sample02.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Animation\Mesh.h">
       <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter10Sample02.h">
+      <Filter>Header Files\Samples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
