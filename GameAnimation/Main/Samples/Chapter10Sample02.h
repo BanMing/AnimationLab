@@ -10,20 +10,26 @@
 #include "../OpenGL/Texture.h"
 #include <vector>
 
+struct AnimationInstance
+{
+	Pose mCurrentPose;
+	Transform mTransform;
+	std::vector<Mesh> mMeshes;
+	float mCurPlayTime;
+	unsigned int mCurClipIndex;
+	std::vector <mat4> mPosePalette;
+};
+
 class Chapter10Sample02 :public Application
 {
 protected:
+	AnimationInstance mCPUSkinAnimation;
+	AnimationInstance mGPUSkinAnimation;
 	Texture* mDiffuseTexture;
 	Shader* mStaticShader;
-	Transform mWalkTransform;
+	Shader* mDynamicShader;
 	Skeleton mSkeleton;
-	std::vector<Mesh> mMeshes;
 	std::vector<Clip> mClips;
-	Pose mCurrentWalkPose;
-	float mWalkPlayTime;
-	float mRunPlayTime;
-	unsigned int mWalkClipIndex;
-	unsigned int mRunClipIndex;
 
 public:
 	void Initialize();

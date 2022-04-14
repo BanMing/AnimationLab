@@ -6,7 +6,7 @@ uniform mat4 projection;
 
 in vec3 position;
 in vec3 normal;
-in vec3 texCoord;
+in vec2 texCoord;
 in vec4 weights;
 in ivec4 joints;
 
