@@ -168,7 +168,7 @@ int Track<T, N>::FrameIndex(float time, bool looping)
 			return (int)size - 2;
 		}
 	}
-
+	// It will execute for each animated component of each animated bone in an animation clip
 	for (int i = (int)size - 1; i >= 0; --i)
 	{
 		if (time >= mFrames[i].mTime)
