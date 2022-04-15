@@ -54,8 +54,8 @@ public:
 	std::vector<unsigned int>& GetIndices();
 
 	// CPU skinning is useful if the platform you are developing for has a limited number of uniform registers or a small uniform buffer.
-	//
 	void CPUSkin(Skeleton& skeleton, Pose& pose);
+	void CPUSKin(std::vector<mat4>& animatePose);
 	// syncs the vectors holding data to the GPU
 	void UpdateOpenGLBuffers();
 
