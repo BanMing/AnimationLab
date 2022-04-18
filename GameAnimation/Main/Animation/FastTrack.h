@@ -17,4 +17,7 @@ typedef FastTrack<float, 1> FastScalarTrack;
 typedef FastTrack<vec3, 3> FastVectorTrack;
 typedef FastTrack<quat, 4> FastQuaternionTrack;
 
+template<typename T,int N>
+FastTrack<T, N> OptimizeTrack(Track<T, N>& input);
+
 #endif

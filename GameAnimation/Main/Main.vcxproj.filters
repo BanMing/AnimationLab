@@ -156,6 +156,12 @@
     <ClCompile Include="Samples\Chapter10Sample02.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\FastTrack.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\TTransformTrack.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -251,6 +257,12 @@
     <ClInclude Include="Samples\Chapter10Sample02.h">
       <Filter>Header Files\Samples</Filter>
     </ClInclude>
+    <ClInclude Include="Animation\FastTrack.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\TTransformTrack.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\static.vert">
@@ -282,5 +294,10 @@
     <Image Include="Assets\Woman.png">
       <Filter>Assets</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="preskinned.vert">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

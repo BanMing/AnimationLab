@@ -91,3 +91,25 @@ int FastTrack<T, N>::FrameIndex(float time, bool loop)
 	}
 	return (int)mSampledFrames[index];
 }
+
+template FastTrack<float, 1> OptimizeTrack(Track<float, 1>& input);
+template FastTrack<vec3, 3> OptimizeTrack(Track<vec3, 3>& input);
+template FastTrack<quat, 4> OptimizeTrack(Track<quat, 4>& input);
+
+template<typename T, int N>
+FastTrack<T, N> OptimizeTrack(Track<T, N>& input)
+{
+	FastTrack<T, N> result;
+	
+	result.SetInterpolation(input.GetInterpolation());
+	unsigned int size = input.Size();
+	result.Resize(size);
+	for (unsigned int i = 0; i < size; i++)
+	{
+		result[i] = input[i];
+	}
+
+	result.UpdateIndexLookupTable();
+
+	return result;
+}

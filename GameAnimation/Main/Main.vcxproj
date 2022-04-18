@@ -144,6 +144,7 @@
     <ClInclude Include="3rd\glad\khrplatform.h" />
     <ClInclude Include="3rd\stb\stb_image.h" />
     <ClInclude Include="Animation\Clip.h" />
+    <ClInclude Include="Animation\FastTrack.h" />
     <ClInclude Include="Animation\Frame.h" />
     <ClInclude Include="Animation\Interpolation.h" />
     <ClInclude Include="Animation\Mesh.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Animation\Skeleton.h" />
     <ClInclude Include="Animation\Track.h" />
     <ClInclude Include="Animation\TransformTrack.h" />
+    <ClInclude Include="Animation\TTransformTrack.h" />
     <ClInclude Include="GLTF\GLTFLoader.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
@@ -176,11 +178,13 @@
     <ClCompile Include="3rd\glad\glad.c" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
     <ClCompile Include="Animation\Clip.cpp" />
+    <ClCompile Include="Animation\FastTrack.cpp" />
     <ClCompile Include="Animation\Mesh.cpp" />
     <ClCompile Include="Animation\Pose.cpp" />
     <ClCompile Include="Animation\Skeleton.cpp" />
     <ClCompile Include="Animation\Track.cpp" />
     <ClCompile Include="Animation\TransformTrack.cpp" />
+    <ClCompile Include="Animation\TTransformTrack.cpp" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
@@ -212,6 +216,18 @@
     <Image Include="Assets\dq.png" />
     <Image Include="Assets\uv.png" />
     <Image Include="Assets\Woman.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="preskinned.vert">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
