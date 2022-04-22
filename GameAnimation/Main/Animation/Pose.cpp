@@ -86,8 +86,24 @@ void Pose::GetMatrixPalette(std::vector<mat4>& out)const
 	{
 		out.resize(size);
 	}
+	int i = 0;
+	for (; i < size; i++)
+	{
+		int parent = mParents[i];
+		if (parent > i)
+		{
+			break;
+		}
 
-	for (unsigned int i = 0; i < size; ++i)
+		mat4 global = transformToMat4(mJoints[i]);
+		if (parent >= 0)
+		{
+			global = out[parent] * global;
+		}
+		out[i] = global;
+	}
+
+	for (; i < size; i++)
 	{
 		Transform t = GetGlobalTransform(i);
 		out[i] = transformToMat4(t);

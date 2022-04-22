@@ -150,6 +150,7 @@
     <ClInclude Include="Animation\Mesh.h" />
     <ClInclude Include="Animation\Pose.h" />
     <ClInclude Include="Animation\Skeleton.h" />
+    <ClInclude Include="Animation\TClip.h" />
     <ClInclude Include="Animation\Track.h" />
     <ClInclude Include="Animation\TransformTrack.h" />
     <ClInclude Include="Animation\TTransformTrack.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Animation\Mesh.cpp" />
     <ClCompile Include="Animation\Pose.cpp" />
     <ClCompile Include="Animation\Skeleton.cpp" />
+    <ClCompile Include="Animation\TClip.cpp" />
     <ClCompile Include="Animation\Track.cpp" />
     <ClCompile Include="Animation\TransformTrack.cpp" />
     <ClCompile Include="Animation\TTransformTrack.cpp" />

@@ -162,6 +162,9 @@
     <ClCompile Include="Animation\TTransformTrack.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\TClip.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -261,6 +264,9 @@
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Animation\TTransformTrack.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\TClip.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
