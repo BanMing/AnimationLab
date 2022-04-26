@@ -1,7 +1,7 @@
 #include "TTransformTrack.h"
 
 template TTransformTrack<VectorTrack, QuaternionTrack>;
-template TTransformTrack<FastTransformTrack, FastQuaternionTrack>;
+template TTransformTrack<FastVectorTrack, FastQuaternionTrack>;
 
 template <typename VTRACK, typename QTRACK>
 TTransformTrack<VTRACK, QTRACK>::TTransformTrack()

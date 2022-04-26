@@ -9,9 +9,9 @@ class TTransformTrack
 {
 protected:
 	unsigned int mId;
-	VTPACK mPosition;
+	VTRACK mPosition;
 	QTRACK mRotation;
-	VTPACK mScale;
+	VTRACK mScale;
 
 public:
 	TTransformTrack();

@@ -15,7 +15,7 @@ TClip<TRACK>::TClip()
 template<typename TRACK>
 float TClip<TRACK>::Smaple(Pose& outPose, float time)
 {
-	if (GetDuration == 0.0f)
+	if (GetDuration() == 0.0f)
 	{
 		return 0.0f;
 	}
@@ -27,7 +27,7 @@ float TClip<TRACK>::Smaple(Pose& outPose, float time)
 		unsigned int joint = mTracks[i].GetId();
 		Transform local = outPose.GetLocalTransform(joint);
 		Transform animated = mTracks[i].Sample(local, time, mLooping);
-		outPose.SetLocalTransform(animated);
+		outPose.SetLocalTransform(joint, animated);
 	}
 	return time;
 }

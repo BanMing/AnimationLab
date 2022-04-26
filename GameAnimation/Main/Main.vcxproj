@@ -149,6 +149,7 @@
     <ClInclude Include="Animation\Interpolation.h" />
     <ClInclude Include="Animation\Mesh.h" />
     <ClInclude Include="Animation\Pose.h" />
+    <ClInclude Include="Animation\RearrangeBones.h" />
     <ClInclude Include="Animation\Skeleton.h" />
     <ClInclude Include="Animation\TClip.h" />
     <ClInclude Include="Animation\Track.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Animation\FastTrack.cpp" />
     <ClCompile Include="Animation\Mesh.cpp" />
     <ClCompile Include="Animation\Pose.cpp" />
+    <ClCompile Include="Animation\RearrangeBones.cpp" />
     <ClCompile Include="Animation\Skeleton.cpp" />
     <ClCompile Include="Animation\TClip.cpp" />
     <ClCompile Include="Animation\Track.cpp" />
@@ -211,6 +213,7 @@
     <None Include="Assets\IKCourse.gltf" />
     <None Include="Assets\Woman.gltf" />
     <None Include="Shaders\lit.frag" />
+    <None Include="Shaders\preskinned.vert" />
     <None Include="Shaders\skinned.vert" />
     <None Include="Shaders\static.vert" />
   </ItemGroup>
@@ -218,18 +221,6 @@
     <Image Include="Assets\dq.png" />
     <Image Include="Assets\uv.png" />
     <Image Include="Assets\Woman.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="preskinned.vert">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

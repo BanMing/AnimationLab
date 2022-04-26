@@ -75,9 +75,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="3rd\glad\glad.c">
       <Filter>Source Files\3rd\glad</Filter>
     </ClCompile>
@@ -164,6 +161,12 @@
     </ClCompile>
     <ClCompile Include="Animation\TClip.cpp">
       <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\RearrangeBones.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +272,9 @@
     <ClInclude Include="Animation\TClip.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Animation\RearrangeBones.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\static.vert">
@@ -289,6 +295,9 @@
     <None Include="Shaders\skinned.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\preskinned.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\dq.png">
@@ -300,10 +309,5 @@
     <Image Include="Assets\Woman.png">
       <Filter>Assets</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="preskinned.vert">
-      <Filter>Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

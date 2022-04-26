@@ -16,7 +16,7 @@ void FastTrack<T, N>::UpdateIndexLookupTable()
 
 	// 60 samples per second of animation
 	float duration = this->GetEndTime() - this->GetStartTime();
-	unsigned int numSamples = duration * 60.0f;
+	unsigned int numSamples = 60 + (unsigned int)(duration * 60.0f);
 	mSampledFrames.resize(numSamples);
 
 	// find the time of the sample along the track
@@ -65,7 +65,7 @@ int FastTrack<T, N>::FrameIndex(float time, bool loop)
 		{
 			time += duration;
 		}
-		time += statTime;
+		time += startTime;
 	}
 	else
 	{
@@ -83,8 +83,8 @@ int FastTrack<T, N>::FrameIndex(float time, bool loop)
 	// The frame index is the normalized sample time scaled by the number of samples
 	float duration = this->GetEndTime() - this->GetStartTime();
 	float t = time / duration;
-	unsigned int numSamples = duration * 60.0f;
-	unsigned int index = t * (float)numSamples;
+	unsigned int numSamples = 60 + (unsigned int)(duration * 60.0f);
+	unsigned int index = (unsigned int)(t * (float)numSamples);
 	if (index >= mSampledFrames.size())
 	{
 		return -1;
