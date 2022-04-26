@@ -142,6 +142,12 @@
     <ClInclude Include="3rd\cgltf\cgltf.h" />
     <ClInclude Include="3rd\glad\glad.h" />
     <ClInclude Include="3rd\glad\khrplatform.h" />
+    <ClInclude Include="3rd\imgui\imconfig.h" />
+    <ClInclude Include="3rd\imgui\imgui.h" />
+    <ClInclude Include="3rd\imgui\imgui_internal.h" />
+    <ClInclude Include="3rd\imgui\imstb_rectpack.h" />
+    <ClInclude Include="3rd\imgui\imstb_textedit.h" />
+    <ClInclude Include="3rd\imgui\imstb_truetype.h" />
     <ClInclude Include="3rd\stb\stb_image.h" />
     <ClInclude Include="Animation\Clip.h" />
     <ClInclude Include="Animation\FastTrack.h" />
@@ -175,10 +181,16 @@
     <ClInclude Include="Samples\Chapter10Sample01.h" />
     <ClInclude Include="Samples\Chapter10Sample02.h" />
     <ClInclude Include="Samples\Chapter11Sample01.h" />
+    <ClInclude Include="Samples\ImGUISample.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\cgltf\cgltf.c" />
     <ClCompile Include="3rd\glad\glad.c" />
+    <ClCompile Include="3rd\imgui\imgui.cpp" />
+    <ClCompile Include="3rd\imgui\imgui_demo.cpp" />
+    <ClCompile Include="3rd\imgui\imgui_draw.cpp" />
+    <ClCompile Include="3rd\imgui\imgui_tables.cpp" />
+    <ClCompile Include="3rd\imgui\imgui_widgets.cpp" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
     <ClCompile Include="Animation\Clip.cpp" />
     <ClCompile Include="Animation\FastTrack.cpp" />
@@ -208,9 +220,11 @@
     <ClCompile Include="Samples\Chapter10Sample01.cpp" />
     <ClCompile Include="Samples\Chapter10Sample02.cpp" />
     <ClCompile Include="Samples\Chapter11Sample01.cpp" />
+    <ClCompile Include="Samples\ImGUISample.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\readme.md" />
     <None Include="Assets\dq.gltf" />
     <None Include="Assets\IKCourse.gltf" />
     <None Include="Assets\Woman.gltf" />

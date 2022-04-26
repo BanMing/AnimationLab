@@ -73,6 +73,12 @@
     <Filter Include="Header Files\Animation">
       <UniqueIdentifier>{630bbb63-2d45-4164-8ba1-7f8149ba55c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\3rd\imgui">
+      <UniqueIdentifier>{8f355405-a41e-43d8-8c3d-937e9343251f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd\imgui">
+      <UniqueIdentifier>{73ee3283-e07a-45fc-a464-bc003982a786}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\glad\glad.c">
@@ -169,6 +175,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Samples\Chapter11Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_demo.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_draw.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_tables.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Samples\ImGUISample.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
   </ItemGroup>
@@ -281,6 +305,27 @@
     <ClInclude Include="Samples\Chapter11Sample01.h">
       <Filter>Header Files\Samples</Filter>
     </ClInclude>
+    <ClInclude Include="3rd\imgui\imconfig.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imgui.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imgui_internal.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imstb_rectpack.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imstb_textedit.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imstb_truetype.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\ImGUISample.h">
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\static.vert">
@@ -304,6 +349,7 @@
     <None Include="Shaders\preskinned.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\dq.png">
