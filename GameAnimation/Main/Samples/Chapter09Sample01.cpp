@@ -52,6 +52,6 @@ void Chapter09Sample01::Shutdown()
 {
 	delete mRestPoseDraw;
 	delete mCurPoseDraw;
-	
+
 	mClips.clear();
 }

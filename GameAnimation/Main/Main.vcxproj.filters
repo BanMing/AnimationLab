@@ -168,6 +168,9 @@
     <ClCompile Include="WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter11Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="Animation\RearrangeBones.h">
       <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter11Sample01.h">
+      <Filter>Header Files\Samples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

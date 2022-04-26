@@ -2,7 +2,7 @@
 #define _H_CHAPTER10_SAMPLE01_
 
 #include "Application.h"
-#include "../Animation/Clip.h"
+#include "../Animation/TClip.h"
 #include "../OpenGL/DebugDraw.h"
 #include "../Animation/Skeleton.h"
 #include <vector>

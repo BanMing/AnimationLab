@@ -9,11 +9,11 @@ TClip<TRACK>::TClip()
 	mName = "No Name";
 	mStartTime = .0f;
 	mEndTime = .0f;
-	mLooping = false;
+	mLooping = true;
 }
 
 template<typename TRACK>
-float TClip<TRACK>::Smaple(Pose& outPose, float time)
+float TClip<TRACK>::Sample(Pose& outPose, float time)
 {
 	if (GetDuration() == 0.0f)
 	{

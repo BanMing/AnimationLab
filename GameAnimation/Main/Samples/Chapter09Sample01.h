@@ -3,7 +3,7 @@
 
 #include "Application.h"
 #include "../OpenGL/DebugDraw.h"
-#include "../Animation/Clip.h"
+#include "../Animation/TClip.h"
 #include <vector>
 
 class Chapter09Sample01 :public Application

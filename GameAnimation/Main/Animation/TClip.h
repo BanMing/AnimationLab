@@ -22,7 +22,7 @@ public:
 	unsigned int GetIdAtIndex(unsigned int index);
 	void SetIdAtIndex(unsigned int index, unsigned int id);
 	unsigned int Size();
-	float Smaple(Pose& outPose, float inTime);
+	float Sample(Pose& outPose, float inTime);
 	TRACK& operator[](unsigned int index);
 	void RecalculateDuration();
 	std::string& GetName();

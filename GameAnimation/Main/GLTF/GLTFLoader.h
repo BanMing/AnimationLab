@@ -3,7 +3,7 @@
 
 #include "../3rd/cgltf/cgltf.h"
 #include "../Animation/Pose.h"
-#include "../Animation/Clip.h"
+#include "../Animation/TClip.h"
 #include "../Animation/Skeleton.h"
 #include "../Animation/Mesh.h"
 #include <string>

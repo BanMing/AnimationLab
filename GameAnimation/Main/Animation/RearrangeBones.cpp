@@ -1,6 +1,7 @@
 #include "RearrangeBones.h"
 #include <vector>
 #include <list>
+
 BoneMap RearrangeSkeleton(Skeleton& skeleton)
 {
 	Pose& restPose = skeleton.GetRestPose();
@@ -69,6 +70,7 @@ BoneMap RearrangeSkeleton(Skeleton& skeleton)
 	skeleton.Set(newRestPose, newBindPose, newNames);
 	return mapBackward;
 }
+
 void RearrangeMesh(Mesh& mesh, BoneMap& boneMap)
 {
 	std::vector<ivec4>& influences = mesh.GetInfluences();
