@@ -11,7 +11,7 @@
 #include <iostream>
 #include "Samples/Application.h"
 
-#include "Samples/Chapter11Sample01.h"
+#include "Samples/ImGUISample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -43,7 +43,7 @@ GLuint gVertexArrayObject = 0;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-	gApplication = new Chapter11Sample01();
+	gApplication = new ImGUISample();
 	WNDCLASSEX wndclass;
 	wndclass.cbSize = sizeof(WNDCLASSEX);
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
@@ -141,6 +141,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
 	gApplication->Initialize();
+	gApplication->CreatGUI(hwnd);
 
 	DWORD lastTick = GetTickCount();
 	MSG msg;

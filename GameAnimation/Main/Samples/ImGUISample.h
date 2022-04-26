@@ -6,6 +6,7 @@
 class ImGUISample :public Application
 {
 public:
+	void CreatGUI(_In_ HWND hWnd);
 	void Initialize();
 	void Update(float inDeltaTime);
 	void Render(float inAspectRatio);

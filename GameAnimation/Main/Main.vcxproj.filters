@@ -195,6 +195,12 @@
     <ClCompile Include="Samples\ImGUISample.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_impl_win32.cpp">
+      <Filter>Source Files\3rd\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -325,6 +331,15 @@
     </ClInclude>
     <ClInclude Include="Samples\ImGUISample.h">
       <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imgui_impl_opengl3.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imgui_impl_win32.h">
+      <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\3rd\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
