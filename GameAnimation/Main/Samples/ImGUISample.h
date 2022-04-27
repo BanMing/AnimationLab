@@ -5,11 +5,12 @@
 
 class ImGUISample :public Application
 {
+protected:
+	bool mShowDemoWindow;
+	bool mShowAnotherWindow;
+	ImVec4 mClearColor;
 public:
-	void CreatGUI(_In_ HWND hWnd);
 	void Initialize();
-	void Update(float inDeltaTime);
-	void Render(float inAspectRatio);
-	void Shutdown();
+	void OnGUI();
 };
 #endif
