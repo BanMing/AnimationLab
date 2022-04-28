@@ -152,6 +152,7 @@
     <ClInclude Include="3rd\imgui\imstb_textedit.h" />
     <ClInclude Include="3rd\imgui\imstb_truetype.h" />
     <ClInclude Include="3rd\stb\stb_image.h" />
+    <ClInclude Include="Animation\Blending.h" />
     <ClInclude Include="Animation\Clip.h" />
     <ClInclude Include="Animation\FastTrack.h" />
     <ClInclude Include="Animation\Frame.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="3rd\imgui\imgui_tables.cpp" />
     <ClCompile Include="3rd\imgui\imgui_widgets.cpp" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
+    <ClCompile Include="Animation\Blending.cpp" />
     <ClCompile Include="Animation\Clip.cpp" />
     <ClCompile Include="Animation\FastTrack.cpp" />
     <ClCompile Include="Animation\Mesh.cpp" />
