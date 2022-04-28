@@ -201,6 +201,9 @@
     <ClCompile Include="3rd\imgui\imgui_impl_win32.cpp">
       <Filter>Source Files\3rd\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\Blending.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -340,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="3rd\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Blending.h">
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
