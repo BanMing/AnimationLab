@@ -10,7 +10,7 @@
 #include <windows.h>
 #include <iostream>
 #include "Samples/Application.h"
-
+#include "3rd/imgui/imgui_impl_win32.h"
 #include "Samples/ImGUISample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
@@ -61,8 +61,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	int clientWidth = 800;
-	int clientHeight = 600;
+	int clientWidth = 1280;
+	int clientHeight = 720;
 	RECT windowRect;
 	SetRect(&windowRect, (screenWidth / 2) - (clientWidth / 2), (screenHeight / 2) - (clientHeight / 2), (screenWidth / 2) + (clientWidth / 2), (screenHeight / 2) + (clientHeight / 2));
 
@@ -94,7 +94,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	WGL_CONTEXT_MINOR_VERSION_ARB, 3,
 	WGL_CONTEXT_FLAGS_ARB, 0,
 	WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-	0,};
+	0, };
 
 	HGLRC hglrc = wglCreateContextAttribsARB(hdc, 0, attribList);
 
@@ -183,6 +183,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 		}
 		if (gApplication != 0)
 		{
+			gApplication->OnGUI();
+		}
+		if (gApplication != 0)
+		{
 			SwapBuffers(hdc);
 			if (vsynch != 0)
 			{
@@ -200,13 +204,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	return (int)msg.wParam;
 }
 
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, iMsg, wParam, lParam))
+		return true;
+
 	switch (iMsg)
 	{
 		case WM_CLOSE:
 			if (gApplication != 0)
 			{
+				gApplication->ShutdownGUI();
 				gApplication->Shutdown();
 				gApplication = 0;
 				DestroyWindow(hwnd);
