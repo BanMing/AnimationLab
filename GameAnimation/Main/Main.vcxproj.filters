@@ -204,6 +204,9 @@
     <ClCompile Include="Animation\Blending.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\CrossFadeController.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -345,6 +348,12 @@
       <Filter>Header Files\3rd\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Animation\Blending.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\CrossFadeTarget.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\CrossFadeController.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
