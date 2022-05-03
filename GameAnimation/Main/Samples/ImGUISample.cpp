@@ -52,6 +52,13 @@ void ImGUISample::OnGUI()
 		ImGui::End();
 	}
 
+	{
+		ImGui::Begin("Basic Infomation");
+		ImGui::Text("Application average: %.3f ms", 1000.0f / ImGui::GetIO().Framerate);
+		ImGui::Text("Frame: %.1f FPS", ImGui::GetIO().Framerate);
+		ImGui::End();
+	}
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

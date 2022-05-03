@@ -1,5 +1,5 @@
 #include "Blending.h"
-#include "Transform.h"
+#include "../Math/Transform.h"
 
 bool IsInHierarchy(Pose& pose, unsigned int parent, unsigned int search)
 {
