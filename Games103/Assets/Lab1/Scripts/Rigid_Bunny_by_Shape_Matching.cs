@@ -55,7 +55,7 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         QQt_i = QQt.inverse;
 
         for (int i = 0; i < X.Length; i++)
-            V[i][0] = 4.0f;
+            V[i][0] = 10.0f;
 
         Update_Mesh(transform.position, Matrix4x4.Rotate(transform.rotation));
 
@@ -164,6 +164,7 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         }
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.vertices = X;
+        mesh.RecalculateNormals();
     }
 
     private void CalculateAStep1(int i)
@@ -227,7 +228,6 @@ public class Rigid_Bunny_by_Shape_Matching : MonoBehaviour
         for (int i = 0; i < V.Length; i++)
         {
             V[i] = (V[i] + dt * g) * linear_decay;
-            //V[i] *= linear_decay;
             X[i] += dt * V[i];
             c += X[i];
         }

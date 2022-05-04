@@ -54,8 +54,10 @@ void ImGUISample::OnGUI()
 
 	{
 		ImGui::Begin("Basic Infomation");
+		
 		ImGui::Text("Application average: %.3f ms", 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Text("Frame: %.1f FPS", ImGui::GetIO().Framerate);
+
 		ImGui::End();
 	}
 
