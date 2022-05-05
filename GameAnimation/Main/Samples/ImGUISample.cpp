@@ -1,6 +1,4 @@
 #include "ImGUISample.h"
-#include "../3rd/imgui/imgui_impl_win32.h"
-#include "../3rd/imgui/imgui_impl_opengl3.h"
 
 void ImGUISample::Initialize()
 {
@@ -10,11 +8,6 @@ void ImGUISample::Initialize()
 
 void ImGUISample::OnGUI()
 {
-	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if (mShowDemoWindow)
 		ImGui::ShowDemoWindow(&mShowDemoWindow);
@@ -51,16 +44,4 @@ void ImGUISample::OnGUI()
 			mShowAnotherWindow = false;
 		ImGui::End();
 	}
-
-	{
-		ImGui::Begin("Basic Infomation");
-		
-		ImGui::Text("Application average: %.3f ms", 1000.0f / ImGui::GetIO().Framerate);
-		ImGui::Text("Frame: %.1f FPS", ImGui::GetIO().Framerate);
-
-		ImGui::End();
-	}
-
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

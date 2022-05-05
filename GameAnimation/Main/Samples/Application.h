@@ -31,8 +31,7 @@ public:
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
 		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
-		//ImGui::StyleColorsClassic();
+		ImGui::StyleColorsLight();
 
 		// Setup Platform/Renderer backends
 		ImGui_ImplWin32_Init(hWnd);

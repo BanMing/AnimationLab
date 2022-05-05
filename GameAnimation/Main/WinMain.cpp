@@ -11,10 +11,12 @@
 #include <iostream>
 #include "Samples/Application.h"
 #include "3rd/imgui/imgui_impl_win32.h"
-#include "Samples/Chapter11Sample01.h"
+#include "3rd/imgui/imgui_impl_opengl3.h"
+#include "Samples/ImGUISample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+void DrawFrameInfo();
 
 #if _DEBUG
 #pragma comment( linker, "/subsystem:console" )
@@ -38,12 +40,42 @@ typedef const char* (WINAPI* PFNWGLGETEXTENSIONSSTRINGEXTPROC) (void);
 typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC) (int);
 typedef int (WINAPI* PFNWGLGETSWAPINTERVALEXTPROC) (void);
 
+// CPU Frame Timers
+struct FrameTimer
+{
+	// High level timers
+	double frameTime = 0.0;
+	float  deltaTime = 0.0f;
+	// CPU timers
+	double frameUpdate = 0.0;
+	double frameRender = 0.0;
+	double win32Events = 0.0;
+	double imguiLogic = 0.0;
+	double imguiRender = 0.0;
+	double swapBuffer = 0.0;
+	// GPU timers
+	double imguiGPU = 0.0;
+	double appGPU = 0.0;
+};
+
 Application* gApplication = 0;
 GLuint gVertexArrayObject = 0;
+GLuint gGpuApplicationStart = 0;
+GLuint gGpuApplicationStop = 0;
+GLuint gGpuImguiStart = 0;
+GLuint gGpuImguiStop = 0;
+bool gSlowFrame = false;
+FrameTimer gDisplay;
+
+const ImVec4 kRed = ImVec4(1, 0, 0, 1);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-	gApplication = new Chapter11Sample01();
+	gApplication = new ImGUISample();
+
+	#pragma region Windows Class
+
+
 	WNDCLASSEX wndclass;
 	wndclass.cbSize = sizeof(WNDCLASSEX);
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
@@ -83,7 +115,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int pixelFormat = ChoosePixelFormat(hdc, &pfd);
 	SetPixelFormat(hdc, pixelFormat, &pfd);
+	#pragma endregion
 
+	#pragma region OpenGL Create
 	HGLRC tempRC = wglCreateContext(hdc);
 	wglMakeCurrent(hdc, tempRC);
 	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
@@ -137,16 +171,65 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
 	glGenVertexArrays(1, &gVertexArrayObject);
 	glBindVertexArray(gVertexArrayObject);
+	#pragma endregion
 
 	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
 	gApplication->Initialize();
 	gApplication->CreatGUI(hwnd);
 
+	#pragma region Profiling Attributes
+	// CPU timings
+	LARGE_INTEGER timerFrequency;
+	LARGE_INTEGER timerStart;
+	LARGE_INTEGER timerStop;
+	LARGE_INTEGER frameStart;
+	LARGE_INTEGER frameStop;
+	LONGLONG timerDiff;
+
+	// GPU Timers
+	bool firstRenderSample = true;
+	GLint timerResultAvailable = 0;
+	GLuint64 gpuStartTime = 0;
+	GLuint64 gpuStopTime = 0;
+
+	glGenQueries(1, &gGpuApplicationStart);
+	glGenQueries(1, &gGpuApplicationStop);
+	glGenQueries(1, &gGpuImguiStart);
+	glGenQueries(1, &gGpuImguiStop);
+
+	FrameTimer accumulator;
+	memset(&gDisplay, 0, sizeof(FrameTimer));
+	memset(&accumulator, 0, sizeof(FrameTimer));
+	int frameCounter = 0;
+
+	bool enableFrameTiming = true;
+	if (!QueryPerformanceFrequency(&timerFrequency))
+	{
+		std::cout << "WinMain: QueryPerformanceFrequency failed\n";
+		enableFrameTiming = false;
+	}
+
+	// Get Display Frequency
+	HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY);
+	MONITORINFOEX monitorInfo;
+	monitorInfo.cbSize = sizeof(MONITORINFOEX);
+	GetMonitorInfo(hMonitor, &monitorInfo);
+	DEVMODE devMode;
+	devMode.dmSize = sizeof(DEVMODE);
+	devMode.dmDriverExtra = 0;
+	EnumDisplaySettings(monitorInfo.szDevice, ENUM_CURRENT_SETTINGS, &devMode);
+	int displayFrequency = (int)devMode.dmDisplayFrequency;
+	double frameBudget = (1000.0 / (double)displayFrequency);
+
+	#pragma endregion
+
 	DWORD lastTick = GetTickCount();
 	MSG msg;
 	while (true)
 	{
+		#pragma region Win32 events
+		QueryPerformanceCounter(&timerStart);
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
@@ -156,13 +239,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		QueryPerformanceCounter(&timerStop);
+		timerDiff = timerStop.QuadPart - timerStart.QuadPart;
+		accumulator.win32Events += (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		#pragma endregion
+
+		QueryPerformanceCounter(&frameStart);
+
+		#pragma region Update
+		QueryPerformanceCounter(&timerStart);
 		DWORD thisTick = GetTickCount();
 		float deltaTime = float(thisTick - lastTick) * 0.001f;
 		lastTick = thisTick;
+		accumulator.deltaTime += deltaTime;
 		if (gApplication != 0)
 		{
 			gApplication->Update(deltaTime);
 		}
+		QueryPerformanceCounter(&timerStop);
+		timerDiff = timerStop.QuadPart - timerStart.QuadPart;
+		accumulator.frameUpdate += (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		#pragma endregion
+
+		#pragma region Render
+		QueryPerformanceCounter(&timerStart);
 		if (gApplication != 0)
 		{
 			RECT clientRect;
@@ -178,14 +278,73 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 			glClearColor(0.5f, 0.6f, 0.7f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+			if (!firstRenderSample)
+			{
+				// Application GPU Timer
+				glGetQueryObjectiv(gGpuApplicationStop, GL_QUERY_RESULT, &timerResultAvailable);
+				while (!timerResultAvailable)
+				{
+					std::cout << "Waiting on app GPU timer!\n";
+					glGetQueryObjectiv(gGpuApplicationStop, GL_QUERY_RESULT, &timerResultAvailable);
+				}
+				glGetQueryObjectui64v(gGpuApplicationStart, GL_QUERY_RESULT, &gpuStartTime);
+				glGetQueryObjectui64v(gGpuApplicationStop, GL_QUERY_RESULT, &gpuStopTime);
+				accumulator.appGPU += (double)(gpuStopTime - gpuStartTime) / 1000000.0;
+			}
+
+			glQueryCounter(gGpuApplicationStart, GL_TIMESTAMP);
 			float aspect = (float)clientWidth / (float)clientHeight;
 			gApplication->Render(aspect);
+			glQueryCounter(gGpuApplicationStop, GL_TIMESTAMP);
 		}
+		QueryPerformanceCounter(&timerStop);
+		timerDiff = timerStop.QuadPart - timerStart.QuadPart;
+		accumulator.frameRender += (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		#pragma endregion
+
+		#pragma region IMGUI Update
+		QueryPerformanceCounter(&timerStart);
 		if (gApplication != 0)
 		{
+			DrawFrameInfo();
 			gApplication->OnGUI();
 		}
+		QueryPerformanceCounter(&timerStop);
+		timerDiff = timerStop.QuadPart - timerStart.QuadPart;
+		accumulator.imguiLogic += (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		#pragma endregion
+
+		#pragma region IMGUI Render
+		QueryPerformanceCounter(&timerStart);
 		if (gApplication != 0)
+		{
+			if (!firstRenderSample)
+			{
+				// Imgui GPU Timer
+				glGetQueryObjectiv(gGpuImguiStop, GL_QUERY_RESULT, &timerResultAvailable);
+				while (!timerResultAvailable)
+				{
+					std::cout << "Waiting on imgui GPU timer!\n";
+					glGetQueryObjectiv(gGpuImguiStop, GL_QUERY_RESULT, &timerResultAvailable);
+				}
+				glGetQueryObjectui64v(gGpuImguiStart, GL_QUERY_RESULT, &gpuStartTime);
+				glGetQueryObjectui64v(gGpuImguiStop, GL_QUERY_RESULT, &gpuStopTime);
+				accumulator.imguiGPU += (double)(gpuStopTime - gpuStartTime) / 1000000.0;
+			}
+
+			glQueryCounter(gGpuImguiStart, GL_TIMESTAMP);
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			glQueryCounter(gGpuImguiStop, GL_TIMESTAMP);
+		}
+		QueryPerformanceCounter(&timerStop);
+		timerDiff = timerStop.QuadPart - timerStart.QuadPart;
+		accumulator.imguiRender += (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		#pragma endregion
+
+		#pragma region Wait for GPU
+		QueryPerformanceCounter(&timerStart);
+		if (gVertexArrayObject != 0)
 		{
 			SwapBuffers(hdc);
 			if (vsynch != 0)
@@ -193,6 +352,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 				glFinish();
 			}
 		}
+		QueryPerformanceCounter(&timerStop);
+		timerDiff = timerStop.QuadPart - timerStart.QuadPart;
+		accumulator.swapBuffer += (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		#pragma endregion
+
+		QueryPerformanceCounter(&frameStop);
+		timerDiff = frameStop.QuadPart - frameStart.QuadPart;
+		double frameTime = (double)timerDiff * 1000.0 / (double)timerFrequency.QuadPart;
+		accumulator.frameTime += frameTime;
+
+		#pragma region Profiling house keeping
+		firstRenderSample = false;
+		if (++frameCounter >= 60)
+		{
+			frameCounter = 0;
+
+			gDisplay.win32Events = accumulator.win32Events / 60.0;
+			gDisplay.frameUpdate = accumulator.frameUpdate / 60.0;
+			gDisplay.frameRender = accumulator.frameRender / 60.0;
+			gDisplay.imguiLogic = accumulator.imguiLogic / 60.0;
+			gDisplay.imguiRender = accumulator.imguiRender / 60.0;
+			gDisplay.swapBuffer = accumulator.swapBuffer / 60.0;
+			gDisplay.frameTime = accumulator.frameTime / 60.0;
+			gDisplay.deltaTime = accumulator.deltaTime / 60.0f;
+			gDisplay.appGPU = accumulator.appGPU / 60.0;
+			gDisplay.imguiGPU = accumulator.imguiGPU / 60.0;
+
+			memset(&accumulator, 0, sizeof(FrameTimer));
+			gSlowFrame = gDisplay.frameTime >= frameBudget;
+		}
+		#pragma endregion 
 	} // End of game loop
 
 	if (gApplication != 0)
@@ -214,45 +404,91 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 	switch (iMsg)
 	{
-		case WM_CLOSE:
-			if (gApplication != 0)
-			{
-				gApplication->ShutdownGUI();
-				gApplication->Shutdown();
-				gApplication = 0;
-				DestroyWindow(hwnd);
-			}
-			else
-			{
-				std::cout << "Already shut down!\n";
-			}
-			break;
-		case WM_DESTROY:
-			if (gVertexArrayObject != 0)
-			{
-				HDC hdc = GetDC(hwnd);
-				HGLRC hglrc = wglGetCurrentContext();
+	case WM_CLOSE:
+		if (gApplication != 0)
+		{
+			gApplication->ShutdownGUI();
+			gApplication->Shutdown();
+			gApplication = 0;
+			DestroyWindow(hwnd);
+		}
+		else
+		{
+			std::cout << "Already shut down!\n";
+		}
+		break;
+	case WM_DESTROY:
+		if (gVertexArrayObject != 0)
+		{
+			HDC hdc = GetDC(hwnd);
+			HGLRC hglrc = wglGetCurrentContext();
 
-				glBindVertexArray(0);
-				glDeleteVertexArrays(1, &gVertexArrayObject);
-				gVertexArrayObject = 0;
+			glBindVertexArray(0);
+			glDeleteVertexArrays(1, &gVertexArrayObject);
+			gVertexArrayObject = 0;
 
-				wglMakeCurrent(NULL, NULL);
-				wglDeleteContext(hglrc);
-				ReleaseDC(hwnd, hdc);
+			wglMakeCurrent(NULL, NULL);
+			wglDeleteContext(hglrc);
+			ReleaseDC(hwnd, hdc);
 
-				PostQuitMessage(0);
-			}
-			else
-			{
-				std::cout << "Got multiple destroy messages\n";
-			}
-			break;
-		case WM_PAINT:
-		case WM_ERASEBKGND:
-			return 0;
+			PostQuitMessage(0);
+		}
+		else
+		{
+			std::cout << "Got multiple destroy messages\n";
+		}
+		break;
+	case WM_PAINT:
+	case WM_ERASEBKGND:
+		return 0;
 	}
 
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
+void DrawFrameInfo()
+{
+	// Start the Dear ImGui frame
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("Profiling Infomation");
+
+	ImGui::Text("Display Stats");
+	ImGui::Spacing();
+	ImGui::Text("Application average: %.3f ms", 1000.0f / ImGui::GetIO().Framerate);
+	ImGui::Text("Frame: %.1f FPS", ImGui::GetIO().Framerate);
+	ImGui::Separator();
+
+	ImGui::Text("High Level Timers");
+	ImGui::Spacing();
+	if (gSlowFrame)
+	{
+		ImGui::TextColored(kRed, "Frame Time: %0.5f ms\0", gDisplay.frameTime);
+		ImGui::TextColored(kRed, "Delta Time: %0.5f ms\0", gDisplay.deltaTime);
+	}
+	else
+	{
+		ImGui::Text("Frame Time: %0.5f ms\0", gDisplay.frameTime);
+		ImGui::Text("Delta Time: %0.5f ms\0", gDisplay.deltaTime);
+	}
+	ImGui::Separator();
+
+	ImGui::Text("GPU Timers");
+	ImGui::Spacing();
+	ImGui::Text("Game GPU: %0.5f ms\0", gDisplay.appGPU);
+	ImGui::Text("IMGUI GPU: %0.5f ms\0", gDisplay.imguiGPU);
+	ImGui::Separator();
+
+	ImGui::Text("CPU Timers");
+	ImGui::Spacing();
+	ImGui::Text("Win32 Events: %0.5f ms\0", gDisplay.win32Events);
+	ImGui::Text("Game Update: %0.5f ms\0", gDisplay.frameUpdate);
+	ImGui::Text("Game Render: %0.5f ms\0", gDisplay.frameRender);
+	ImGui::Text("IMGUI logic: %0.5f ms\0", gDisplay.imguiLogic);
+	ImGui::Text("IMGUI render: %0.5f ms\0", gDisplay.imguiRender);
+	ImGui::Text("Swap Buffers: %0.5f ms\0", gDisplay.swapBuffer);
+
+	ImGui::End();
+}
