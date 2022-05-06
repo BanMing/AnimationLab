@@ -65,6 +65,8 @@ GLuint gGpuApplicationStop = 0;
 GLuint gGpuImguiStart = 0;
 GLuint gGpuImguiStop = 0;
 bool gSlowFrame = false;
+float gScaleFactor = 1.0f;
+float gInvScaleFactor = 1.0f;
 FrameTimer gDisplay;
 
 const ImVec4 kRed = ImVec4(1, 0, 0, 1);
@@ -93,8 +95,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	int clientWidth = 1280;
-	int clientHeight = 720;
+	int clientWidth = 800;
+	int clientHeight = 600;
 	RECT windowRect;
 	SetRect(&windowRect, (screenWidth / 2) - (clientWidth / 2), (screenHeight / 2) - (clientHeight / 2), (screenWidth / 2) + (clientWidth / 2), (screenHeight / 2) + (clientHeight / 2));
 
@@ -272,11 +274,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 			glViewport(0, 0, clientWidth, clientHeight);
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_CULL_FACE);
-			glPointSize(5.0f);
+			glPointSize(5.0f * gScaleFactor);
+			glLineWidth(1.5f * gScaleFactor);
 			glBindVertexArray(gVertexArrayObject);
 
 			glClearColor(0.5f, 0.6f, 0.7f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			glBindVertexArray(gVertexArrayObject);
 
 			if (!firstRenderSample)
 			{

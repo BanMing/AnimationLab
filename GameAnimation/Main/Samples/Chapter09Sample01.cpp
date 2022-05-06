@@ -47,11 +47,11 @@ void Chapter09Sample01::Render(float inAspectRatio)
 	mCurPoseDraw->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), mvp);
 }
 
-
 void Chapter09Sample01::Shutdown()
 {
 	delete mRestPoseDraw;
 	delete mCurPoseDraw;
 
 	mClips.clear();
+	mClips.shrink_to_fit();
 }

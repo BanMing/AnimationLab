@@ -59,4 +59,5 @@ void Chapter10Sample01::Shutdown()
 	
 	mPlaybackTime = 0;
 	mClips.clear();
+	mClips.shrink_to_fit();
 }

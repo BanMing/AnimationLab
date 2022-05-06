@@ -86,6 +86,7 @@ mat4 transformToMat4(const Transform& t)
 		z.x, z.y, z.z, 0,   // Z basis (& scale)
 		p.x, p.y, p.z, 1);  // Position
 }
+
 // M = SRT
 Transform mat4ToTransform(const mat4& m)
 {

@@ -148,7 +148,10 @@ void Chapter08Sample01::Render(float inAspectRatio)
 void Chapter08Sample01::Shutdown()
 {
 	mScalarTracks.clear();
+	mScalarTracks.shrink_to_fit();
+
 	mScalarTracksLooping.clear();
+	mScalarTracksLooping.shrink_to_fit();
 
 	delete mScalarTrackLines;
 	delete mHandlePoints;
@@ -234,7 +237,6 @@ ScalarTrack Chapter08Sample01::MakeScalarTrack(Interpolation interp, int numFram
 
 	return result;
 }
-
 
 VectorTrack Chapter08Sample01::MakeVectorTrack(Interpolation interp, int numFrames, ...)
 {

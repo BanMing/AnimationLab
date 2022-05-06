@@ -19,13 +19,13 @@ out vec2 uv;
 
 void main()
 {
-	mat4 skin = (pose[joints.x] * invBindPose[joints.x]) * weights.x;
-	skin += (pose[joints.y] * invBindPose[joints.y]) * weights.y;
+	mat4 skin = (pose[joints.x] *  invBindPose[joints.x]) * weights.x;
+	skin += (pose[joints.y] *  invBindPose[joints.y]) * weights.y;
 	skin += (pose[joints.z] * invBindPose[joints.z]) * weights.z;
 	skin += (pose[joints.w] * invBindPose[joints.w]) * weights.w;
 
 	gl_Position = projection * view * model * skin * vec4(position, 1.0);
-
+    
 	fragPos = vec3(model * skin * vec4(position, 1.0));
 	norm = vec3(model * skin * vec4(normal, 0.0f));
 	uv = texCoord;

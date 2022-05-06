@@ -1,141 +1,177 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "Chapter10Sample02.h"
 #include "../GLTF/GLTFLoader.h"
 #include "../OpenGL/Draw.h"
 #include "../OpenGL/Uniform.h"
+#include "../3rd/glad/glad.h"
 
 void Chapter10Sample02::Initialize()
 {
 	cgltf_data* data = LoadGLTFFile("Assets/Woman.gltf");
 	mSkeleton = LoadSkeleton(data);
-	std::vector<Mesh> meshes = LoadMeshes(data);
+	mMeshes = LoadMeshes(data);
 	mClips = LoadAnimationClips(data);
 	FreeGLTFFile(data);
 
-	mCPUSkinAnimation.mMeshes = meshes;
-	mCPUSkinAnimation.mCurrentPose = mSkeleton.GetRestPose();
+	mIsShowMesh = true;
+	mAnimationIns.mCurrentPose = mSkeleton.GetRestPose();
 
-	mGPUSkinAnimation.mMeshes = meshes;
-	mGPUSkinAnimation.mCurrentPose = mSkeleton.GetRestPose();
-
-	mClipsNum = mClips.size();
-	for (unsigned int i = 0; i < mClipsNum; i++)
+	for (unsigned int i = 0; i < mClips.size(); i++)
 	{
 		std::string& clipName = mClips[i].GetName();
-		if (clipName == "Punch")
-		{
-			mCPUSkinAnimation.mCurClipIndex = i;
-		}
-
-		if (clipName == "Punch")
-		{
-			mGPUSkinAnimation.mCurClipIndex = i;
-		}
-
 		mClipsNames += clipName + '\0';
 	}
-	test = const_cast<char*>(mClipsNames.c_str());
+
 	mDiffuseTexture = new Texture("Assets/Woman.png");
-
 	mStaticShader = new Shader("Shaders/static.vert", "Shaders/lit.frag");
-	mCPUSkinAnimation.mTransform.position = vec3(-2, 0, 0);
-
 	mDynamicShader = new Shader("Shaders/skinned.vert", "Shaders/lit.frag");
-	mGPUSkinAnimation.mTransform.position = vec3(2, 0, 0);
+
+	mAnimationIns.mCurrentSkinType = SkinType::GPU;
+
+	mRestPoseDraw = new DebugDraw();
+	mRestPoseDraw->FromPose(mSkeleton.GetRestPose());
+	mRestPoseDraw->UpdateOpenGLBuffers();
+
+	mBindPoseDraw = new DebugDraw();
+	mBindPoseDraw->FromPose(mSkeleton.GetBindPose());
+	mBindPoseDraw->UpdateOpenGLBuffers();
+
+	mCurPoseDraw = new DebugDraw();
+	mCurPoseDraw->FromPose(mSkeleton.GetRestPose());
+	mCurPoseDraw->UpdateOpenGLBuffers();
+
+	mInvBindPose = mSkeleton.GetInvBindPose();
 }
 
 void Chapter10Sample02::Update(float inDeltaTime)
 {
-	mCPUSkinAnimation.mCurPlayTime = mClips[mCPUSkinAnimation.mCurClipIndex].Sample(mCPUSkinAnimation.mCurrentPose,
-																					inDeltaTime + mCPUSkinAnimation.mCurPlayTime);
-	for (size_t i = 0; i < mCPUSkinAnimation.mMeshes.size(); i++)
+	mAnimationIns.mCurPlayTime = mClips[mAnimationIns.mCurClipIndex].Sample(mAnimationIns.mCurrentPose,
+																			inDeltaTime + mAnimationIns.mCurPlayTime);
+	if (mIsShowMesh)
 	{
-		mCPUSkinAnimation.mMeshes[i].CPUSkin(mSkeleton, mCPUSkinAnimation.mCurrentPose);
+		if (mAnimationIns.mCurrentSkinType == SkinType::CPU)
+		{
+			for (size_t i = 0; i < mMeshes.size(); i++)
+			{
+				mMeshes[i].CPUSkin(mSkeleton, mAnimationIns.mCurrentPose);
+			}
+		}
+		else
+		{
+			mAnimationIns.mCurrentPose.GetMatrixPalette(mAnimationIns.mPosePalette);
+		}
 	}
 
-	mGPUSkinAnimation.mCurPlayTime = mClips[mGPUSkinAnimation.mCurClipIndex].Sample(mGPUSkinAnimation.mCurrentPose,
-																					inDeltaTime + mGPUSkinAnimation.mCurPlayTime);
-
-	mGPUSkinAnimation.mCurrentPose.GetMatrixPalette(mGPUSkinAnimation.mPosePalette);
+	if (mAnimationIns.mIsShowCurPose)
+	{
+		mCurPoseDraw->FromPose(mAnimationIns.mCurrentPose);
+	}
 }
 
 void Chapter10Sample02::Render(float inAspectRatio)
 {
 	mat4 projection = perspective(60.0f, inAspectRatio, 0.01f, 1000.0f);
 	mat4 view = lookAt(vec3(0, 5, 7), vec3(0, 3, 0), vec3(0, 1, 0));
-	mat4 model;
+	mat4 mvp = projection * view; // No model
 
-	// CPU Skinned Mesh
-	model = transformToMat4(mCPUSkinAnimation.mTransform);
-	mStaticShader->Bind();
-	Uniform<mat4>::Set(mStaticShader->GetUniform("model"), model);
-	Uniform<mat4>::Set(mStaticShader->GetUniform("view"), view);
-	Uniform<mat4>::Set(mStaticShader->GetUniform("projection"), projection);
-	Uniform<vec3>::Set(mStaticShader->GetUniform("light"), vec3(1, 1, 1));
-
-	mDiffuseTexture->Set(mStaticShader->GetUniform("tex0"), 0);
-	for (size_t i = 0; i < mCPUSkinAnimation.mMeshes.size(); i++)
+	if (mIsShowMesh)
 	{
-		mCPUSkinAnimation.mMeshes[i].Bind(mStaticShader->GetAttribute("position"),
-										  mStaticShader->GetAttribute("normal"),
-										  mStaticShader->GetAttribute("texCoord"), -1, -1);
-		mCPUSkinAnimation.mMeshes[i].Draw();
-		mCPUSkinAnimation.mMeshes[i].UnBind(mStaticShader->GetAttribute("position"),
-											mStaticShader->GetAttribute("normal"),
-											mStaticShader->GetAttribute("texCoord"), -1, -1);
+		Shader* shader = mStaticShader;
+		if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
+		{
+			shader = mDynamicShader;
+		}
+
+		shader->Bind();
+		Uniform<mat4>::Set(shader->GetUniform("model"), mat4());
+		Uniform<mat4>::Set(shader->GetUniform("view"), view);
+		Uniform<mat4>::Set(shader->GetUniform("projection"), projection);
+		Uniform<vec3>::Set(shader->GetUniform("light"), vec3(1, 1, 1));
+
+		if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
+		{
+			Uniform<mat4>::Set(shader->GetUniform("pose"), mAnimationIns.mPosePalette);
+			Uniform<mat4>::Set(shader->GetUniform("invBindPose"), mInvBindPose);
+		}
+
+		mDiffuseTexture->Set(shader->GetUniform("tex0"), 0);
+		for (size_t i = 0; i < mMeshes.size(); i++)
+		{
+			int weights = -1;
+			int influences = -1;
+			if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
+			{
+				weights = shader->GetAttribute("weights");
+				influences = shader->GetAttribute("joints");
+			}
+
+			mMeshes[i].Bind(shader->GetAttribute("position"),
+							shader->GetAttribute("normal"),
+							shader->GetAttribute("texCoord"), weights, influences);
+			mMeshes[i].Draw();
+			mMeshes[i].UnBind(shader->GetAttribute("position"),
+							  shader->GetAttribute("normal"),
+							  shader->GetAttribute("texCoord"), weights, influences);
+		}
+		mDiffuseTexture->UnSet(0);
+		shader->UnBind();
 	}
-	mDiffuseTexture->UnSet(0);
-	mStaticShader->UnBind();
 
-	// GPU Skinned Mesh
-	model = transformToMat4(mGPUSkinAnimation.mTransform);
-	mDynamicShader->Bind();
-	Uniform<mat4>::Set(mDynamicShader->GetUniform("model"), model);
-	Uniform<mat4>::Set(mDynamicShader->GetUniform("view"), view);
-	Uniform<mat4>::Set(mDynamicShader->GetUniform("projection"), projection);
-	Uniform<vec3>::Set(mDynamicShader->GetUniform("light"), vec3(1, 1, 1));
+	glDisable(GL_DEPTH_TEST);
 
-	Uniform<mat4>::Set(mDynamicShader->GetUniform("pose"), mGPUSkinAnimation.mPosePalette);
-	Uniform<mat4>::Set(mDynamicShader->GetUniform("invBindPose"), mSkeleton.GetInvBindPose());
-
-	mDiffuseTexture->Set(mDynamicShader->GetUniform("tex0"), 0);
-	for (size_t i = 0; i < mGPUSkinAnimation.mMeshes.size(); i++)
+	if (mAnimationIns.mIsShowBindPose)
 	{
-		mGPUSkinAnimation.mMeshes[i].Bind(mDynamicShader->GetAttribute("position"),
-										  mDynamicShader->GetAttribute("normal"),
-										  mDynamicShader->GetAttribute("texCoord"),
-										  mDynamicShader->GetAttribute("weights"),
-										  mDynamicShader->GetAttribute("joints"));
-		mGPUSkinAnimation.mMeshes[i].Draw();
-		mGPUSkinAnimation.mMeshes[i].UnBind(mDynamicShader->GetAttribute("position"),
-											mDynamicShader->GetAttribute("normal"),
-											mDynamicShader->GetAttribute("texCoord"),
-											mDynamicShader->GetAttribute("weights"),
-											mDynamicShader->GetAttribute("joints"));
+		mBindPoseDraw->Draw(DebugDrawMode::Lines, vec3(0, 1, 0), mvp);
 	}
-	mDiffuseTexture->UnSet(0);
-	mDynamicShader->UnBind();
 
+	if (mAnimationIns.mIsShowCurPose)
+	{
+		mCurPoseDraw->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), mvp);
+	}
+
+	if (mAnimationIns.mIsShowRestPose)
+	{
+		mRestPoseDraw->Draw(DebugDrawMode::Lines, vec3(1, 0, 0), mvp);
+	}
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Chapter10Sample02::OnGUI()
 {
-	bool showDemoWindow = true;
-	ImGui::ShowDemoWindow(&showDemoWindow);
 	ImGui::Begin("Skin Animation");
-	ImGui::Combo("Animation Clip", &mCPUSkinAnimation.mCurClipIndex, test);
+	ImGui::Combo("Clip", &mAnimationIns.mCurClipIndex, mClipsNames.c_str());
+
+	const char* kSkinTypes[] = { "CPU","GPU" };
+	ImGui::Combo("Skin", &mAnimationIns.mCurrentSkinType, kSkinTypes, IM_ARRAYSIZE(kSkinTypes));
+
+	const float progress = mAnimationIns.mCurPlayTime / mClips[mAnimationIns.mCurClipIndex].GetDuration();
+	ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f), "");
+	ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+	ImGui::Text("Progress");
+
+	ImGui::Checkbox("Show Mesh", &mIsShowMesh);
+	ImGui::Checkbox("Show Current Pose", &mAnimationIns.mIsShowCurPose);
+	ImGui::Checkbox("Show Rest Pose", &mAnimationIns.mIsShowRestPose);
+	ImGui::Checkbox("Show Bind Pose", &mAnimationIns.mIsShowBindPose);
+
 	ImGui::End();
 }
 
 void Chapter10Sample02::Shutdown()
 {
 	mClips.clear();
-	mCPUSkinAnimation.mMeshes.clear();
-	mGPUSkinAnimation.mMeshes.clear();
+	mClips.shrink_to_fit();
+
+	mClipsNames.clear();
+	mClipsNames.shrink_to_fit();
+
+	mMeshes.clear();
+	mMeshes.shrink_to_fit();
 
 	delete mDiffuseTexture;
 	delete mStaticShader;
 	delete mDynamicShader;
-	
-	mClipsNames.clear();
+
+	delete mRestPoseDraw;
+	delete mBindPoseDraw;
+	delete mCurPoseDraw;
 }
