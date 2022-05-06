@@ -29,12 +29,12 @@ void Chapter11Sample01::Initialize()
 		mClips[i] = OptimizeClip(clips[i]);
 		RearrangeFastclip(mClips[i], boneMap);
 
-		if (mClips[i].GetName() == "Running")
+		if (mClips[i].GetName() == "Punch")
 		{
 			mGPUAnimation.mCurAniamtionIndex = i;
 		}
 
-		if (mClips[i].GetName() == "Running")
+		if (mClips[i].GetName() == "Punch")
 		{
 			mCPUAnimation.mCurAniamtionIndex = i;
 		}

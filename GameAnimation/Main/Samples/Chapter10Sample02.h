@@ -16,7 +16,7 @@ struct AnimationInstance
 	Transform mTransform;
 	std::vector<Mesh> mMeshes;
 	float mCurPlayTime;
-	unsigned int mCurClipIndex;
+	int mCurClipIndex;
 	std::vector <mat4> mPosePalette;
 };
 
@@ -30,11 +30,14 @@ protected:
 	Shader* mDynamicShader;
 	Skeleton mSkeleton;
 	std::vector<Clip> mClips;
-
+	unsigned int mClipsNum;
+	std::string mClipsNames;
+	char* test;
 public:
 	void Initialize();
 	void Update(float inDeltaTime);
 	void Render(float inAspectRatio);
+	void OnGUI();
 	void Shutdown();
 };
 

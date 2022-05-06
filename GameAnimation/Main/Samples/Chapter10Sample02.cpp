@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Chapter10Sample02.h"
 #include "../GLTF/GLTFLoader.h"
 #include "../OpenGL/Draw.h"
@@ -17,19 +18,23 @@ void Chapter10Sample02::Initialize()
 	mGPUSkinAnimation.mMeshes = meshes;
 	mGPUSkinAnimation.mCurrentPose = mSkeleton.GetRestPose();
 
-	for (unsigned int i = 0; i < mClips.size(); i++)
+	mClipsNum = mClips.size();
+	for (unsigned int i = 0; i < mClipsNum; i++)
 	{
-		if (mClips[i].GetName() == "Punch")
+		std::string& clipName = mClips[i].GetName();
+		if (clipName == "Punch")
 		{
 			mCPUSkinAnimation.mCurClipIndex = i;
 		}
-		
-		if (mClips[i].GetName() == "Punch")
+
+		if (clipName == "Punch")
 		{
 			mGPUSkinAnimation.mCurClipIndex = i;
 		}
-	}
 
+		mClipsNames += clipName + '\0';
+	}
+	test = const_cast<char*>(mClipsNames.c_str());
 	mDiffuseTexture = new Texture("Assets/Woman.png");
 
 	mStaticShader = new Shader("Shaders/static.vert", "Shaders/lit.frag");
@@ -113,6 +118,15 @@ void Chapter10Sample02::Render(float inAspectRatio)
 
 }
 
+void Chapter10Sample02::OnGUI()
+{
+	bool showDemoWindow = true;
+	ImGui::ShowDemoWindow(&showDemoWindow);
+	ImGui::Begin("Skin Animation");
+	ImGui::Combo("Animation Clip", &mCPUSkinAnimation.mCurClipIndex, test);
+	ImGui::End();
+}
+
 void Chapter10Sample02::Shutdown()
 {
 	mClips.clear();
@@ -122,4 +136,6 @@ void Chapter10Sample02::Shutdown()
 	delete mDiffuseTexture;
 	delete mStaticShader;
 	delete mDynamicShader;
+	
+	mClipsNames.clear();
 }
