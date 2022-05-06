@@ -39,7 +39,6 @@ void Chapter10Sample02::Initialize()
 	mCurPoseDraw->FromPose(mSkeleton.GetRestPose());
 	mCurPoseDraw->UpdateOpenGLBuffers();
 
-	mInvBindPose = mSkeleton.GetInvBindPose();
 }
 
 void Chapter10Sample02::Update(float inDeltaTime)
@@ -90,7 +89,7 @@ void Chapter10Sample02::Render(float inAspectRatio)
 		if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
 		{
 			Uniform<mat4>::Set(shader->GetUniform("pose"), mAnimationIns.mPosePalette);
-			Uniform<mat4>::Set(shader->GetUniform("invBindPose"), mInvBindPose);
+			Uniform<mat4>::Set(shader->GetUniform("invBindPose"), mSkeleton.GetInvBindPose());
 		}
 
 		mDiffuseTexture->Set(shader->GetUniform("tex0"), 0);
