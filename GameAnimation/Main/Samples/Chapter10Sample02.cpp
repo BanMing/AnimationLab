@@ -19,6 +19,7 @@ void Chapter10Sample02::Initialize()
 	{
 		std::string& clipName = mClips[i].GetName();
 		mClipsNames += clipName + '\0';
+		mClips[i].SetLooping(false);
 	}
 
 	mDiffuseTexture = new Texture("Assets/Woman.png");
@@ -93,7 +94,7 @@ void Chapter10Sample02::Render(float inAspectRatio)
 		}
 
 		mDiffuseTexture->Set(shader->GetUniform("tex0"), 0);
-		for (size_t i = 0; i < mMeshes.size(); i++)
+		for (unsigned int i = 0, size = (unsigned int)mMeshes.size(); i < size; ++i)
 		{
 			int weights = -1;
 			int influences = -1;
@@ -103,13 +104,9 @@ void Chapter10Sample02::Render(float inAspectRatio)
 				influences = shader->GetAttribute("joints");
 			}
 
-			mMeshes[i].Bind(shader->GetAttribute("position"),
-							shader->GetAttribute("normal"),
-							shader->GetAttribute("texCoord"), weights, influences);
+			mMeshes[i].Bind(shader->GetAttribute("position"), shader->GetAttribute("normal"), shader->GetAttribute("texCoord"), weights, influences);
 			mMeshes[i].Draw();
-			mMeshes[i].UnBind(shader->GetAttribute("position"),
-							  shader->GetAttribute("normal"),
-							  shader->GetAttribute("texCoord"), weights, influences);
+			mMeshes[i].UnBind(shader->GetAttribute("position"), shader->GetAttribute("normal"), shader->GetAttribute("texCoord"), weights, influences);
 		}
 		mDiffuseTexture->UnSet(0);
 		shader->UnBind();

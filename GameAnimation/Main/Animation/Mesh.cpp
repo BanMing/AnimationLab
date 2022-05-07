@@ -139,7 +139,7 @@ void Mesh::Draw()
 	}
 	else
 	{
-		::Draw(mPosition.size(), DrawMode::Triangles);
+		::Draw((unsigned int)mPosition.size(), DrawMode::Triangles);
 	}
 }
 
@@ -151,7 +151,7 @@ void Mesh::DrawInstanced(unsigned int numInstances)
 	}
 	else
 	{
-		::DrawInstanced(mPosition.size(), DrawMode::Triangles, numInstances);
+		::DrawInstanced((unsigned int)mPosition.size(), DrawMode::Triangles, numInstances);
 	}
 }
 
