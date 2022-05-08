@@ -15,7 +15,10 @@ Pose LoadRestPose(cgltf_data* data);
 
 // useful for debugging
 std::vector<std::string> LoadJointNames(cgltf_data* data);
+
 std::vector<Clip> LoadAnimationClips(cgltf_data* data);
+std::vector<FastClip> LoadFastClips(cgltf_data* data);
+
 Pose LoadBindPose(cgltf_data* data);
 Skeleton LoadSkeleton(cgltf_data* data);
 std::vector<Mesh> LoadMeshes(cgltf_data* data);

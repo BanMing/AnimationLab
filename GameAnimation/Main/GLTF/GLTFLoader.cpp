@@ -313,6 +313,21 @@ std::vector<Clip> LoadAnimationClips(cgltf_data* data)
 	return result;
 }
 
+std::vector<FastClip> LoadFastClips(cgltf_data* data)
+{
+	std::vector<FastClip> result;
+
+	std::vector<Clip> clips = LoadAnimationClips(data);
+	result.resize(clips.size());
+
+	for (size_t i = 0; i < clips.size(); i++)
+	{
+		result[i] = OptimizeClip(clips[i]);
+	}
+
+	return result;
+}
+
 Pose LoadBindPose(cgltf_data* data)
 {
 	Pose restPose = LoadRestPose(data);

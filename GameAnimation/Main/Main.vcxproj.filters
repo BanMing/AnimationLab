@@ -207,6 +207,9 @@
     <ClCompile Include="3rd\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files\3rd\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter12Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="3rd\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter12Sample01.h">
+      <Filter>Header Files\Samples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

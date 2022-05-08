@@ -19,14 +19,13 @@ void Chapter10Sample02::Initialize()
 	{
 		std::string& clipName = mClips[i].GetName();
 		mClipsNames += clipName + '\0';
-		mClips[i].SetLooping(false);
 	}
 
 	mDiffuseTexture = new Texture("Assets/Woman.png");
 	mStaticShader = new Shader("Shaders/static.vert", "Shaders/lit.frag");
 	mDynamicShader = new Shader("Shaders/skinned.vert", "Shaders/lit.frag");
 
-	mAnimationIns.mCurrentSkinType = SkinType::GPU;
+	mAnimationIns.mCurrentSkinType = SkinningType::GPU;
 
 	mRestPoseDraw = new DebugDraw();
 	mRestPoseDraw->FromPose(mSkeleton.GetRestPose());
@@ -48,7 +47,7 @@ void Chapter10Sample02::Update(float inDeltaTime)
 																			inDeltaTime + mAnimationIns.mCurPlayTime);
 	if (mIsShowMesh)
 	{
-		if (mAnimationIns.mCurrentSkinType == SkinType::CPU)
+		if (mAnimationIns.mCurrentSkinType == SkinningType::CPU)
 		{
 			for (size_t i = 0; i < mMeshes.size(); i++)
 			{
@@ -64,6 +63,7 @@ void Chapter10Sample02::Update(float inDeltaTime)
 	if (mAnimationIns.mIsShowCurPose)
 	{
 		mCurPoseDraw->FromPose(mAnimationIns.mCurrentPose);
+		mCurPoseDraw->UpdateOpenGLBuffers();
 	}
 }
 
@@ -76,7 +76,7 @@ void Chapter10Sample02::Render(float inAspectRatio)
 	if (mIsShowMesh)
 	{
 		Shader* shader = mStaticShader;
-		if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
+		if (mAnimationIns.mCurrentSkinType == SkinningType::GPU)
 		{
 			shader = mDynamicShader;
 		}
@@ -87,7 +87,7 @@ void Chapter10Sample02::Render(float inAspectRatio)
 		Uniform<mat4>::Set(shader->GetUniform("projection"), projection);
 		Uniform<vec3>::Set(shader->GetUniform("light"), vec3(1, 1, 1));
 
-		if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
+		if (mAnimationIns.mCurrentSkinType == SkinningType::GPU)
 		{
 			Uniform<mat4>::Set(shader->GetUniform("pose"), mAnimationIns.mPosePalette);
 			Uniform<mat4>::Set(shader->GetUniform("invBindPose"), mSkeleton.GetInvBindPose());
@@ -98,7 +98,7 @@ void Chapter10Sample02::Render(float inAspectRatio)
 		{
 			int weights = -1;
 			int influences = -1;
-			if (mAnimationIns.mCurrentSkinType == SkinType::GPU)
+			if (mAnimationIns.mCurrentSkinType == SkinningType::GPU)
 			{
 				weights = shader->GetAttribute("weights");
 				influences = shader->GetAttribute("joints");
@@ -134,10 +134,22 @@ void Chapter10Sample02::Render(float inAspectRatio)
 void Chapter10Sample02::OnGUI()
 {
 	ImGui::Begin("Skin Animation");
-	ImGui::Combo("Clip", &mAnimationIns.mCurClipIndex, mClipsNames.c_str());
+	bool isChanged = ImGui::Combo("Clip", &mAnimationIns.mCurClipIndex, mClipsNames.c_str());
+	if (isChanged)
+	{
+		mAnimationIns.mCurrentPose = mSkeleton.GetRestPose();
+	}
 
 	const char* kSkinTypes[] = { "CPU","GPU" };
-	ImGui::Combo("Skin", &mAnimationIns.mCurrentSkinType, kSkinTypes, IM_ARRAYSIZE(kSkinTypes));
+	isChanged = ImGui::Combo("Skin", &mAnimationIns.mCurrentSkinType, kSkinTypes, IM_ARRAYSIZE(kSkinTypes));
+	if (isChanged)
+	{
+		// Need to reset so positions is in the buffers
+		for (unsigned int i = 0, size = (unsigned int)mMeshes.size(); i < size; ++i)
+		{
+			mMeshes[i].UpdateOpenGLBuffers();
+		}
+	}
 
 	const float progress = mAnimationIns.mCurPlayTime / mClips[mAnimationIns.mCurClipIndex].GetDuration();
 	ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f), "");

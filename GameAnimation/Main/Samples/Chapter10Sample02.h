@@ -11,12 +11,6 @@
 #include "../OpenGL/Texture.h"
 #include <vector>
 
-enum SkinType
-{
-	CPU,
-	GPU
-};
-
 struct AnimationInstance
 {
 	Pose mCurrentPose;

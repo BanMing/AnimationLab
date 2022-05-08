@@ -11,6 +11,12 @@
 #include "Pose.h"
 #include <vector>
 
+enum SkinningType
+{
+	CPU,
+	GPU
+};
+
 // Maintain a copy of the mesh data on the CPU as well as on the GPU
 class Mesh
 {
