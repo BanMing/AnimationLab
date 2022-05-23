@@ -16,7 +16,7 @@
 struct AnimationInstance
 {
 	int mCurClipIndex;
-	int mPlayTime;
+	float mPlayTime;
 	Pose mCurPose;
 	bool mIsShowPose;
 	DebugDraw* mPoseDraw;
@@ -51,6 +51,7 @@ protected:
 	bool mIsShowBlendPose;
 
 	std::string mClipNames;
+	std::string mJointNames;
 
 public:
 	void Initialize() override;

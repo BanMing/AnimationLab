@@ -28,30 +28,34 @@ void Chapter12Sample01::Initialize()
 	mBlendPose = mSkeleton.GetRestPose();
 
 	mDiffuseTexture = new Texture("Assets/Woman.png");
-	mStaticShader = new Shader("Shader/static.vert", "Shader/lit.frag");
-	mDynamicShader = new Shader("Shader/skinned.vert", "Shader/lit.frag");
+
+	mStaticShader = new Shader("Shaders/static.vert", "Shaders/lit.frag");
+	mDynamicShader = new Shader("Shaders/preskinned.vert", "Shaders/lit.frag");
 
 	mRestPoseDraw = new DebugDraw();
 	mRestPoseDraw->FromPose(mSkeleton.GetRestPose());
 	mRestPoseDraw->UpdateOpenGLBuffers();
 
 	mBindPoseDraw = new DebugDraw();
-	mBindPoseDraw->FromPose(mSkeleton.GetRestPose());
+	mBindPoseDraw->FromPose(mSkeleton.GetBindPose());
 	mBindPoseDraw->UpdateOpenGLBuffers();
 
 	mBlendPoseDraw = new DebugDraw();
 	mBlendPoseDraw->FromPose(mSkeleton.GetRestPose());
 	mBlendPoseDraw->UpdateOpenGLBuffers();
 
-	mBindPoseDraw = new DebugDraw();
-	mBindPoseDraw->FromPose(mSkeleton.GetRestPose());
-	mBindPoseDraw->UpdateOpenGLBuffers();
-
 	mIsShowMesh = true;
+	mBlendRoot = 0;
 
 	for (size_t i = 0; i < mClips.size(); i++)
 	{
 		mClipNames += mClips[i].GetName() + '\0';
+	}
+
+	//mJointNames = "Root\0";
+	for (size_t i = 0; i < mSkeleton.GetJointNames().size(); i++)
+	{
+		mJointNames += mSkeleton.GetJointName(i) + '\0';
 	}
 }
 
@@ -83,12 +87,13 @@ void Chapter12Sample01::Update(float inDeltaTime)
 	if (mIsShowMesh)
 	{
 		mBlendPose.GetMatrixPalette(mPoseMatrixPalette);
+		for (size_t i = 0; i < mPoseMatrixPalette.size(); i++)
+		{
+			mPoseMatrixPalette[i] = mPoseMatrixPalette[i] * mSkeleton.GetInvBindPose()[i];
+		}
+
 		if (mSkinningType == SkinningType::CPU)
 		{
-			for (size_t i = 0; i < mPoseMatrixPalette.size(); i++)
-			{
-				mPoseMatrixPalette[i] = mPoseMatrixPalette[i] * mSkeleton.GetInvBindPose()[i];
-			}
 
 			for (size_t i = 0; i < mMeshes.size(); i++)
 			{
@@ -115,13 +120,12 @@ void Chapter12Sample01::Render(float inAspectRatio)
 		shader->Bind();
 		Uniform<mat4>::Set(shader->GetUniform("model"), mat4());
 		Uniform<mat4>::Set(shader->GetUniform("view"), view);
-		Uniform<mat4>::Set(shader->GetUniform("project"), projection);
+		Uniform<mat4>::Set(shader->GetUniform("projection"), projection);
 		Uniform<vec3>::Set(shader->GetUniform("light"), vec3(1, 1, 1));
 
 		if (mSkinningType == SkinningType::GPU)
 		{
-			Uniform<mat4>::Set(shader->GetUniform("pose"), mPoseMatrixPalette);
-			Uniform<mat4>::Set(shader->GetUniform("invBindPose"), mSkeleton.GetInvBindPose());
+			Uniform<mat4>::Set(shader->GetUniform("animated"), mPoseMatrixPalette);
 		}
 
 		mDiffuseTexture->Set(shader->GetUniform("tex0"), 0);
@@ -216,6 +220,10 @@ void Chapter12Sample01::OnGUI()
 			mMeshes[i].UpdateOpenGLBuffers();
 		}
 	}
+
+	isChanged = ImGui::Combo("Blend Root", &mBlendRoot, mJointNames.c_str());
+
+	ImGui::SliderFloat("Blend Rate", &mBlendRate, 0.0f, 1.0f);
 
 	ImGui::Checkbox("Show Mesh", &mIsShowMesh);
 	ImGui::Checkbox("Show Bind Pose", &mIsShowBindPose);
