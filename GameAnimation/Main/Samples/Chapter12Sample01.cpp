@@ -45,7 +45,6 @@ void Chapter12Sample01::Initialize()
 	mBlendPoseDraw->UpdateOpenGLBuffers();
 
 	mIsShowMesh = true;
-	mBlendRoot = 0;
 
 	for (size_t i = 0; i < mClips.size(); i++)
 	{
@@ -57,6 +56,8 @@ void Chapter12Sample01::Initialize()
 	{
 		mJointNames += mSkeleton.GetJointName(i) + '\0';
 	}
+	// make sure the        
+	mBlendRoot = mSkeleton.GetJointNames().size() - 1;
 }
 
 void Chapter12Sample01::Update(float inDeltaTime)
