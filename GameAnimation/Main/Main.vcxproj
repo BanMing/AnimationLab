@@ -168,6 +168,8 @@
     <ClInclude Include="Animation\TransformTrack.h" />
     <ClInclude Include="Animation\TTransformTrack.h" />
     <ClInclude Include="GLTF\GLTFLoader.h" />
+    <ClInclude Include="IK\CCDSolver.h" />
+    <ClInclude Include="IK\FABRIKSolver.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
     <ClInclude Include="math\vec2.h" />
@@ -214,6 +216,8 @@
     <ClCompile Include="Animation\TransformTrack.cpp" />
     <ClCompile Include="Animation\TTransformTrack.cpp" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />
+    <ClCompile Include="IK\CCDSolver.cpp" />
+    <ClCompile Include="IK\FABRIKSolver.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
     <ClCompile Include="Math\Transform.cpp" />

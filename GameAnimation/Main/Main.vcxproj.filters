@@ -79,6 +79,12 @@
     <Filter Include="Source Files\3rd\imgui">
       <UniqueIdentifier>{73ee3283-e07a-45fc-a464-bc003982a786}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\IK">
+      <UniqueIdentifier>{d3fb5d12-603c-4b57-8f87-2c895447731c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IK">
+      <UniqueIdentifier>{6678fd4d-d1b8-4a1d-a224-c395a11e1769}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\glad\glad.c">
@@ -209,6 +215,12 @@
     </ClCompile>
     <ClCompile Include="Samples\Chapter12Sample01.cpp">
       <Filter>Source Files\Samples</Filter>
+    </ClCompile>
+    <ClCompile Include="IK\CCDSolver.cpp">
+      <Filter>Source Files\IK</Filter>
+    </ClCompile>
+    <ClCompile Include="IK\FABRIKSolver.cpp">
+      <Filter>Source Files\IK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +373,12 @@
     </ClInclude>
     <ClInclude Include="Samples\Chapter12Sample01.h">
       <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="IK\CCDSolver.h">
+      <Filter>Header Files\IK</Filter>
+    </ClInclude>
+    <ClInclude Include="IK\FABRIKSolver.h">
+      <Filter>Header Files\IK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
