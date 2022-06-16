@@ -76,6 +76,8 @@ bool CCDSolver::Solve(const Transform& target)
 
 		for (int j = size - 2; j >= 0; j--)
 		{
+			// TODO:constraints
+
 			effector = GetGlobalTransform(last).position;
 			Transform world = GetGlobalTransform(j);
 

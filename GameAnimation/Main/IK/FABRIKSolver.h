@@ -1,3 +1,9 @@
+/******************************************************************
+** @File         : FABRIKSolver.h
+** @Author       : BanMing
+** @Date         : 2022/06/15
+** @Description  :
+*******************************************************************/
 #ifndef _H_FABRIKSOLVER_
 #define  _H_FABRIKSOLVER_
 
@@ -14,8 +20,9 @@ protected:
 	std::vector<float> mLengths;
 protected:
 	void IKChainToWorld();
-	void IterateForward(const vec3& goal);
-	void IterateBackward(const vec3& base);
+	void IterateForward(const vec3& base);
+	void IterateBackward(const vec3& goal);
+	// convert the world position IK chain back into local space transforms
 	void WorldToIKChain();
 public:
 	FABRIKSolver();
@@ -25,6 +32,10 @@ public:
 	void SetNumSteps(unsigned int numSteps);
 	float GetThreshold();
 	void SetThreshold(float value);
+	Transform GetLocalTransform(unsigned int index);
+	void SetLocalTransform(unsigned int index, const Transform& t);
+	Transform GetGolbalTransform(unsigned int index);
+	bool Solve(const Transform& target);
 };
 
 #endif // _H_FABRIKSOLVER_
