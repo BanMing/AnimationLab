@@ -222,6 +222,9 @@
     <ClCompile Include="IK\FABRIKSolver.cpp">
       <Filter>Source Files\IK</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter13Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="IK\FABRIKSolver.h">
       <Filter>Header Files\IK</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter13Sample01.h">
+      <Filter>Header Files\Samples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

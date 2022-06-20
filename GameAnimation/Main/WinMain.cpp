@@ -12,7 +12,7 @@
 #include "Samples/Application.h"
 #include "3rd/imgui/imgui_impl_win32.h"
 #include "3rd/imgui/imgui_impl_opengl3.h"
-#include "Samples/Chapter12Sample01.h"
+#include "Samples/Chapter13Sample01.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -73,7 +73,7 @@ const ImVec4 kRed = ImVec4(1, 0, 0, 1);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-	gApplication = new Chapter12Sample01();
+	gApplication = new Chapter13Sample01();
 
 	#pragma region Windows Class
 
