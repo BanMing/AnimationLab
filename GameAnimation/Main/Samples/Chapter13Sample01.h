@@ -11,23 +11,23 @@
 #include "../Math/vec3.h"
 #include "../IK/CCDSolver.h"
 #include "../OpenGL/DebugDraw.h"
-#include <vector>
 
 class Chapter13Sample01 :public Application
 {
 protected:
 	const float kPositionMin = 0.0f;
-	const float kPositionMax = 20.0f;
+	const float kPositionMax = 8.0f;
 
 	const float kOrientationMin = 0.0f;
 	const float kOrientationMax = 10.0f;
 	const int kJointNum = 3;
 protected:
-	vec3 mTargetPosition;
-	vec3 mTargetOrientation;
+	Transform mTarget;
 	CCDSolver mIKSolver;
-	std::vector<Transform> mJoints;
-	DebugDraw* mDebugDraw;
+	DebugDraw* mPointDraw;
+	DebugDraw* mLineDraw;
+	DebugDraw* mTargetDraw;
+
 public:
 	void Initialize();
 	void Update(float inDeltaTime);
