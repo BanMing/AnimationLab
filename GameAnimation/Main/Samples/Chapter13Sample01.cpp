@@ -8,6 +8,8 @@
 #include "Chapter13Sample01.h"
 #include <iostream>
 
+#define QUAT_DEG2RAD 0.0174533f
+
 void Chapter13Sample01::Initialize()
 {
 	mTarget.position = vec3(1, 2, 0);
@@ -18,7 +20,9 @@ void Chapter13Sample01::Initialize()
 	mIKSolver[2] = Transform(vec3(0.5f, -1.5f, 0), quat(), vec3(1, 1, 1));
 
 	mPointDraw = new  DebugDraw();
-	mTargetDraw = new DebugDraw();
+	mTargetDraw[0] = new DebugDraw();
+	mTargetDraw[1] = new DebugDraw();
+	mTargetDraw[2] = new DebugDraw();
 	mLineDraw = new DebugDraw();
 
 	for (unsigned int i = 0; i < kJointNum; ++i)
@@ -37,14 +41,37 @@ void Chapter13Sample01::Initialize()
 
 	mLineDraw->UpdateOpenGLBuffers();
 
-	mTargetDraw->Push(mTarget.position.v);
-	mTargetDraw->UpdateOpenGLBuffers();
+	mTargetDraw[0]->Push(mTarget.position.v + vec3(kTargetLineOffset, 0, 0));
+	mTargetDraw[0]->Push(mTarget.position.v + vec3(-kTargetLineOffset, 0, 0));
+	mTargetDraw[0]->UpdateOpenGLBuffers();
+
+	mTargetDraw[1]->Push(mTarget.position.v + vec3(0, kTargetLineOffset, 0));
+	mTargetDraw[1]->Push(mTarget.position.v + vec3(0, -kTargetLineOffset, 0));
+	mTargetDraw[1]->UpdateOpenGLBuffers();
+
+	mTargetDraw[2]->Push(mTarget.position.v + vec3(0, 0, kTargetLineOffset));
+	mTargetDraw[2]->Push(mTarget.position.v + vec3(0, 0, -kTargetLineOffset));
+	mTargetDraw[2]->UpdateOpenGLBuffers();
+	
+	mCamPitch = 45.0f;
+	mCamYaw = 60.0f;
+	mCamDist = 7.0f;
 }
 
 void Chapter13Sample01::Update(float inDeltaTime)
 {
 	mIKSolver.Solve(mTarget);
-	mTargetDraw->operator[](0) = mTarget.position.v;
+	(*mTargetDraw[0])[0] = mTarget.position.v + vec3(kTargetLineOffset, 0, 0);
+	(*mTargetDraw[0])[1] = mTarget.position.v + vec3(-kTargetLineOffset, 0, 0);
+	mTargetDraw[0]->UpdateOpenGLBuffers();
+
+	(*mTargetDraw[1])[0] = mTarget.position.v + vec3(0, kTargetLineOffset, 0);
+	(*mTargetDraw[1])[1] = mTarget.position.v + vec3(0, -kTargetLineOffset, 0);
+	mTargetDraw[1]->UpdateOpenGLBuffers();
+
+	(*mTargetDraw[2])[0] = mTarget.position.v + vec3(0, 0, kTargetLineOffset);
+	(*mTargetDraw[2])[1] = mTarget.position.v + vec3(0, 0, -kTargetLineOffset);
+	mTargetDraw[2]->UpdateOpenGLBuffers();
 
 	for (unsigned int i = 0; i < kJointNum; ++i)
 	{
@@ -58,19 +85,24 @@ void Chapter13Sample01::Update(float inDeltaTime)
 	mLineDraw->operator[](2) = mIKSolver.GetGlobalTransform(1).position.v;
 	mLineDraw->operator[](3) = mIKSolver.GetGlobalTransform(2).position.v;
 	mLineDraw->UpdateOpenGLBuffers();
-
-	mTargetDraw->UpdateOpenGLBuffers();
 }
 
 void Chapter13Sample01::Render(float inAspectRatio)
 {
+	vec3 cameraPos(
+		mCamDist * cosf(mCamYaw * QUAT_DEG2RAD) * sinf(mCamPitch * QUAT_DEG2RAD),
+		mCamDist * cosf(mCamPitch * QUAT_DEG2RAD),
+		mCamDist * sinf(mCamYaw * QUAT_DEG2RAD) * sinf(mCamPitch * QUAT_DEG2RAD)
+	);
 	mat4 projection = perspective(60.0f, inAspectRatio, 0.01f, 1000.0f);
-	mat4 view = lookAt(vec3(0, 4, 7), vec3(0, 4, 0), vec3(0, 1, 0));
+	mat4 view = lookAt(cameraPos, vec3(0, 4, 0), vec3(0, 1, 0));
 	mat4 mvp = projection * view; // No model
 
-	mPointDraw->Draw(DebugDrawMode::Points, vec3(0, 0, 1), mvp);
-	mTargetDraw->Draw(DebugDrawMode::Points, vec3(1, 0, 1), mvp);
-	mLineDraw->Draw(DebugDrawMode::Lines, vec3(1, 0, 0), mvp);
+	mPointDraw->Draw(DebugDrawMode::Points, vec3(0, 1, 1), mvp);
+	mLineDraw->Draw(DebugDrawMode::Lines, vec3(1, 0, 1), mvp);
+	mTargetDraw[0]->Draw(DebugDrawMode::Lines, vec3(1, 0, 0), mvp);
+	mTargetDraw[1]->Draw(DebugDrawMode::Lines, vec3(0, 1, 0), mvp);
+	mTargetDraw[2]->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), mvp);
 }
 
 void Chapter13Sample01::OnGUI()
@@ -81,15 +113,17 @@ void Chapter13Sample01::OnGUI()
 	ImGui::SliderFloat("Target z", &mTarget.position.z, -7, 7);
 
 
-	/*ImGui::SliderFloat("Pitch", &mTarget.rotation., kOrientationMin, kOrientationMax);
-	ImGui::SliderFloat("Yaw", &mTargetOrientation.y, kOrientationMin, kOrientationMax);
-	ImGui::SliderFloat("Distance", &mTargetOrientation.z, kOrientationMin, kOrientationMax);*/
+	ImGui::SliderFloat("Pitch", &mCamPitch, kOrientationMin, kOrientationMax);
+	ImGui::SliderFloat("Yaw", &mCamYaw, kOrientationMin, kOrientationMax);
+	ImGui::SliderFloat("Distance", &mCamDist, kOrientationMin, kOrientationMax);
 	ImGui::End();
 }
 
 void Chapter13Sample01::Shutdown()
 {
 	delete mPointDraw;
-	delete mTargetDraw;
+	delete mTargetDraw[0];
+	delete mTargetDraw[1];
+	delete mTargetDraw[2];
 	delete mLineDraw;
 }

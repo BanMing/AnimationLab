@@ -18,15 +18,19 @@ protected:
 	const float kPositionMin = 0.0f;
 	const float kPositionMax = 8.0f;
 
-	const float kOrientationMin = 0.0f;
-	const float kOrientationMax = 10.0f;
+	const float kOrientationMin = -90.0f;
+	const float kOrientationMax = 90.0f;
 	const int kJointNum = 3;
+	const float kTargetLineOffset = 0.3f;
 protected:
 	Transform mTarget;
 	CCDSolver mIKSolver;
 	DebugDraw* mPointDraw;
 	DebugDraw* mLineDraw;
-	DebugDraw* mTargetDraw;
+	DebugDraw* mTargetDraw[3];
+	float mCamPitch;
+	float mCamYaw;
+	float mCamDist;
 
 public:
 	void Initialize();
