@@ -17,7 +17,7 @@ void FABRIKSolver::IKChainToWorld()
 	unsigned int ikSize = mIKChain.size();
 	for (size_t i = 0; i < ikSize; i++)
 	{
-		Transform world = GetGolbalTransform(i);
+		Transform world = GetGlobalTransform(i);
 		mWorldChain[i] = world.position;
 		if (i >= 1)
 		{
@@ -71,8 +71,8 @@ void FABRIKSolver::WorldToIKChain()
 	}
 	for (size_t i = 0; i < ikSize - 1; i++)
 	{
-		Transform world = GetGolbalTransform(i);
-		Transform next = GetGolbalTransform(i + 1);
+		Transform world = GetGlobalTransform(i);
+		Transform next = GetGlobalTransform(i + 1);
 
 		vec3 position = world.position;
 		quat rotation = world.rotation;
@@ -136,7 +136,7 @@ void FABRIKSolver::SetLocalTransform(unsigned int index, const Transform& t)
 	mIKChain[index] = t;
 }
 
-Transform FABRIKSolver::GetGolbalTransform(unsigned int index)
+Transform FABRIKSolver::GetGlobalTransform(unsigned int index)
 {
 	unsigned int size = (unsigned int)mIKChain.size();
 	Transform world = mIKChain[index];
@@ -182,7 +182,7 @@ bool FABRIKSolver::Solve(const Transform& target)
 
 	WorldToIKChain();
 
-	vec3 effector = GetGolbalTransform(last).position;
+	vec3 effector = GetGlobalTransform(last).position;
 	if (lenSq(goal - effector) < thresholdSq)
 	{
 		return true;

@@ -34,7 +34,7 @@ public:
 	void SetThreshold(float value);
 	Transform GetLocalTransform(unsigned int index);
 	void SetLocalTransform(unsigned int index, const Transform& t);
-	Transform GetGolbalTransform(unsigned int index);
+	Transform GetGlobalTransform(unsigned int index);
 	bool Solve(const Transform& target);
 };
 
