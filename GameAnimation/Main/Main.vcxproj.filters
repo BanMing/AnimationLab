@@ -228,6 +228,9 @@
     <ClCompile Include="Samples\Chapter13Sample02.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
+    <ClCompile Include="Samples\Chapter13Sample03.cpp">
+      <Filter>Source Files\Samples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -390,6 +393,9 @@
       <Filter>Header Files\Samples</Filter>
     </ClInclude>
     <ClInclude Include="Samples\Chapter13Sample02.h">
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="Samples\Chapter13Sample03.h">
       <Filter>Header Files\Samples</Filter>
     </ClInclude>
   </ItemGroup>

@@ -192,6 +192,7 @@
     <ClInclude Include="Samples\Chapter12Sample01.h" />
     <ClInclude Include="Samples\Chapter13Sample01.h" />
     <ClInclude Include="Samples\Chapter13Sample02.h" />
+    <ClInclude Include="Samples\Chapter13Sample03.h" />
     <ClInclude Include="Samples\ImGUISample.h" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +241,7 @@
     <ClCompile Include="Samples\Chapter12Sample01.cpp" />
     <ClCompile Include="Samples\Chapter13Sample01.cpp" />
     <ClCompile Include="Samples\Chapter13Sample02.cpp" />
+    <ClCompile Include="Samples\Chapter13Sample03.cpp" />
     <ClCompile Include="Samples\ImGUISample.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
