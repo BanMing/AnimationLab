@@ -11,6 +11,7 @@
 #include "../OpenGL/DebugDraw.h"
 #include "../OpenGL/Texture.h"
 #include "../Animation/Mesh.h"
+#include "../Animation/TClip.h"
 
 class Chapter13Sample03 :public Application
 {
@@ -18,12 +19,28 @@ protected:
 	Texture* mCourseTexture;
 	std::vector<Mesh> mIKGround;
 
-	//DebugDraw* mCurPoseDraw;
+	VectorTrack mMotionTrack;
+	float mWalkingTime;
 
+	Transform mCharacterTrans;
+	DebugDraw* mCharacterDraw;
+	FastClip mWalkClip;
+	Skeleton mSkeleton;
+	std::vector<Mesh> mCharacterMeshes;
+	std::vector<mat4> mPoseMatrixPalette;
+	Pose mCurPose;
+	float mPlayTime;
+
+	DebugDraw* mSkeletonDraw;
+
+	Texture* mDiffuseTexture;
 	Shader* mStaticShader;
+	Shader* mDynamicShader;
 
 	// UI control
 	bool mIsShowGround;
+	bool mIsShowCharacter;
+	bool mIsShowSkeleton;
 public:
 	void Initialize();
 	void Update(float inDeltaTime);
