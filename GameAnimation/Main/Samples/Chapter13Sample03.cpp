@@ -225,7 +225,7 @@ void Chapter13Sample03::Render(float inAspectRatio)
 		Uniform<mat4>::Set(characterShader->GetUniform("view"), view);
 		Uniform<mat4>::Set(characterShader->GetUniform("projection"), projection);
 		Uniform<vec3>::Set(characterShader->GetUniform("light"), vec3(1, 1, 1));
-		Uniform<mat4>::Set(characterShader->GetUniform("pose"), mPoseMatrixPalette);
+		Uniform<mat4>::Set(characterShader->GetUniform("animated"), mPoseMatrixPalette);
 
 		mDiffuseTexture->Set(characterShader->GetUniform("tex0"), 0);
 		for (size_t i = 0; i < mCharacterMeshes.size(); i++)
