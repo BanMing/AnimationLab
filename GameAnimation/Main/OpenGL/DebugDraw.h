@@ -8,6 +8,8 @@
 #include "../Animation/Pose.h"
 
 #include <vector>
+#include "../IK/CCDSolver.h"
+#include "../IK/FABRIKSolver.h"
 
 
 enum class DebugDrawMode
@@ -35,6 +37,10 @@ public:
 	void Push(const vec3& v);
 
 	void FromPose(const Pose& pose);
+	void LinesFromIKSolver(CCDSolver& solver);
+	void PointsFromIKSolver(CCDSolver& solver);
+	void LinesFromIKSolver(FABRIKSolver& solver);
+	void PointsFromIKSolver(FABRIKSolver& solver);
 
 	void UpdateOpenGLBuffers();
 	void Draw(DebugDrawMode mode, const vec3& color, const mat4& mvp);

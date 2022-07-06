@@ -231,6 +231,9 @@
     <ClCompile Include="Samples\Chapter13Sample03.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
+    <ClCompile Include="IK\IKLeg.cpp">
+      <Filter>Source Files\IK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -397,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="Samples\Chapter13Sample03.h">
       <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="IK\IKLeg.h">
+      <Filter>Header Files\IK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
