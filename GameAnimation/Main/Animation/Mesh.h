@@ -5,6 +5,7 @@
 #include "../Math/vec3.h"
 #include "../Math/vec4.h"
 #include "../Math/mat4.h"
+#include "../Math/Triangle.h"
 #include "../OpenGL/Attribute.h"
 #include "../OpenGL/IndexBuffer.h"
 #include "Skeleton.h"
@@ -71,4 +72,6 @@ public:
 	void UnBind(int position, int normal, int texCoord, int weight, int influcence);
 };
 
+std::vector<Triangle> MeshToTriangles(Mesh& mesh);
+std::vector<Triangle> MeshesToTriangles(std::vector<Mesh>& meshes);
 #endif // !_H_MESH_

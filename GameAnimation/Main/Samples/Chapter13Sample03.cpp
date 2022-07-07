@@ -139,6 +139,7 @@ void Chapter13Sample03::Initialize()
 	mIKGround = LoadStaticMeshes(data);
 	FreeGLTFFile(data);
 	mCourseTexture = new Texture("Assets/uv.png");
+	mTriangles = MeshesToTriangles(mIKGround);
 
 	data = LoadGLTFFile("Assets/Woman.gltf");
 	mSkeleton = LoadSkeleton(data);

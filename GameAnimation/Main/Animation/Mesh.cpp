@@ -285,9 +285,57 @@ void  Mesh::CPUSKin(std::vector<mat4>& animatedPose)
 		vec3 n1 = transformVector(animatedPose[j.y], mNormal[i]);
 		vec3 n2 = transformVector(animatedPose[j.z], mNormal[i]);
 		vec3 n3 = transformVector(animatedPose[j.w], mNormal[i]);
-		mSkinnedNormal[i]= n0 * w.x + n1 * w.y + n2 * w.z + n3 * w.w;
+		mSkinnedNormal[i] = n0 * w.x + n1 * w.y + n2 * w.z + n3 * w.w;
 	}
 
 	mPosAttrib->Set(mSkinnedPosition);
 	mNormAttrib->Set(mSkinnedNormal);
 }
+
+#pragma region Helpers
+std::vector<Triangle> MeshToTriangles(Mesh& mesh)
+{
+	std::vector<Triangle> result;
+	std::vector<vec3> vertices = mesh.GetPosition();
+	std::vector<unsigned int> indices = mesh.GetIndices();
+
+	if (indices.size() == 0)
+	{
+		unsigned int numVertices = (unsigned int)vertices.size();
+		for (unsigned int i = 0; i < numVertices; i += 3)
+		{
+			result.push_back(Triangle(
+				vertices[i + 0],
+				vertices[i + 1],
+				vertices[i + 2]
+			));
+		}
+	}
+	else
+	{
+		unsigned int numIndices = (unsigned int)indices.size();
+		for (unsigned int i = 0; i < numIndices; i += 3)
+		{
+			result.push_back(Triangle(
+				vertices[indices[i + 0]],
+				vertices[indices[i + 1]],
+				vertices[indices[i + 2]]
+			));
+		}
+	}
+
+	return result;
+}
+
+std::vector<Triangle> MeshesToTriangles(std::vector<Mesh>& meshes)
+{
+	std::vector<Triangle> result;
+	unsigned int numMeshes = (unsigned int)meshes.size();
+	for (unsigned int i = 0; i < numMeshes; i++)
+	{
+		std::vector<Triangle> triangles = MeshToTriangles(meshes[i]);
+		result.insert(result.end(), triangles.begin(), triangles.end());
+	}
+	return result;
+}
+#pragma endregion Helpers

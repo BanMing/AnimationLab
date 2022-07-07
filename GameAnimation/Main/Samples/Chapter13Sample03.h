@@ -12,15 +12,22 @@
 #include "../OpenGL/Texture.h"
 #include "../Animation/Mesh.h"
 #include "../Animation/TClip.h"
+#include "../IK/IKLeg.h"
 
 class Chapter13Sample03 :public Application
 {
 protected:
 	Texture* mCourseTexture;
 	std::vector<Mesh> mIKGround;
+	std::vector<Triangle> mTriangles;
 
 	VectorTrack mMotionTrack;
 	float mWalkingTime;
+
+	IKLeg* mLeftLeg;
+	IKLeg* mRightLeg;
+	float mToeLength;
+	float mLastModelY;
 
 	Transform mCharacterTrans;
 	DebugDraw* mCharacterDraw;
