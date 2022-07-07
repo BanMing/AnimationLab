@@ -16,6 +16,11 @@
 
 class Chapter13Sample03 :public Application
 {
+private:
+	const float kSinkIntoGround = 0.15f;
+	const float kToeLength = 0.3f;
+	const float kRayHeight = 2.1f;
+	const float kRayOriginY = 11.0f;
 protected:
 	Texture* mCourseTexture;
 	std::vector<Mesh> mIKGround;
@@ -26,8 +31,7 @@ protected:
 
 	IKLeg* mLeftLeg;
 	IKLeg* mRightLeg;
-	float mToeLength;
-	float mLastModelY;
+	float mLastCharacterY;
 
 	Transform mCharacterTrans;
 	DebugDraw* mCharacterDraw;
@@ -38,7 +42,7 @@ protected:
 	Pose mCurPose;
 	float mPlayTime;
 
-	DebugDraw* mSkeletonDraw;
+	DebugDraw* mCurPoseDraw;
 
 	Texture* mDiffuseTexture;
 	Shader* mStaticShader;
@@ -47,7 +51,8 @@ protected:
 	// UI control
 	bool mIsShowGround;
 	bool mIsShowCharacter;
-	bool mIsShowSkeleton;
+	bool mIsShowCurPose;
+	bool mIsShowIKLeg;
 public:
 	void Initialize();
 	void Update(float inDeltaTime);

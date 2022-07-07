@@ -85,6 +85,12 @@
     <Filter Include="Source Files\IK">
       <UniqueIdentifier>{6678fd4d-d1b8-4a1d-a224-c395a11e1769}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{be523dc3-8914-4d35-ac2d-3e5740427dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{c69267f5-44a3-4da6-a6a0-91b6704279c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rd\glad\glad.c">
@@ -233,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="IK\IKLeg.cpp">
       <Filter>Source Files\IK</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Ray.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +412,12 @@
     </ClInclude>
     <ClInclude Include="IK\IKLeg.h">
       <Filter>Header Files\IK</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Triangle.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Ray.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

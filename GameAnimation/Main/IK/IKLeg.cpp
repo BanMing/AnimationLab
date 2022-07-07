@@ -108,6 +108,7 @@ void IKLeg::SolveForLeg(const Transform& model, Pose& pose, const vec3& ankleTar
 	mSolver.SetLocalTransform(0, combine(model, pose.GetGlobalTransform(mHipIndex)));
 	mSolver.SetLocalTransform(1, pose.GetLocalTransform(mKneeIndex));
 	mSolver.SetLocalTransform(2, pose.GetLocalTransform(mAnkleIndex));
+	mIKPose = pose;
 
 	Transform target(ankleTargetPosition + vec3(0, 1, 0) * mAnkleToGroundOffset, quat(), vec3(1, 1, 1));
 	mSolver.Solve(target);

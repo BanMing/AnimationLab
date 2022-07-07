@@ -173,6 +173,7 @@
     <ClInclude Include="IK\IKLeg.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
+    <ClInclude Include="Math\Triangle.h" />
     <ClInclude Include="math\vec2.h" />
     <ClInclude Include="math\vec3.h" />
     <ClInclude Include="math\vec4.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="OpenGL\Shader.h" />
     <ClInclude Include="OpenGL\Texture.h" />
     <ClInclude Include="OpenGL\Uniform.h" />
+    <ClInclude Include="Physics\Ray.h" />
     <ClInclude Include="Samples\Application.h" />
     <ClInclude Include="samples\Chapter06Sample01.h" />
     <ClInclude Include="Samples\Chapter08Sample01.h" />
@@ -234,6 +236,7 @@
     <ClCompile Include="OpenGL\Shader.cpp" />
     <ClCompile Include="OpenGL\Texture.cpp" />
     <ClCompile Include="OpenGL\Uniform.cpp" />
+    <ClCompile Include="Physics\Ray.cpp" />
     <ClCompile Include="samples\Chapter06Sample01.cpp" />
     <ClCompile Include="Samples\Chapter08Sample01.cpp" />
     <ClCompile Include="Samples\Chapter09Sample01.cpp" />
