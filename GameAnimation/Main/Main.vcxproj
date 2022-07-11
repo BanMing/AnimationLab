@@ -171,6 +171,7 @@
     <ClInclude Include="IK\CCDSolver.h" />
     <ClInclude Include="IK\FABRIKSolver.h" />
     <ClInclude Include="IK\IKLeg.h" />
+    <ClInclude Include="Math\DualQuaternion.h" />
     <ClInclude Include="math\mat4.h" />
     <ClInclude Include="math\quat.h" />
     <ClInclude Include="Math\Triangle.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="IK\CCDSolver.cpp" />
     <ClCompile Include="IK\FABRIKSolver.cpp" />
     <ClCompile Include="IK\IKLeg.cpp" />
+    <ClCompile Include="Math\DualQuaternion.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="math\quat.cpp" />
     <ClCompile Include="Math\Transform.cpp" />

@@ -243,6 +243,9 @@
     <ClCompile Include="Physics\Ray.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Math\DualQuaternion.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -418,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="Physics\Ray.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\DualQuaternion.h">
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
