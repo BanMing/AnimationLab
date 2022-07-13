@@ -26,6 +26,7 @@ public:
 	Pose& GetBindPose();
 	Pose& GetRestPose();
 	std::vector<mat4>& GetInvBindPose();
+	void GetInvBindPose(std::vector<DualQuaternion>& pose);
 	std::vector<std::string>& GetJointNames();
 	std::string& GetJointName(unsigned int index);
 };

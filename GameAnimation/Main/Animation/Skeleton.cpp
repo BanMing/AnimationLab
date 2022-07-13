@@ -42,6 +42,18 @@ std::vector<mat4>& Skeleton::GetInvBindPose()
 	return mInvBindPose;
 }
 
+void Skeleton::GetInvBindPose(std::vector<DualQuaternion>& outInvBindPose)
+{
+	unsigned int size = mInvBindPose.size();
+	outInvBindPose.resize(size);
+
+	for (unsigned int i = 0; i < size; i++)
+	{
+		DualQuaternion world = mBindPose.GetGlobalDualQuaternion(i);
+		outInvBindPose[i] = conjugate(world);
+	}
+}
+
 std::vector<std::string>& Skeleton::GetJointNames()
 {
 	return mJointNames;

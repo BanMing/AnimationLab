@@ -257,6 +257,7 @@
     <None Include="Assets\dq.gltf" />
     <None Include="Assets\IKCourse.gltf" />
     <None Include="Assets\Woman.gltf" />
+    <None Include="Shaders\dualquaternion.vert" />
     <None Include="Shaders\lit.frag" />
     <None Include="Shaders\preskinned.vert" />
     <None Include="Shaders\skinned.vert" />

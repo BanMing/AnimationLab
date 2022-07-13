@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../Math/Transform.h"
+#include "../Math/DualQuaternion.h"
 
 class Pose
 {
@@ -27,6 +28,10 @@ public:
 
 	// For OpenGL,joints convert into a linear array of matrices.
 	void GetMatrixPalette(std::vector<mat4>& out) const;
+	void GetDualQuaternionPalette(std::vector<DualQuaternion>& dqs);
+
+	// Get world dual quaternion of a specified joint
+	DualQuaternion GetGlobalDualQuaternion(unsigned int i);
 
 	bool operator==(const Pose& other);
 	bool operator!=(const Pose& other);

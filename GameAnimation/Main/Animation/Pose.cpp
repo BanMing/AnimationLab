@@ -82,7 +82,7 @@ Transform Pose::operator[](unsigned int index) const
 void Pose::GetMatrixPalette(std::vector<mat4>& out)const
 {
 	#if 0
-	
+
 	unsigned int size = Size();
 	if (out.size() != size)
 	{
@@ -94,7 +94,7 @@ void Pose::GetMatrixPalette(std::vector<mat4>& out)const
 		Transform t = GetGlobalTransform(i);
 		out[i] = transformToMat4(t);
 	}
-	
+
 	#else
 
 	unsigned int size = Size();
@@ -128,6 +128,20 @@ void Pose::GetMatrixPalette(std::vector<mat4>& out)const
 	#endif
 }
 
+void Pose::GetDualQuaternionPalette(std::vector<DualQuaternion>& dqs)
+{
+	unsigned int size = Size();
+	if (dqs.size() != size)
+	{
+		dqs.resize(size);
+	}
+
+	for (unsigned int i = 0; i < size; i++)
+	{
+		dqs[i] = GetGlobalDualQuaternion(i);
+	}
+}
+
 int Pose::GetParent(unsigned int index) const
 {
 	return mParents[index];
@@ -136,6 +150,20 @@ int Pose::GetParent(unsigned int index) const
 void Pose::SetParent(unsigned int index, int parent)
 {
 	mParents[index] = parent;
+}
+
+DualQuaternion Pose::GetGlobalDualQuaternion(unsigned int i)
+{
+	DualQuaternion result = transformToDualQuat(mJoints[i]);
+
+	for (int p = mParents[i]; p > 0; p = mParents[p])
+	{
+		DualQuaternion parent = transformToDualQuat(mJoints[p]);
+		// multiplication is in reverse
+		result = result * parent;
+	}
+
+	return result;
 }
 
 bool Pose::operator==(const Pose& other)
