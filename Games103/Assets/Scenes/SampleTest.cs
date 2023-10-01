@@ -11,18 +11,35 @@ public class SampleTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log($"A : {TransormToMat4(a.transform)}");
-        Debug.Log($"B : {TransormToMat4(b.transform)}");
-        Debug.Log($"C : {TransormToMat4(c.transform)}");
-        Debug.Log($"B*A : {TransormToMat4(b.transform) * TransormToMat4(a.transform)}");
-        Debug.Log($"A*B : {TransormToMat4(a.transform) * TransormToMat4(b.transform)}");
-        Debug.Log($"A*C : {TransormToMat4(a.transform) * TransormToMat4(c.transform)}");
+        //Debug.Log($"A : {TransormToMat4(a.transform)}");
+        //Debug.Log($"B : {TransormToMat4(b.transform)}");
+        //Debug.Log($"C : {TransormToMat4(c.transform)}");
+        //Debug.Log($"B*A : {TransormToMat4(b.transform) * TransormToMat4(a.transform)}");
+        //Debug.Log($"A*B : {TransormToMat4(a.transform) * TransormToMat4(b.transform)}");
+        //Debug.Log($"A*C : {TransormToMat4(a.transform) * TransormToMat4(c.transform)}");
 
-        Debug.Log($"a transform : {a.transform.TransformPoint(b.transform.position)}");
-        Debug.Log($"a transform : {a.transform.TransformPoint(b.transform.localPosition)}");
+        //Debug.Log($"a transform : {a.transform.TransformPoint(b.transform.position)}");
+        //Debug.Log($"a transform : {a.transform.TransformPoint(b.transform.localPosition)}");
 
-        Debug.Log($"a transform : {TransormPoint(a.transform, b.transform.position)}");
-        Debug.Log($"a transform : {TransormPoint(a.transform, b.transform.localPosition)}");
+        //Debug.Log($"a transform : {TransormPoint(a.transform, b.transform.position)}");
+        //Debug.Log($"a transform : {TransormPoint(a.transform, b.transform.localPosition)}");
+
+
+        Matrix4x4 matrix4X4 = new Matrix4x4(new Vector4(3, 0, 0, 0),
+                                            new Vector4(0, 4, 0, 3),
+                                            new Vector4(3, 0, 3, 0),
+                                            new Vector4(0, 2, 0, 0));
+
+        Vector3 v = new Vector3(1, 2, 3);
+        Vector4 v1 = new Vector4(1, 2, 3, 1);
+        Vector4 v2 = new Vector4(1, 2, 3, 0);
+
+        Debug.Log($"MultiplyPoint :{matrix4X4.MultiplyPoint(v).ToString()}");
+        Debug.Log($"MultiplyPoint3x4 :{matrix4X4.MultiplyPoint3x4(v).ToString()}");
+        Debug.Log($"MultiplyVector :{matrix4X4.MultiplyVector(v).ToString()}");
+        Debug.Log($"Multiply :{matrix4X4 * v}");
+        Debug.Log($"Multiply v1 :{matrix4X4 * v1}");
+        Debug.Log($"Multiply v2 :{matrix4X4 * v2}");
     }
 
     // Update is called once per frame

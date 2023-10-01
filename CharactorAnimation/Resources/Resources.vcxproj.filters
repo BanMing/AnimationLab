@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\FX">
+      <UniqueIdentifier>{9f25f339-cbe4-4c51-a978-6e30f7b71737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Meshes">
+      <UniqueIdentifier>{919b3965-3776-452a-835a-d500c6cc837d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Meshes\body.jpg">
+      <Filter>Resource Files\Meshes</Filter>
+    </Image>
+    <Image Include="Meshes\face.jpg">
+      <Filter>Resource Files\Meshes</Filter>
+    </Image>
+    <Image Include="Meshes\helmet.jpg">
+      <Filter>Resource Files\Meshes</Filter>
+    </Image>
+    <Image Include="Meshes\pulserifle.jpg">
+      <Filter>Resource Files\Meshes</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Meshes\soldier.X">
+      <Filter>Resource Files\Meshes</Filter>
+    </None>
+    <None Include="FX\lighting.fx">
+      <Filter>Resource Files\FX</Filter>
+    </None>
+  </ItemGroup>
+</Project>

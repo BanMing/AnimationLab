@@ -27,6 +27,16 @@ void Chapter09Sample01::Initialize()
 			break;
 		}
 	}
+
+	for (size_t i = 0; i < restPose.Size(); i++)
+	{
+		//printf("parent:%d\n", restPose.GetParent(i));
+		Transform joint = restPose.GetGlobalTransform(i);
+		Transform local_joint = restPose.GetLocalTransform(i);
+		printf("local position [%f,%f,%f]\n", local_joint.position.x, local_joint.position.y, local_joint.position.z);
+		printf("local rotation [%f,%f,%f,%f]\n", local_joint.rotation.x, local_joint.rotation.y, local_joint.rotation.z, local_joint.rotation.w);
+		//printf("world position [%f,%f,%f]\n", joint.position.x, joint.position.y, joint.position.z);
+	}
 }
 
 void Chapter09Sample01::Update(float inDeltaTime)
@@ -44,7 +54,7 @@ void Chapter09Sample01::Render(float inAspectRatio)
 	mat4 mvp = projection * view; // No model
 
 	mRestPoseDraw->Draw(DebugDrawMode::Lines, vec3(1, 0, 0), mvp);
-	mCurPoseDraw->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), mvp);
+	//mCurPoseDraw->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), mvp);
 }
 
 void Chapter09Sample01::Shutdown()
