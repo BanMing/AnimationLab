@@ -97,9 +97,8 @@ quat operator*(const quat& Q1, const quat& Q2)
 vec3 operator*(const quat& q, const vec3& v)
 {
 
-	return  q.vector * 2.0f * dot(q.vector, v) +
-		v * (q.scalar * q.scalar - dot(q.vector, q.vector)) +
-		cross(q.vector, v) * 2.0f * q.scalar;
+	vec3 t = cross(q.vector, v) * 2.0f;
+	return  v + (t * q.scalar) + cross(q.vector, t);
 }
 
 quat operator-(const quat& q)
@@ -131,9 +130,9 @@ quat operator^(const quat& q, float f)
 bool operator==(const quat& left, const quat& right)
 {
 	return (fabsf(left.x - right.x) <= QUAT_EPSILON &&
-			fabsf(left.y - right.y) <= QUAT_EPSILON &&
-			fabsf(left.z - right.z) <= QUAT_EPSILON &&
-			fabsf(left.w - left.w) <= QUAT_EPSILON);
+		fabsf(left.y - right.y) <= QUAT_EPSILON &&
+		fabsf(left.z - right.z) <= QUAT_EPSILON &&
+		fabsf(left.w - left.w) <= QUAT_EPSILON);
 }
 
 bool operator!=(const quat& a, const quat& b)
@@ -145,9 +144,9 @@ bool operator!=(const quat& a, const quat& b)
 bool sameOrientation(const quat& left, const quat& right)
 {
 	return (fabsf(left.x - right.x) <= QUAT_EPSILON &&
-			fabsf(left.y - right.y) <= QUAT_EPSILON &&
-			fabsf(left.z - right.z) <= QUAT_EPSILON &&
-			fabsf(left.w - right.w) <= QUAT_EPSILON)
+		fabsf(left.y - right.y) <= QUAT_EPSILON &&
+		fabsf(left.z - right.z) <= QUAT_EPSILON &&
+		fabsf(left.w - right.w) <= QUAT_EPSILON)
 		|| (fabsf(left.x + right.x) <= QUAT_EPSILON &&
 			fabsf(left.y + right.y) <= QUAT_EPSILON &&
 			fabsf(left.z + right.z) <= QUAT_EPSILON &&
