@@ -4,11 +4,6 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-//Global Variables
-IDirect3DDevice9* g_pDevice = NULL;
-ID3DXSprite* g_pSprite = NULL;
-ID3DXFont* g_pFont = NULL;
-ID3DXEffect* g_pEffect = NULL;
 std::ofstream g_debug("debug.txt");
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -31,6 +26,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 Application::Application()
 {
+	m_appName = L"Character Animation";
 }
 
 Application::~Application()
@@ -58,7 +54,7 @@ HRESULT Application::Init(HINSTANCE hInstance, bool windowed)
 	//... Finally Register the new Window Class
 	RegisterClass(&wc);
 
-	m_mainWindow = CreateWindow(L"D3DWND", L"Window Tile", WS_EX_TOPMOST, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInstance, 0);
+	m_mainWindow = CreateWindow(L"D3DWND", m_appName, WS_EX_TOPMOST, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInstance, 0);
 
 	SetCursor(NULL);
 
@@ -110,7 +106,7 @@ HRESULT Application::Init(HINSTANCE hInstance, bool windowed)
 	else vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 
 	//Create the IDirect3DDevice9
-	if (FAILED(d3d9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_mainWindow, vp, &m_present, &g_pDevice)))
+	if (FAILED(d3d9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_mainWindow, vp, &m_present, &m_pDevice)))
 	{
 		g_debug << "Failed to create IDirect3DDevice9 \n";
 		return E_FAIL;
@@ -120,34 +116,22 @@ HRESULT Application::Init(HINSTANCE hInstance, bool windowed)
 	d3d9->Release();
 
 	//Load Application Specific resources here...
-	D3DXCreateFont(g_pDevice, 20, 0, FW_BOLD, 1, false,
+	D3DXCreateFont(m_pDevice, 20, 0, FW_BOLD, 1, false,
 		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
-		DEFAULT_PITCH | FF_DONTCARE, L"Arial", &g_pFont);
+		DEFAULT_PITCH | FF_DONTCARE, L"Arial", &m_pFont);
 
 	//Create Sprite
-	D3DXCreateSprite(g_pDevice, &g_pSprite);
+	D3DXCreateSprite(m_pDevice, &m_pSprite);
 
-	// Load Effect
-	ID3DXBuffer* pErrorMsgs = NULL;
-	HRESULT hRes = D3DXCreateEffectFromFile(g_pDevice, L"../resources/fx/lighting.fx", NULL, NULL, D3DXSHADER_DEBUG, NULL, &g_pEffect, &pErrorMsgs);
-
-	if (FAILED(hRes) && (pErrorMsgs != NULL))
-	{
-		MessageBox(NULL, (LPCWSTR)(char*)pErrorMsgs->GetBufferPointer(), L"Effect Error", MB_OK);
-		return E_FAIL;
-	}
-
-	// Load Soldier Mesh
-	m_soldier.Load(g_pDevice, L"../resources/meshes/soldier.x");
 	m_deviceLost = false;
 
-	return S_OK;
+	return OnInit();
 }
 
 void Application::Update(float deltaTime)
 {
 	//Check for lost device
-	HRESULT coop = g_pDevice->TestCooperativeLevel();
+	HRESULT coop = m_pDevice->TestCooperativeLevel();
 
 	if (coop != D3D_OK)
 	{
@@ -166,8 +150,7 @@ void Application::Update(float deltaTime)
 		return;
 	}
 
-	// Camera Rotation 
-	m_angle += deltaTime;
+	OnUpdate(deltaTime);
 }
 
 void Application::Render()
@@ -176,87 +159,15 @@ void Application::Render()
 	{
 		return;
 	}
-	D3DXMATRIX identity, shadow;
-	D3DXMatrixIdentity(&identity);
-
-	//Set ground plane + light position
-	D3DXPLANE ground(0.0f, 1.0f, 0.0f, 0.0f);
-	D3DXVECTOR4 lightPos(-20.0f, 75.0f, -120.0f, 0.0f);
-
-	//Create the shadow matrix
-	D3DXMatrixShadow(&shadow, &lightPos, &ground);
-
-	// Calculate Transformation Matrices
-	D3DXMATRIX view, proj, world;
-	D3DXMatrixIdentity(&world);
-	D3DXVECTOR3 angleVec3 = D3DXVECTOR3(cos(m_angle) * 2.0f, 2.0f, sin(m_angle) * 2.0f);
-	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-	D3DXMatrixLookAtLH(&view, &angleVec3, &up, &up);
-	D3DXMatrixPerspectiveFovLH(&proj, D3DX_PI / 4.0f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-
-	//Set transformation matrices
-	g_pDevice->SetTransform(D3DTS_WORLD, &world);
-	g_pDevice->SetTransform(D3DTS_VIEW, &view);
-	g_pDevice->SetTransform(D3DTS_PROJECTION, &proj);
-	D3DXMATRIX vp = view * proj;
-	g_pEffect->SetMatrix("matVP", &vp);
-
-	// Clear the viewport
-	g_pDevice->Clear(
-		0,					// Num rectangles to clear
-		NULL,				// Rectangles to clear (NULL = whole screen)
-		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,	// Clear the render target
-		0xffffffff,			// Color AARRGGBB (in this case White) 
-		1.0f,				// Clear Z-buffer to 1.0f
-		0);					 //Clear Stencil Buffer to 0
-
-	// Begin the scene
-	if (SUCCEEDED(g_pDevice->BeginScene()))
-	{
-		//Render Soldier
-		{
-			g_pEffect->SetMatrix("matW", &identity);
-			g_pEffect->SetVector("lightPos", &lightPos);
-			D3DXHANDLE hTech = g_pEffect->GetTechniqueByName("Lighting");
-			g_pEffect->SetTechnique(hTech);
-			g_pEffect->Begin(NULL, NULL);
-			g_pEffect->BeginPass(0);
-
-			m_soldier.Render();
-
-			g_pEffect->EndPass();
-			g_pEffect->End();
-		}
-
-		//Render Shadow
-		{
-			g_pEffect->SetMatrix("matW", &shadow);
-			D3DXHANDLE hTech = g_pEffect->GetTechniqueByName("Shadow");
-			g_pEffect->SetTechnique(hTech);
-			g_pEffect->Begin(NULL, NULL);
-			g_pEffect->BeginPass(0);
-
-			m_soldier.Render();
-
-			g_pEffect->EndPass();
-			g_pEffect->End();
-		}
-
-		// End the scene.
-		g_pDevice->EndScene();
-
-		// Present the result (full screen)
-		g_pDevice->Present(0, 0, 0, 0);
-	}
+	OnRender();
 }
 
 void Application::Cleanup()
 {
 	//Release all resources here...
-	if (g_pSprite != NULL)	g_pSprite->Release();
-	if (g_pFont != NULL)		g_pFont->Release();
-	if (g_pDevice != NULL)	g_pDevice->Release();
-	if (g_pEffect != NULL)	g_pEffect->Release();
+	if (m_pSprite != NULL)	m_pSprite->Release();
+	if (m_pFont != NULL)		m_pFont->Release();
+	if (m_pDevice != NULL)	m_pDevice->Release();
 }
 
 void Application::Quit()
@@ -267,17 +178,15 @@ void Application::Quit()
 
 void Application::DeviceLost()
 {
-	g_pFont->OnLostDevice();
-	g_pSprite->OnLostDevice();
-	g_pEffect->OnLostDevice();
+	m_pFont->OnLostDevice();
+	m_pSprite->OnLostDevice();
 	m_deviceLost = true;
 }
 
 void Application::DeviceGained()
 {
-	g_pDevice->Reset(&m_present);
-	g_pFont->OnResetDevice();
-	g_pSprite->OnResetDevice();
-	g_pEffect->OnResetDevice();
+	m_pDevice->Reset(&m_present);
+	m_pFont->OnResetDevice();
+	m_pSprite->OnResetDevice();
 	m_deviceLost = false;
 }
