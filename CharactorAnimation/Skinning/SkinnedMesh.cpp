@@ -1,11 +1,13 @@
 #include "SkinnedMesh.h"
 #include "BoneHierarchyLoader.h"
+#include "BoneMesh.h"
 struct VERTEX
 {
 	D3DXVECTOR3 position;
 	D3DCOLOR color;
 	VERTEX(D3DXVECTOR3 pos, D3DCOLOR col) :position(pos), color(col) {}
 };
+
 SkinnedMesh::SkinnedMesh()
 {
 	m_pDevice = NULL;
@@ -82,6 +84,55 @@ void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)
 	if (bone->pFrameFirstChild)RenderSkeleton((Bone*)bone->pFrameFirstChild, bone, world);
 }
 
+void SkinnedMesh::Render(Bone* bone)
+{
+	if (bone == NULL) { bone = (Bone*)m_pRootBone; }
+
+	//If there is a mesh to render
+	if (bone->pMeshContainer != NULL)
+	{
+		BoneMesh* boneMesh = (BoneMesh*)bone->pMeshContainer;
+		if (boneMesh->pSkinInfo != NULL)
+		{
+			//Set up bone transforms
+			int numBones = boneMesh->pSkinInfo->GetNumBones();
+			for (int i = 0; i < numBones; i++)
+			{
+				D3DXMatrixMultiply(&boneMesh->currentBoneMatrices[i], &boneMesh->boneOffsetMatrices[i], boneMesh->boneMatrixPtrs[i]);
+			}
+
+			//Update the skinned mesh
+			BYTE* src = NULL, * dest = NULL;
+			boneMesh->OriginalMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&src);
+			boneMesh->MeshData.pMesh->LockVertexBuffer(0, (void**)&dest);
+
+			boneMesh->pSkinInfo->UpdateSkinnedMesh(boneMesh->currentBoneMatrices, NULL, src, dest);
+
+			boneMesh->OriginalMesh->UnlockVertexBuffer();
+			boneMesh->MeshData.pMesh->UnlockVertexBuffer();
+
+			//Render the mesh
+			for (size_t i = 0; i < boneMesh->NumAttributeGroups; i++)
+			{
+				int mtrl = boneMesh->attributeTable[i].AttribId;
+				m_pDevice->SetMaterial(&(boneMesh->materials[mtrl]));
+				m_pDevice->SetTexture(0, boneMesh->textures[mtrl]);
+				boneMesh->MeshData.pMesh->DrawSubset(mtrl);
+			}
+		}
+	}
+
+	//Render Siblings & Children
+	if (bone->pFrameSibling != NULL) {
+		Render((Bone*)bone->pFrameSibling);
+	}
+
+	if (bone->pFrameFirstChild != NULL) {
+		Render((Bone*)bone->pFrameFirstChild);
+	}
+
+}
+
 void SkinnedMesh::UpdateMatrices(Bone* bone, D3DXMATRIX* parentMatrix)
 {
 	if (bone == NULL)return;
@@ -103,5 +154,51 @@ void SkinnedMesh::UpdateMatrices(Bone* bone, D3DXMATRIX* parentMatrix)
 	{
 		UpdateMatrices((Bone*)bone->pFrameFirstChild,
 			&bone->WorldTransformationMatrix);
+	}
+}
+
+void SkinnedMesh::SetupBoneMatrixPointers(Bone* bone)
+{
+	//Find all bones containing a mesh
+	if (bone->pMeshContainer != NULL)
+	{
+		BoneMesh* boneMesh = (BoneMesh*)bone->pMeshContainer;
+
+		//For the bones with skinned meshes, set up the pointers
+		if (boneMesh->pSkinInfo != NULL)
+		{
+			//Get num bones influencing this mesh
+			int NumBones = boneMesh->pSkinInfo->GetNumBones();
+
+			//Create an array of pointers with numBones pointers
+			boneMesh->boneMatrixPtrs = new D3DXMATRIX * [NumBones];
+
+			//Fill array
+			for (int i = 0; i < NumBones; i++)
+			{
+				//Find influencing bone by name
+				Bone* b = (Bone*)D3DXFrameFind(m_pRootBone, boneMesh->pSkinInfo->GetBoneName(i));
+
+				//and stroe pointer to it in the array
+				if (b != NULL)
+				{
+					boneMesh->boneMatrixPtrs[i] = &b->WorldTransformationMatrix;
+				}
+				else
+				{
+					boneMesh->boneMatrixPtrs[i] = NULL;
+				}
+			}
+		}
+	}
+
+	if (bone->pFrameSibling != NULL)
+	{
+		SetupBoneMatrixPointers((Bone*)bone->pFrameSibling);
+	}
+
+	if (bone->pFrameFirstChild != NULL)
+	{
+		SetupBoneMatrixPointers((Bone*)bone->pFrameFirstChild);
 	}
 }

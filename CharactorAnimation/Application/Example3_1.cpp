@@ -12,7 +12,7 @@ Example3_1::Example3_1()
 
 HRESULT Example3_1::OnInit()
 {
-	m_drone.Load(m_pDevice, L"../resources/meshes/soldier.x");
+	m_drone.Load(m_pDevice, L"../resources/meshes/soldier_3_1.x");
 	return S_OK;
 }
 

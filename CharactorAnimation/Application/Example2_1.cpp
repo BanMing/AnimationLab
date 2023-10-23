@@ -18,7 +18,7 @@ HRESULT Example2_1::OnInit()
 	}
 
 	// Load Soldier Mesh
-	m_soldier.Load(m_pDevice, L"../resources/meshes/soldier.x");
+	m_soldier.Load(m_pDevice, L"../resources/meshes/soldier_2_1.x");
 	return S_OK;
 }
 

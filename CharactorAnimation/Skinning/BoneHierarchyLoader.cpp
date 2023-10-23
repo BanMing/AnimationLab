@@ -1,57 +1,121 @@
+#include "BoneHierarchyLoader.h"
 #include "Bone.h"
 #include "BoneMesh.h"
-#include "BoneHierarchyLoader.h"
 
 #pragma warning(disable:4996)
 
-HRESULT BoneHierarchyLoader::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
+HRESULT __stdcall BoneHierarchyLoader::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
 {
-	Bone* newBone = new Bone();
+	Bone* newBone = new Bone;
 	memset(newBone, 0, sizeof(Bone));
 
-	// Copy Name
+	//Copy name
 	if (Name != NULL)
 	{
 		newBone->Name = new char[strlen(Name) + 1];
 		strcpy(newBone->Name, Name);
 	}
 
-	// Set the transformation matrices
+	//Set the transformation matrices
 	D3DXMatrixIdentity(&newBone->TransformationMatrix);
 	D3DXMatrixIdentity(&newBone->WorldTransformationMatrix);
 
+	//Return the new bone...
 	*ppNewFrame = (D3DXFRAME*)newBone;
 
 	return S_OK;
 }
 
-HRESULT BoneHierarchyLoader::CreateMeshContainer(LPCSTR Name, const D3DXMESHDATA* pMeshData, const D3DXMATERIAL* pMaterials, const D3DXEFFECTINSTANCE* pEffectInstances, DWORD NumMaterials, const DWORD* pAdjacency, LPD3DXSKININFO pSkinInfo, LPD3DXMESHCONTAINER* ppNewMeshContainer)
+HRESULT __stdcall BoneHierarchyLoader::CreateMeshContainer(LPCSTR Name, const D3DXMESHDATA* pMeshData, const D3DXMATERIAL* pMaterials, const D3DXEFFECTINSTANCE* pEffectInstances, DWORD NumMaterials, const DWORD* pAdjacency, LPD3DXSKININFO pSkinInfo, LPD3DXMESHCONTAINER* ppNewMeshContainer)
 {
-	//Just return a temporary mesh for now...
-	*ppNewMeshContainer = new BoneMesh();
-	memset(*ppNewMeshContainer, 0, sizeof(BoneMesh));
-	return S_OK;
-}
+	//Create new Bone Mesh
+	BoneMesh* boneMesh = (BoneMesh*)malloc(sizeof(BoneMesh));
+	memset(boneMesh, 0, sizeof(BoneMesh));
 
-HRESULT BoneHierarchyLoader::DestroyFrame(LPD3DXFRAME pFrameToFree)
-{
-	if (pFrameToFree)
+	//Get mesh data
+	boneMesh->OriginalMesh = pMeshData->pMesh;
+	boneMesh->MeshData.pMesh = pMeshData->pMesh;
+	boneMesh->MeshData.Type = pMeshData->Type;
+
+	//Add Refernece so the mesh is not deallocated
+	pMeshData->pMesh->AddRef();
+
+	IDirect3DDevice9* pDevice = NULL;
+	pMeshData->pMesh->GetDevice(&pDevice);
+
+	// Copy materials and load textures (just like with a static mesh)
+	for (DWORD i = 0; i < NumMaterials; i++)
 	{
-		// Free Name String
-		if (pFrameToFree->Name != NULL)
-		{
-			delete[] pFrameToFree->Name;
+		D3DXMATERIAL mtrl;
+		memcpy(&mtrl, &pMaterials[i], sizeof(D3DXMATERIAL));
+		boneMesh->materials.push_back(mtrl.MatD3D);
+		IDirect3DTexture9* newTexture = NULL;
 
-			// Free Frame
-			delete pFrameToFree;
+		if (mtrl.pTextureFilename != NULL)
+		{
+			char textureFname[200];
+			strcpy(textureFname, "meshes/");
+			strcat(textureFname, mtrl.pTextureFilename);
+
+			// Load texture
+			D3DXCreateTextureFromFile(pDevice, (LPCWSTR)textureFname, &newTexture);
+		}
+
+		boneMesh->textures.push_back(newTexture);
+	}
+
+	if (pSkinInfo != NULL)
+	{
+		//Get Skin Info
+		boneMesh->pSkinInfo = pSkinInfo;
+
+		//Add reference so SkinInfo isn't deallocated
+		pSkinInfo->AddRef();
+
+		//Clone mesh and store in boneMesh->MeshData.pMesh
+		pMeshData->pMesh->CloneMeshFVF(D3DXMESH_MANAGED, pMeshData->pMesh->GetFVF(), pDevice, &boneMesh->MeshData.pMesh);
+
+		//Get Attribute Table
+		boneMesh->MeshData.pMesh->GetAttributeTable(NULL, &boneMesh->NumAttributeGroups);
+
+		boneMesh->attributeTable = new D3DXATTRIBUTERANGE[boneMesh->NumAttributeGroups];
+		boneMesh->MeshData.pMesh->GetAttributeTable(boneMesh->attributeTable, NULL);
+
+		//Create bone offset and current matrices
+		int NumBones = pSkinInfo->GetNumBones();
+		boneMesh->boneOffsetMatrices = new D3DXMATRIX[NumBones];
+		boneMesh->currentBoneMatrices = new D3DXMATRIX[NumBones];
+
+		//Get bone offset matrices
+		for (int i = 0; i < NumBones; i++)
+		{
+			boneMesh->boneOffsetMatrices[i] = *(boneMesh->pSkinInfo->GetBoneOffsetMatrix(i));
 		}
 	}
 
-	pFrameToFree = NULL;
+	//Set ppNewMeshContainer to the newly created boneMesh container
+	*ppNewMeshContainer = boneMesh;
 	return S_OK;
 }
 
-HRESULT BoneHierarchyLoader::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerToFree)
+HRESULT __stdcall BoneHierarchyLoader::DestroyFrame(LPD3DXFRAME pFrameToFree)
+{
+	if (pFrameToFree)
+	{
+		//Free Name String
+		if (pFrameToFree->Name != NULL)
+			delete[] pFrameToFree->Name;
+
+		//Free Frame
+		delete pFrameToFree;
+	}
+
+	pFrameToFree = NULL;
+
+	return S_OK;
+}
+
+HRESULT __stdcall BoneHierarchyLoader::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerToFree)
 {
 	if (pMeshContainerToFree != NULL)
 		delete pMeshContainerToFree;
