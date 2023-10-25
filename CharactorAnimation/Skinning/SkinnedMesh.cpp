@@ -41,6 +41,7 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName)
 
 	// Create Sphere
 	D3DXCreateSphere(m_pDevice, 0.02f, 10, 10, &m_pSphereMesh, NULL);
+	SetupBoneMatrixPointers((Bone*)m_pRootBone);
 }
 
 void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)

@@ -54,11 +54,12 @@ HRESULT __stdcall BoneHierarchyLoader::CreateMeshContainer(LPCSTR Name, const D3
 		if (mtrl.pTextureFilename != NULL)
 		{
 			char textureFname[200];
-			strcpy(textureFname, "meshes/");
+			strcpy(textureFname, "../resources/meshes/");
 			strcat(textureFname, mtrl.pTextureFilename);
-
+			WCHAR res[256];
+			MultiByteToWideChar(CP_ACP, 0, textureFname, strlen(textureFname) + 1, res, sizeof(res) / sizeof(res[0]));
 			// Load texture
-			D3DXCreateTextureFromFile(pDevice, (LPCWSTR)textureFname, &newTexture);
+			D3DXCreateTextureFromFile(pDevice, res, &newTexture);
 		}
 
 		boneMesh->textures.push_back(newTexture);

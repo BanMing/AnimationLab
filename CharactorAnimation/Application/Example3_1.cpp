@@ -1,8 +1,8 @@
 #include "Example3_1.h"
 
-D3DXVECTOR3 g_eyePos{ 0.0f, 1.5f, -3.0f };
-D3DXVECTOR3 g_atPos{ 0.0f, 1.0f, 0.0f };
-D3DXVECTOR3 g_upPos{ 0.0f, 1.0f, 0.0f };
+static D3DXVECTOR3 g_eyePos{ 0.0f, 1.5f, -3.0f };
+static D3DXVECTOR3 g_atPos{ 0.0f, 1.0f, 0.0f };
+static D3DXVECTOR3 g_upPos{ 0.0f, 1.0f, 0.0f };
 
 Example3_1::Example3_1()
 {
