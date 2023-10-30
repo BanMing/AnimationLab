@@ -1,6 +1,6 @@
 #include "SkinnedMesh.h"
 #include "BoneHierarchyLoader.h"
-#include "BoneMesh.h"
+
 struct VERTEX
 {
 	D3DXVECTOR3 position;
@@ -13,6 +13,8 @@ SkinnedMesh::SkinnedMesh()
 	m_pDevice = NULL;
 	m_pRootBone = NULL;
 	m_pSphereMesh = NULL;
+	m_pSkinningEffect = NULL;
+	m_skinningType = SkinningType::CPU;
 }
 
 SkinnedMesh::~SkinnedMesh()
@@ -23,12 +25,18 @@ SkinnedMesh::~SkinnedMesh()
 	m_pDevice = NULL;
 	m_pRootBone = NULL;
 	m_pSphereMesh = NULL;
+	m_pSkinningEffect = NULL;
 }
 
 void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName)
 {
+	Load(pDevice, fileName, NULL);
+}
+
+void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, ID3DXEffect* pSkinningEffect)
+{
 	m_pDevice = pDevice;
-	BoneHierarchyLoader boneHierarchy;
+	BoneHierarchyLoader boneHierarchy(m_skinningType);
 
 	// Load a bone hierarchy from a file
 	D3DXLoadMeshHierarchyFromX(fileName, D3DXMESH_MANAGED, m_pDevice, &boneHierarchy,
@@ -42,6 +50,8 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName)
 	// Create Sphere
 	D3DXCreateSphere(m_pDevice, 0.02f, 10, 10, &m_pSphereMesh, NULL);
 	SetupBoneMatrixPointers((Bone*)m_pRootBone);
+
+	m_pSkinningEffect = pSkinningEffect;
 }
 
 void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)
@@ -102,24 +112,15 @@ void SkinnedMesh::Render(Bone* bone)
 				D3DXMatrixMultiply(&boneMesh->currentBoneMatrices[i], &boneMesh->boneOffsetMatrices[i], boneMesh->boneMatrixPtrs[i]);
 			}
 
-			//Update the skinned mesh
-			BYTE* src = NULL, * dest = NULL;
-			boneMesh->OriginalMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&src);
-			boneMesh->MeshData.pMesh->LockVertexBuffer(0, (void**)&dest);
-
-			boneMesh->pSkinInfo->UpdateSkinnedMesh(boneMesh->currentBoneMatrices, NULL, src, dest);
-
-			boneMesh->OriginalMesh->UnlockVertexBuffer();
-			boneMesh->MeshData.pMesh->UnlockVertexBuffer();
-
-			//Render the mesh
-			for (size_t i = 0; i < boneMesh->NumAttributeGroups; i++)
+			if (m_skinningType == SkinningType::CPU)
 			{
-				int mtrl = boneMesh->attributeTable[i].AttribId;
-				m_pDevice->SetMaterial(&(boneMesh->materials[mtrl]));
-				m_pDevice->SetTexture(0, boneMesh->textures[mtrl]);
-				boneMesh->MeshData.pMesh->DrawSubset(mtrl);
+				CPUSkinning(boneMesh);
 			}
+			else
+			{
+				GPUSkinning(boneMesh);
+			}
+
 		}
 	}
 
@@ -133,6 +134,54 @@ void SkinnedMesh::Render(Bone* bone)
 	}
 
 }
+
+void SkinnedMesh::CPUSkinning(BoneMesh* boneMesh)
+{
+	//Update the skinned mesh
+	BYTE* src = NULL, * dest = NULL;
+	boneMesh->OriginalMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&src);
+	boneMesh->MeshData.pMesh->LockVertexBuffer(0, (void**)&dest);
+
+	boneMesh->pSkinInfo->UpdateSkinnedMesh(boneMesh->currentBoneMatrices, NULL, src, dest);
+
+	boneMesh->OriginalMesh->UnlockVertexBuffer();
+	boneMesh->MeshData.pMesh->UnlockVertexBuffer();
+
+	//Render the mesh
+	for (DWORD i = 0; i < boneMesh->NumAttributeGroups; i++)
+	{
+		int mtrl = boneMesh->attributeTable[i].AttribId;
+		m_pDevice->SetMaterial(&(boneMesh->materials[mtrl]));
+		m_pDevice->SetTexture(0, boneMesh->textures[mtrl]);
+		boneMesh->MeshData.pMesh->DrawSubset(mtrl);
+	}
+}
+
+void SkinnedMesh::GPUSkinning(BoneMesh* boneMesh)
+{
+	//Set HW matrix pelette
+	m_pSkinningEffect->SetMatrixArray("MatrixPalette", boneMesh->currentBoneMatrices, boneMesh->pSkinInfo->GetNumBones());
+
+	//Render the mesh
+	for (DWORD i = 0; i < boneMesh->NumAttributeGroups; i++)
+	{
+		int mtrl = boneMesh->attributeTable[i].AttribId;
+		m_pDevice->SetMaterial(&(boneMesh->materials[mtrl]));
+		m_pDevice->SetTexture(0, boneMesh->textures[mtrl]);
+
+		m_pSkinningEffect->SetTexture("texDiffuse", boneMesh->textures[mtrl]);
+		D3DXHANDLE hTech = m_pSkinningEffect->GetTechniqueByName("Skinning");
+		m_pSkinningEffect->SetTechnique(hTech);
+		m_pSkinningEffect->Begin(NULL, NULL);
+		m_pSkinningEffect->BeginPass(0);
+
+		boneMesh->MeshData.pMesh->DrawSubset(mtrl);
+
+		m_pSkinningEffect->EndPass();
+		m_pSkinningEffect->End();
+	}
+}
+
 
 void SkinnedMesh::UpdateMatrices(Bone* bone, D3DXMATRIX* parentMatrix)
 {

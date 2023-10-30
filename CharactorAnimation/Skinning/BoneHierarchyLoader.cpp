@@ -73,8 +73,27 @@ HRESULT __stdcall BoneHierarchyLoader::CreateMeshContainer(LPCSTR Name, const D3
 		//Add reference so SkinInfo isn't deallocated
 		pSkinInfo->AddRef();
 
-		//Clone mesh and store in boneMesh->MeshData.pMesh
-		pMeshData->pMesh->CloneMeshFVF(D3DXMESH_MANAGED, pMeshData->pMesh->GetFVF(), pDevice, &boneMesh->MeshData.pMesh);
+
+		if (m_skinningType == SkinningType::CPU)
+		{
+			//Clone mesh and store in boneMesh->MeshData.pMesh
+			pMeshData->pMesh->CloneMeshFVF(D3DXMESH_MANAGED, pMeshData->pMesh->GetFVF(), pDevice, &boneMesh->MeshData.pMesh);
+		}
+		else
+		{
+			DWORD maxVerInfluences = 0;
+			DWORD numBoneComboEntries = 0;
+			ID3DXBuffer* boneComboTable = 0;
+
+			pSkinInfo->ConvertToIndexedBlendedMesh(pMeshData->pMesh, D3DXMESH_MANAGED | D3DXMESH_WRITEONLY, 30,
+				NULL, NULL, NULL, NULL,
+				&maxVerInfluences, &numBoneComboEntries, &boneComboTable, &boneMesh->MeshData.pMesh);
+
+			if (boneComboTable!=NULL)
+			{
+				boneComboTable->Release();
+			}
+		}
 
 		//Get Attribute Table
 		boneMesh->MeshData.pMesh->GetAttributeTable(NULL, &boneMesh->NumAttributeGroups);
@@ -118,8 +137,19 @@ HRESULT __stdcall BoneHierarchyLoader::DestroyFrame(LPD3DXFRAME pFrameToFree)
 
 HRESULT __stdcall BoneHierarchyLoader::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerToFree)
 {
-	if (pMeshContainerToFree != NULL)
-		delete pMeshContainerToFree;
+	BoneMesh* boneMesh = (BoneMesh*)pMeshContainerToFree;
+
+	//Release textures
+	int numTextures = (int)boneMesh->textures.size();
+	for (int i = 0; i < numTextures; i++)
+		if (boneMesh->textures[i] != NULL)
+			boneMesh->textures[i]->Release();
+
+	//Release mesh data
+	if (boneMesh->MeshData.pMesh)boneMesh->MeshData.pMesh->Release();
+	if (boneMesh->pSkinInfo)boneMesh->pSkinInfo->Release();
+	if (boneMesh->OriginalMesh)boneMesh->OriginalMesh->Release();
+	delete boneMesh;
 
 	return S_OK;
 }

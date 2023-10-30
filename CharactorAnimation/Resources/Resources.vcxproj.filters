@@ -51,5 +51,8 @@
     <None Include="FX\lighting.fx">
       <Filter>Resource Files\FX</Filter>
     </None>
+    <None Include="FX\skinning.fx">
+      <Filter>Resource Files\FX</Filter>
+    </None>
   </ItemGroup>
 </Project>

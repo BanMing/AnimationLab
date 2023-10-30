@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <d3dx9.h>
+#include "SkinnedMesh.h"
 
 class BoneHierarchyLoader : public ID3DXAllocateHierarchy
 {
@@ -10,5 +11,10 @@ public:
 	HRESULT __stdcall DestroyFrame(LPD3DXFRAME pFrameToFree) override;
 	HRESULT __stdcall DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerToFree) override;
 
+public:
+	BoneHierarchyLoader(const SkinningType& skinningType): m_skinningType(skinningType) {}
+	BoneHierarchyLoader(): m_skinningType(SkinningType::CPU) {}
+private:
+	SkinningType m_skinningType;
 };
 

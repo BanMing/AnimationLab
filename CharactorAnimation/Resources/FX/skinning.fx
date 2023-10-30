@@ -1,0 +1,106 @@
+//Transformation Matrices
+matrix matW;
+matrix matVP;
+
+//World Light Position
+float3 lightPos;
+
+//Texture
+texture texDiffuse;
+
+//Sampler
+sampler DiffuseSampler = sampler_state
+{
+    Texture = (texDiffuse);
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+    AddressW = Wrap;
+    MaxAnisotropy = 16;
+};
+
+//The Matrix Palette
+extern float4x4 MatrixPalette[35];
+
+//This variable should be set by the application code depending 
+//on the max number of used by a certain mesh
+extern int numBoneInfluences = 2;
+
+//Vertex Input
+struct VS_INPUT_SKIN
+{
+    float4 position : POSITIONT;
+    float3 normal : NORMAL;
+    float2 tex0 : TEXCOORD;
+    float4 weights : BLENDWEIGHT0;
+    int4 boneIndices : BLENDINDICES0;
+};
+
+//Vertex Shader Output / Pixel Shader Input
+struct VS_OUTPUT
+{
+    float4 position : POSITION0;
+    float2 tex0 : TEXCOORD0;
+    float shade : TEXCOORD1;
+};
+
+VS_OUTPUT vs_Skinning(VS_INPUT_SKIN IN)
+{
+    VS_OUTPUT OUT = (VS_OUTPUT) 0;
+    
+    float4 p = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    float3 norm = float3(0.0f, 0.0f, 0.0f);
+    float lastWeight = 0.0f;
+    int n = numBoneInfluences - 1;
+    IN.normal = normalize(IN.normal);
+    
+    //Blend vertex position & normal
+    for (int i = 0; i < n; ++i)
+    {
+        lastWeight += IN.weights[i];
+        p += IN.weights[i] * mul(IN.position, MatrixPalette[IN.boneIndices[i]]);
+        norm += IN.weights[i] * mul(IN.normal, MatrixPalette[IN.boneIndices[i]]);
+    }
+
+    lastWeight = 1.0f - lastWeight;
+    p += lastWeight * mul(IN.position, MatrixPalette[IN.boneIndices[n]]);
+    norm += lastWeight * mul(IN.normal, MatrixPalette[IN.boneIndices[n]]);
+    
+    p.w = 1.0f;
+    
+    //Transform vertex to world space
+    float4 posWorld = mul(p, matW);
+    
+    //To screen space
+    OUT.position = mul(posWorld, matVP);
+    
+    //Copy UV coordinate
+    OUT.tex0 = IN.tex0;
+    
+    //Calculate lighting
+    norm = normalize(norm);
+    norm = mul(norm, matW);
+    OUT.shade = max(dot(norm, normalize(lightPos - posWorld)), 0.2f);
+    
+    return OUT;
+}
+
+//Pixel Shader
+float4 ps_lighting(VS_OUTPUT IN) : COLOR0
+{
+    float4 color = tex2D(DiffuseSampler, IN.tex0);
+    return color * IN.shade;
+}
+
+technique Skinning
+{
+    pass P0
+    {
+        Lighting = false;
+		
+        VertexShader = compile vs_2_0 vs_Skinning();
+        PixelShader = compile ps_2_0 ps_lighting();
+    }
+}
