@@ -99,6 +99,11 @@ void Example3_2::OnRender()
 
 void Example3_2::OnCleanup()
 {
+	if (m_pEffect != NULL)
+	{
+		m_pEffect->Release();
+		m_pEffect = NULL;
+	}
 }
 
 void Example3_2::OnQuit()
@@ -107,8 +112,10 @@ void Example3_2::OnQuit()
 
 void Example3_2::OnDeviceLost()
 {
+	m_pEffect->OnLostDevice();
 }
 
 void Example3_2::OnDeviceGained()
 {
+	m_pEffect->OnResetDevice();
 }

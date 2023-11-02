@@ -13,7 +13,6 @@ SkinnedMesh::SkinnedMesh()
 	m_pDevice = NULL;
 	m_pRootBone = NULL;
 	m_pSphereMesh = NULL;
-	m_pSkinningEffect = NULL;
 	m_skinningType = SkinningType::CPU;
 }
 
@@ -25,17 +24,16 @@ SkinnedMesh::~SkinnedMesh()
 	m_pDevice = NULL;
 	m_pRootBone = NULL;
 	m_pSphereMesh = NULL;
-	m_pSkinningEffect = NULL;
 }
 
 void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName)
 {
-	Load(pDevice, fileName, NULL);
+	Load(pDevice, fileName, SkinningType::CPU);
 }
 
-void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, ID3DXEffect* pSkinningEffect)
+void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, SkinningType skinningType)
 {
-	m_skinningType = pSkinningEffect == NULL ? SkinningType::CPU : SkinningType::GPU;
+	m_skinningType = skinningType;
 
 	m_pDevice = pDevice;
 	BoneHierarchyLoader boneHierarchy(m_skinningType);
@@ -53,7 +51,6 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, ID3DXEffect*
 	D3DXCreateSphere(m_pDevice, 0.02f, 10, 10, &m_pSphereMesh, NULL);
 	SetupBoneMatrixPointers((Bone*)m_pRootBone);
 
-	m_pSkinningEffect = pSkinningEffect;
 }
 
 void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)
@@ -99,6 +96,11 @@ void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)
 
 void SkinnedMesh::Render(Bone* bone)
 {
+	Render(bone, NULL);
+}
+
+void SkinnedMesh::Render(Bone* bone, ID3DXEffect* pEffect)
+{
 	if (bone == NULL) { bone = (Bone*)m_pRootBone; }
 
 	//If there is a mesh to render
@@ -120,19 +122,41 @@ void SkinnedMesh::Render(Bone* bone)
 			}
 			else
 			{
-				GPUSkinning(boneMesh);
+				GPUSkinning(boneMesh, pEffect);
 			}
 
+		}
+		else
+		{
+			//Normal Static Mesh
+			pEffect->SetMatrix("matW", &bone->WorldTransformationMatrix);
+
+			D3DXHANDLE hTech;
+			hTech = pEffect->GetTechniqueByName("Lighting");
+			pEffect->SetTechnique(hTech);
+
+			//Render the static mesh
+			for (size_t i = 0; i < boneMesh->materials.size(); i++)
+			{
+				pEffect->SetTexture("texDiffuse", boneMesh->textures[i]);
+				pEffect->Begin(NULL, NULL);
+				pEffect->BeginPass(0);
+
+				boneMesh->OriginalMesh->DrawSubset(i);
+
+				pEffect->EndPass();
+				pEffect->End();
+			}
 		}
 	}
 
 	//Render Siblings & Children
 	if (bone->pFrameSibling != NULL) {
-		Render((Bone*)bone->pFrameSibling);
+		Render((Bone*)bone->pFrameSibling, pEffect);
 	}
 
 	if (bone->pFrameFirstChild != NULL) {
-		Render((Bone*)bone->pFrameFirstChild);
+		Render((Bone*)bone->pFrameFirstChild, pEffect);
 	}
 
 }
@@ -159,10 +183,10 @@ void SkinnedMesh::CPUSkinning(BoneMesh* boneMesh)
 	}
 }
 
-void SkinnedMesh::GPUSkinning(BoneMesh* boneMesh)
+void SkinnedMesh::GPUSkinning(BoneMesh* boneMesh, ID3DXEffect* pEffect)
 {
 	//Set HW matrix pelette
-	m_pSkinningEffect->SetMatrixArray("MatrixPalette", boneMesh->currentBoneMatrices, boneMesh->pSkinInfo->GetNumBones());
+	pEffect->SetMatrixArray("FinalTransforms", boneMesh->currentBoneMatrices, boneMesh->pSkinInfo->GetNumBones());
 
 	//Render the mesh
 	for (DWORD i = 0; i < boneMesh->NumAttributeGroups; i++)
@@ -171,16 +195,16 @@ void SkinnedMesh::GPUSkinning(BoneMesh* boneMesh)
 		m_pDevice->SetMaterial(&(boneMesh->materials[mtrl]));
 		m_pDevice->SetTexture(0, boneMesh->textures[mtrl]);
 
-		m_pSkinningEffect->SetTexture("texDiffuse", boneMesh->textures[mtrl]);
-		D3DXHANDLE hTech = m_pSkinningEffect->GetTechniqueByName("Skinning");
-		m_pSkinningEffect->SetTechnique(hTech);
-		m_pSkinningEffect->Begin(NULL, NULL);
-		m_pSkinningEffect->BeginPass(0);
+		pEffect->SetTexture("texDiffuse", boneMesh->textures[mtrl]);
+		D3DXHANDLE hTech = pEffect->GetTechniqueByName("Skinning");
+		pEffect->SetTechnique(hTech);
+		pEffect->Begin(NULL, NULL);
+		pEffect->BeginPass(0);
 
 		boneMesh->MeshData.pMesh->DrawSubset(mtrl);
 
-		m_pSkinningEffect->EndPass();
-		m_pSkinningEffect->End();
+		pEffect->EndPass();
+		pEffect->End();
 	}
 }
 

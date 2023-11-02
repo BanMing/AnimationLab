@@ -89,7 +89,7 @@ HRESULT __stdcall BoneHierarchyLoader::CreateMeshContainer(LPCSTR Name, const D3
 				NULL, NULL, NULL, NULL,
 				&maxVerInfluences, &numBoneComboEntries, &boneComboTable, &boneMesh->MeshData.pMesh);
 
-			if (boneComboTable!=NULL)
+			if (boneComboTable != NULL)
 			{
 				boneComboTable->Release();
 			}
