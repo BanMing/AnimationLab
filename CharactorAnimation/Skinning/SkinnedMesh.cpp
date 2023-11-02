@@ -35,6 +35,8 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName)
 
 void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, ID3DXEffect* pSkinningEffect)
 {
+	m_skinningType = pSkinningEffect == NULL ? SkinningType::CPU : SkinningType::GPU;
+
 	m_pDevice = pDevice;
 	BoneHierarchyLoader boneHierarchy(m_skinningType);
 

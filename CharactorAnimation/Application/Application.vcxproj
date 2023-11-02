@@ -141,6 +141,7 @@
     <ClCompile Include="Example2_1.cpp" />
     <ClCompile Include="Example3_1.cpp" />
     <ClCompile Include="Example3_2.cpp" />
+    <ClCompile Include="Example3_3.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="Example2_1.h" />
     <ClInclude Include="Example3_1.h" />
     <ClInclude Include="Example3_2.h" />
+    <ClInclude Include="Example3_3.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Resources.vcxproj">

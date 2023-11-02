@@ -31,9 +31,9 @@ extern int numBoneInfluences = 2;
 //Vertex Input
 struct VS_INPUT_SKIN
 {
-    float4 position : POSITIONT;
+    float4 position : POSITION0;
     float3 normal : NORMAL;
-    float2 tex0 : TEXCOORD;
+    float2 tex0 : TEXCOORD0;
     float4 weights : BLENDWEIGHT0;
     int4 boneIndices : BLENDINDICES0;
 };
@@ -49,7 +49,7 @@ struct VS_OUTPUT
 VS_OUTPUT vs_Skinning(VS_INPUT_SKIN IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT) 0;
-    
+
     float4 p = float4(0.0f, 0.0f, 0.0f, 1.0f);
     float3 norm = float3(0.0f, 0.0f, 0.0f);
     float lastWeight = 0.0f;
@@ -63,7 +63,7 @@ VS_OUTPUT vs_Skinning(VS_INPUT_SKIN IN)
         p += IN.weights[i] * mul(IN.position, MatrixPalette[IN.boneIndices[i]]);
         norm += IN.weights[i] * mul(IN.normal, MatrixPalette[IN.boneIndices[i]]);
     }
-
+    
     lastWeight = 1.0f - lastWeight;
     p += lastWeight * mul(IN.position, MatrixPalette[IN.boneIndices[n]]);
     norm += lastWeight * mul(IN.normal, MatrixPalette[IN.boneIndices[n]]);
@@ -72,7 +72,7 @@ VS_OUTPUT vs_Skinning(VS_INPUT_SKIN IN)
     
     //Transform vertex to world space
     float4 posWorld = mul(p, matW);
-    
+	
     //To screen space
     OUT.position = mul(posWorld, matVP);
     
@@ -83,7 +83,7 @@ VS_OUTPUT vs_Skinning(VS_INPUT_SKIN IN)
     norm = normalize(norm);
     norm = mul(norm, matW);
     OUT.shade = max(dot(norm, normalize(lightPos - posWorld)), 0.2f);
-    
+     
     return OUT;
 }
 
