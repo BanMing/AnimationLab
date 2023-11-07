@@ -124,7 +124,7 @@ HRESULT Application::Init(HINSTANCE hInstance, bool windowed)
 	D3DXCreateSprite(m_pDevice, &m_pSprite);
 
 	m_deviceLost = false;
-
+	printf("$$$$$$$$\n");
 	return OnInit();
 }
 

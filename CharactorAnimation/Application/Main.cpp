@@ -1,10 +1,10 @@
 #include <windows.h>
-#include "Example4_1.h"
+#include "Example4_2.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
 {
 	// Create a new Application object
-	Example4_1 app;
+	Example4_2 app;
 
 	// Initialize it
 	if (FAILED(app.Init(hInstance, true)))

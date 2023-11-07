@@ -24,6 +24,7 @@ SkinnedMesh::~SkinnedMesh()
 	m_pDevice = NULL;
 	m_pRootBone = NULL;
 	m_pSphereMesh = NULL;
+	m_pAnimControl = NULL;
 }
 
 void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName)
@@ -40,7 +41,7 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, SkinningType
 
 	// Load a bone hierarchy from a file
 	D3DXLoadMeshHierarchyFromX(fileName, D3DXMESH_MANAGED, m_pDevice, &boneHierarchy,
-		NULL, &m_pRootBone, NULL);
+		NULL, &m_pRootBone, &m_pAnimControl);
 
 	// Update all Bone transformation matrices
 	D3DXMATRIX i;
@@ -51,6 +52,12 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, SkinningType
 	D3DXCreateSphere(m_pDevice, 0.02f, 10, 10, &m_pSphereMesh, NULL);
 	SetupBoneMatrixPointers((Bone*)m_pRootBone);
 
+}
+
+void SkinnedMesh::Update(D3DXMATRIX world, float deltaTime)
+{
+	m_pAnimControl->AdvanceTime(deltaTime, NULL);
+	UpdateMatrices((Bone*)m_pRootBone,&world);
 }
 
 void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)
@@ -161,6 +168,45 @@ void SkinnedMesh::Render(Bone* bone, ID3DXEffect* pEffect)
 
 }
 
+void SkinnedMesh::SetAnimation(std::string name)
+{
+	ID3DXAnimationSet* anim = NULL;
+
+	int numAnims = (int)m_pAnimControl->GetMaxNumAnimationSets();
+
+	for (int i = 0; i < numAnims; i++)
+	{
+		anim = NULL;
+		m_pAnimControl->GetAnimationSet(i, &anim);
+
+		if (anim != NULL)
+		{
+			if (strcmp(name.c_str(), anim->GetName()) == 0) 
+			{
+				m_pAnimControl->SetTrackAnimationSet(0, anim);
+			}
+			anim->Release();
+		}
+	}
+}
+
+void SkinnedMesh::GetAnimations(std::vector<std::string>& animations)
+{
+	ID3DXAnimationSet* anim = NULL;
+
+	for (size_t i = 0; i < m_pAnimControl->GetMaxNumAnimationSets(); i++)
+	{
+		anim = NULL;
+		m_pAnimControl->GetAnimationSet(i, &anim);
+
+		if (anim != NULL)
+		{
+			animations.push_back(anim->GetName());
+			anim->Release();
+		}
+	}
+}
+
 void SkinnedMesh::CPUSkinning(BoneMesh* boneMesh)
 {
 	//Update the skinned mesh
@@ -207,7 +253,6 @@ void SkinnedMesh::GPUSkinning(BoneMesh* boneMesh, ID3DXEffect* pEffect)
 		pEffect->End();
 	}
 }
-
 
 void SkinnedMesh::UpdateMatrices(Bone* bone, D3DXMATRIX* parentMatrix)
 {

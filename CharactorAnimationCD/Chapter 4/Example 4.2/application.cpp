@@ -283,7 +283,8 @@ void Application::Update(float deltaTime)
 			{
 				RECT rc = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 				AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
-				SetWindowPos(m_mainWindow, HWND_NOTOPMOST, 0, 0, rc.right - rc.left, rc.bottom - rc.top, SWP_SHOWWINDOW);
+				SetWindowPos(m_mainWindow, HWND_NOTOPMOST, 0, 0, 
+				rc.right - rc.left, rc.bottom - rc.top, SWP_SHOWWINDOW);
 				UpdateWindow(m_mainWindow);
 			}
 		}

@@ -7,6 +7,9 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
+inline bool KeyDown(int vk_code) { return (GetAsyncKeyState(vk_code) & 0x8000) ? true : false; }
+inline bool KeyUp(int vk_code) { return (GetAsyncKeyState(vk_code) & 0x8000) ? false : true; }
+
 class Application
 {
 public:
