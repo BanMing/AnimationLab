@@ -17,19 +17,28 @@ class SkinnedMesh
 public:
 	SkinnedMesh();
 	~SkinnedMesh();
+
 	void Load(IDirect3DDevice9* pDevice, LPCWSTR fileName);
 	void Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, SkinningType skinningType);
+
+	void Update(D3DXMATRIX world);
 	void Update(D3DXMATRIX world, float deltaTime);
+
 	void RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world);
 	void Render(Bone* bone);
 	void Render(Bone* bone, ID3DXEffect* pEffect);
+
 	void SetAnimation(std::string name);
 	void GetAnimations(std::vector<std::string>& animations);
+	ID3DXAnimationController* GetAnimController();
+
 private:
 	void CPUSkinning(BoneMesh* boneMesh);
 	void GPUSkinning(BoneMesh* boneMesh, ID3DXEffect* pEffect);
 	void UpdateMatrices(Bone* bone, D3DXMATRIX* parentMatrix);
 	void SetupBoneMatrixPointers(Bone* bone);
+
+private:
 	D3DXFRAME* m_pRootBone;
 	IDirect3DDevice9* m_pDevice;
 	LPD3DXMESH m_pSphereMesh;

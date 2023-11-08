@@ -54,10 +54,15 @@ void SkinnedMesh::Load(IDirect3DDevice9* pDevice, LPCWSTR fileName, SkinningType
 
 }
 
+void SkinnedMesh::Update(D3DXMATRIX world)
+{
+	UpdateMatrices((Bone*)m_pRootBone, &world);
+}
+
 void SkinnedMesh::Update(D3DXMATRIX world, float deltaTime)
 {
 	m_pAnimControl->AdvanceTime(deltaTime, NULL);
-	UpdateMatrices((Bone*)m_pRootBone,&world);
+	UpdateMatrices((Bone*)m_pRootBone, &world);
 }
 
 void SkinnedMesh::RenderSkeleton(Bone* bone, Bone* parent, D3DXMATRIX world)
@@ -181,7 +186,7 @@ void SkinnedMesh::SetAnimation(std::string name)
 
 		if (anim != NULL)
 		{
-			if (strcmp(name.c_str(), anim->GetName()) == 0) 
+			if (strcmp(name.c_str(), anim->GetName()) == 0)
 			{
 				m_pAnimControl->SetTrackAnimationSet(0, anim);
 			}
@@ -205,6 +210,24 @@ void SkinnedMesh::GetAnimations(std::vector<std::string>& animations)
 			anim->Release();
 		}
 	}
+}
+
+ID3DXAnimationController* SkinnedMesh::GetAnimController()
+{
+	ID3DXAnimationController* res = NULL;
+	
+	if (m_pAnimControl != NULL)
+	{
+
+		m_pAnimControl->CloneAnimationController(
+			m_pAnimControl->GetMaxNumAnimationOutputs(),
+			m_pAnimControl->GetMaxNumAnimationSets(),
+			m_pAnimControl->GetMaxNumTracks(),
+			m_pAnimControl->GetMaxNumEvents(),
+			&res);
+	}
+
+	return res;
 }
 
 void SkinnedMesh::CPUSkinning(BoneMesh* boneMesh)

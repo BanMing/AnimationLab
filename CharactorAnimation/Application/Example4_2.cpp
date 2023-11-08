@@ -1,8 +1,4 @@
 #include "Example4_2.h"
-#include <vector>
-#include <string>
-#include <cstdio>
-#include <iostream>
 
 static D3DXVECTOR3 eye{ 0.0f, 1.5f, -3.0f };
 static D3DXVECTOR3 at{ 0.0f, 1.0f, 0.0f };
@@ -33,7 +29,6 @@ HRESULT Example4_2::OnInit()
 
 	// Load Model
 	m_drone.Load(m_pDevice, L"../resources/meshes/soldier_3_1.x", SkinningType::GPU);
-
 	m_drone.SetAnimation("Walk");
 	return S_OK;
 }
@@ -42,6 +37,7 @@ void Example4_2::OnUpdate(float deltaTime)
 {
 	m_time += deltaTime;
 	D3DXMATRIX world;
+	//D3DXMatrixIdentity(&world);
 	D3DXMatrixRotationY(&world, m_time);
 	m_drone.Update(world, deltaTime);
 }
@@ -57,7 +53,7 @@ void Example4_2::OnRender()
 
 	// Calculate Transformation Matrices
 	D3DXVECTOR3 angleVec3 = D3DXVECTOR3(cos(m_time) * 2.0f, 2.0f, sin(m_time) * 2.0f);
-	D3DXMatrixLookAtLH(&view, &angleVec3, &up, &up);
+	D3DXMatrixLookAtLH(&view, &eye, &at, &up);
 	D3DXMatrixPerspectiveFovLH(&proj, D3DX_PI / 4.0f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
 	m_pDevice->SetTransform(D3DTS_WORLD, &identity);
