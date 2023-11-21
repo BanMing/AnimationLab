@@ -27,7 +27,7 @@ HRESULT Example4_3::OnInit()
 	}
 
 	// Load Model
-	m_drone.Load(m_pDevice, L"../resources/meshes/soldier_4_3.x", SkinningType::GPU);
+	m_drone.Load(m_pDevice, L"../resources/meshes/soldier_4_3.x", SkinningType::CPU);
 
 	std::vector<std::string> animations;
 	m_drone.GetAnimations(animations);
