@@ -252,6 +252,12 @@
     <ClCompile Include="Samples\TestSample.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
+    <ClCompile Include="AnimTexture.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\AnimTexture.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">

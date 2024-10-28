@@ -212,6 +212,7 @@
     <ClCompile Include="3rd\imgui\imgui_tables.cpp" />
     <ClCompile Include="3rd\imgui\imgui_widgets.cpp" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
+    <ClCompile Include="Animation\AnimTexture.cpp" />
     <ClCompile Include="Animation\Blending.cpp" />
     <ClCompile Include="Animation\Clip.cpp" />
     <ClCompile Include="Animation\CrossFadeController.cpp" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Animation\Track.cpp" />
     <ClCompile Include="Animation\TransformTrack.cpp" />
     <ClCompile Include="Animation\TTransformTrack.cpp" />
+    <ClCompile Include="AnimTexture.h" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />
     <ClCompile Include="IK\CCDSolver.cpp" />
     <ClCompile Include="IK\FABRIKSolver.cpp" />
