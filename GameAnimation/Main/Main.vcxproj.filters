@@ -258,6 +258,12 @@
     <ClCompile Include="Animation\AnimTexture.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\AnimBaker.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Crowd.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\glad\glad.h">
@@ -442,6 +448,15 @@
     </ClInclude>
     <ClInclude Include="Samples\TestSample.h">
       <Filter>Header Files\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\AnimBaker.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\AnimTexture.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Crowd.h">
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -152,10 +152,13 @@
     <ClInclude Include="3rd\imgui\imstb_textedit.h" />
     <ClInclude Include="3rd\imgui\imstb_truetype.h" />
     <ClInclude Include="3rd\stb\stb_image.h" />
+    <ClInclude Include="Animation\AnimBaker.h" />
+    <ClInclude Include="Animation\AnimTexture.h" />
     <ClInclude Include="Animation\Blending.h" />
     <ClInclude Include="Animation\Clip.h" />
     <ClInclude Include="Animation\CrossFadeController.h" />
     <ClInclude Include="Animation\CrossFadeTarget.h" />
+    <ClInclude Include="Animation\Crowd.h" />
     <ClInclude Include="Animation\FastTrack.h" />
     <ClInclude Include="Animation\Frame.h" />
     <ClInclude Include="Animation\Interpolation.h" />
@@ -212,10 +215,12 @@
     <ClCompile Include="3rd\imgui\imgui_tables.cpp" />
     <ClCompile Include="3rd\imgui\imgui_widgets.cpp" />
     <ClCompile Include="3rd\stb\std_image.cpp" />
+    <ClCompile Include="Animation\AnimBaker.cpp" />
     <ClCompile Include="Animation\AnimTexture.cpp" />
     <ClCompile Include="Animation\Blending.cpp" />
     <ClCompile Include="Animation\Clip.cpp" />
     <ClCompile Include="Animation\CrossFadeController.cpp" />
+    <ClCompile Include="Animation\Crowd.cpp" />
     <ClCompile Include="Animation\FastTrack.cpp" />
     <ClCompile Include="Animation\Mesh.cpp" />
     <ClCompile Include="Animation\Pose.cpp" />
