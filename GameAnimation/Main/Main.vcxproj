@@ -201,6 +201,7 @@
     <ClInclude Include="Samples\Chapter13Sample02.h" />
     <ClInclude Include="Samples\Chapter13Sample03.h" />
     <ClInclude Include="Samples\Chapter14Sample01.h" />
+    <ClInclude Include="Samples\Chapter15Sample01.h" />
     <ClInclude Include="Samples\ImGUISample.h" />
     <ClInclude Include="Samples\TestSample.h" />
   </ItemGroup>
@@ -230,7 +231,6 @@
     <ClCompile Include="Animation\Track.cpp" />
     <ClCompile Include="Animation\TransformTrack.cpp" />
     <ClCompile Include="Animation\TTransformTrack.cpp" />
-    <ClCompile Include="AnimTexture.h" />
     <ClCompile Include="GLTF\GLTFLoader.cpp" />
     <ClCompile Include="IK\CCDSolver.cpp" />
     <ClCompile Include="IK\FABRIKSolver.cpp" />
@@ -259,6 +259,7 @@
     <ClCompile Include="Samples\Chapter13Sample02.cpp" />
     <ClCompile Include="Samples\Chapter13Sample03.cpp" />
     <ClCompile Include="Samples\Chapter14Sample01.cpp" />
+    <ClCompile Include="Samples\Chapter15Sample01.cpp" />
     <ClCompile Include="Samples\ImGUISample.cpp" />
     <ClCompile Include="Samples\TestSample.cpp" />
     <ClCompile Include="WinMain.cpp" />
@@ -268,6 +269,7 @@
     <None Include="Assets\dq.gltf" />
     <None Include="Assets\IKCourse.gltf" />
     <None Include="Assets\Woman.gltf" />
+    <None Include="Shaders\crowd.vert" />
     <None Include="Shaders\dualquaternion.vert" />
     <None Include="Shaders\lit.frag" />
     <None Include="Shaders\preskinned.vert" />

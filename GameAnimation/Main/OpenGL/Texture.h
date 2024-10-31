@@ -8,6 +8,7 @@ protected:
 	unsigned int mHeight;
 	unsigned int mChannels;
 	unsigned int mHandle;
+
 private:
 	Texture(const Texture& other);
 	Texture& operator=(const Texture& other);
@@ -22,6 +23,16 @@ public:
 	void Set(unsigned int uniformIndex, unsigned int textureIndex);
 	void UnSet(unsigned int textureIndex);
 	unsigned int GetHandle();
+	inline unsigned int GetWidth()
+	{
+		return mWidth;
+	};
+
+	inline void Resize(int size)
+	{
+		mWidth = size;
+		mHeight = size;
+	}
 };
 
 #endif

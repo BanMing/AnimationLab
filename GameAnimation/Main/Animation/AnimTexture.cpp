@@ -39,6 +39,7 @@ AnimTexture& AnimTexture::operator=(const AnimTexture& other)
 		mData = new float[mSize * mSize * 4];
 		memcpy(mData, other.mData, sizeof(float) * (mSize * mSize * 4));
 	}
+	return *this;
 }
 
 AnimTexture::~AnimTexture()

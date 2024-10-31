@@ -252,9 +252,6 @@
     <ClCompile Include="Samples\TestSample.cpp">
       <Filter>Source Files\Samples</Filter>
     </ClCompile>
-    <ClCompile Include="AnimTexture.h">
-      <Filter>Header Files\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="Animation\AnimTexture.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
@@ -263,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="Animation\Crowd.cpp">
       <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Samples\Chapter15Sample01.cpp">
+      <Filter>Source Files\Samples</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,6 +458,9 @@
     <ClInclude Include="Animation\Crowd.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Samples\Chapter15Sample01.h">
+      <Filter>Header Files\Samples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\static.vert">
@@ -483,6 +486,9 @@
     </None>
     <None Include="..\readme.md" />
     <None Include="Shaders\dualquaternion.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\crowd.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
