@@ -3,7 +3,7 @@
 #include "../OpenGL/Uniform.h"
 unsigned int Crowd::Size()
 {
-	return mCurrentPlayTimes.size();
+	return (unsigned int) mCurrentPlayTimes.size();
 }
 
 void Crowd::Resize(unsigned int size)
@@ -54,6 +54,64 @@ void Crowd::SetUniforms(Shader* shader)
 	Uniform<float>::Set(shader->GetUniform("time"), mTimes);
 }
 
+void Crowd::RandomizeTimes(FastClip& clip)
+{
+	float start = clip.GetStartTime();
+	float duration = clip.GetDuration();
+
+	unsigned int size = (unsigned int) mCurrentPlayTimes.size();
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		float random = (float) rand() / (float) RAND_MAX;
+		mCurrentPlayTimes[i] = random * duration + start;
+	}
+}
+
+void Crowd::RandomizePositions(std::vector<vec3>& existing, const vec3& min, const vec3& max, float radius)
+{
+	std::vector<vec3> positions;
+	unsigned int size = (unsigned int) mCurrentPlayTimes.size();
+	positions.reserve(size);
+	vec3 delta = max - min;
+
+	unsigned int breakLoop = 0;
+	while (positions.size() < size)
+	{
+		if (breakLoop >= 2000)
+		{
+			break;
+		}
+
+		vec3 random((float) rand() / (float) RAND_MAX, (float) rand() / (float) RAND_MAX, (float) rand() / (float) RAND_MAX);
+		vec3 point = min + delta * random;
+
+		bool valid = true;
+		for (unsigned int i = 0, iSize = (unsigned int) existing.size(); i < iSize; ++i)
+		{
+			if (lenSq(existing[i] - point) < radius * radius)
+			{
+				valid = false;
+				breakLoop += 1;
+				break;
+			}
+		}
+
+		if (valid)
+		{
+			breakLoop = 0;
+			positions.push_back(point);
+			existing.push_back(point);
+		}
+	}
+
+	if (positions.size() != size)
+	{
+		Resize((unsigned int) positions.size());
+	}
+
+	memcpy(mPositions[0].v, positions[0].v, sizeof(float) * positions.size() * 3);
+}
+
 float Crowd::AdjustTime(float t, float start, float end, bool looping)
 {
 	if (looping)
@@ -81,7 +139,7 @@ float Crowd::AdjustTime(float t, float start, float end, bool looping)
 
 void Crowd::UpdatePlaybackTimes(float dt, bool looping, float start, float end)
 {
-	unsigned int size = mCurrentPlayTimes.size();
+	unsigned int size = (unsigned int) mCurrentPlayTimes.size();
 	for (unsigned int i = 0; i < size; ++i)
 	{
 		float time = mCurrentPlayTimes[i] + dt;
@@ -95,7 +153,7 @@ void Crowd::UpdateFrameIndices(float start, float duration, unsigned int texWidt
 {
 	// To find the x coordinate of the current frame,
 	// normalize the frame time and then multiply the normalized frame time by the size of the texture.
-	unsigned int size = mCurrentPlayTimes.size();
+	unsigned int size = (unsigned int) mCurrentPlayTimes.size();
 	for (unsigned int i = 0; i < size; ++i)
 	{
 		float thisNormalizedTime = (mCurrentPlayTimes[i] - start) / duration;
@@ -109,7 +167,7 @@ void Crowd::UpdateFrameIndices(float start, float duration, unsigned int texWidt
 
 void Crowd::UpdateInterpolationTimes(float start, float duration, unsigned int texWidth)
 {
-	unsigned int size = mCurrentPlayTimes.size();
+	unsigned int size = (unsigned int) mCurrentPlayTimes.size();
 	for (unsigned int i = 0; i < size; ++i)
 	{
 		if (mFrames[i].x == mFrames[i].y)

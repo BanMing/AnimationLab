@@ -38,16 +38,24 @@ void Chapter15Sample01::Initialize()
 			mCrowdTextures[i].Save(fileName.c_str());
 		}
 	}
+
+	SetCrowdSize(20);
 }
 
 void Chapter15Sample01::Update(float deltaTime)
 {
+	unsigned int numCrowds = (unsigned int) mCrowds.size();
+	for (unsigned int i = 0; i < numCrowds; ++i)
+	{
+		mCrowds[i].Update(deltaTime, mClips[i], mCrowdTextures[i].Size());
+	}
 }
 
 void Chapter15Sample01::Render(float inAspectRatio)
 {
-	mat4 projection = perspective(60.f, inAspectRatio, 0.f, 100.f);
+	mat4 projection = perspective(60.f, inAspectRatio, 0.1f, 1000.f);
 	mat4 view = lookAt(vec3(0, 15, 40), vec3(0, 3, 0), vec3(0, 1, 0));
+	mat4 mvp = projection * view;	 // No model
 
 	mCrowdShader->Bind();
 
@@ -66,23 +74,27 @@ void Chapter15Sample01::Render(float inAspectRatio)
 	int texUniform = mCrowdShader->GetUniform("tex0");
 	mDiffuseTexture->Set(texUniform, 0);
 
-	//int animTexUniform = mCrowdShader->GetUniform("animTex");
-	//mCrowdTexture->Set(animTexUniform, 1);
-	//mCrowds.SetUniforms(mCrowdShader);
+	unsigned int numCrowds = (unsigned int) mCrowds.size();
+	for (unsigned int c = 0; c < numCrowds; ++c)
+	{
+		mCrowdTextures[c].Set(mCrowdShader->GetUniform("animTex"), 1);
+		mCrowds[c].SetUniforms(mCrowdShader);
+		for (unsigned int i = 0, size = (unsigned int) mMeshes.size(); i < size; ++i)
+		{
+			int pAttrib = mCrowdShader->GetAttribute("position");
+			int nAttrib = mCrowdShader->GetAttribute("normal");
+			int tAttrib = mCrowdShader->GetAttribute("texCoord");
+			int wAttrib = mCrowdShader->GetAttribute("weights");
+			int jAttrib = mCrowdShader->GetAttribute("joints");
+			mMeshes[i].Bind(pAttrib, nAttrib, tAttrib, wAttrib, jAttrib);
+			mMeshes[i].DrawInstanced(mCrowds[c].Size());
+			mMeshes[i].UnBind(pAttrib, nAttrib, tAttrib, wAttrib, jAttrib);
+		}
+		mCrowdTextures[c].UnSet(1);
+	}
 
-	//int pAttrib = mCrowdShader->GetAttribute("position");
-	//int nAttrib = mCrowdShader->GetAttribute("normal");
-	//int tAttrib = mCrowdShader->GetAttribute("texCoord");
-	//int wAttrib = mCrowdShader->GetAttribute("weights");
-	//int jAttrib = mCrowdShader->GetAttribute("joints");
-
-	//mMesh.Bind(pAttrib, nAttrib, tAttrib, wAttrib, jAttrib);
-	//mMesh.DrawInstanced(mCrowd.Size());
-	//mMesh.UnBind(pAttrib, nAttrib, tAttrib, wAttrib, jAttrib);
-
-	//mCrowdTexture->UnSet(1);
-	//mDiffuseTexture->UnSet(0);
-	//mCrowdShader->UnBind();
+	mDiffuseTexture->UnSet(0);
+	mCrowdShader->UnBind();
 }
 
 void Chapter15Sample01::OnGUI()
@@ -91,4 +103,23 @@ void Chapter15Sample01::OnGUI()
 
 void Chapter15Sample01::Shutdown()
 {
+	delete mDiffuseTexture;
+	delete mCrowdShader;
+
+	mMeshes.clear();
+	mClips.clear();
+	mCrowdTextures.clear();
+	mCrowds.clear();
+}
+
+void Chapter15Sample01::SetCrowdSize(unsigned int size)
+{
+	std::vector<vec3> occupied;
+	unsigned int numCrowds = (unsigned int) mCrowds.size();
+	for (unsigned int i = 0; i < numCrowds; ++i)
+	{
+		mCrowds[i].Resize(size);
+		mCrowds[i].RandomizeTimes(mClips[i]);
+		mCrowds[i].RandomizePositions(occupied, vec3(-40.f, 0.f, -80.f), vec3(40.f, 0, 30.f), 2.f);
+	}
 }

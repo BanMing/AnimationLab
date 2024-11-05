@@ -20,6 +20,9 @@ public:
 	void Shutdown();
 
 protected:
+	void SetCrowdSize(unsigned int size);
+
+protected:
 	Shader* mCrowdShader;
 	Skeleton mSkeleton;
 	Texture* mDiffuseTexture;

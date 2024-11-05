@@ -23,6 +23,9 @@ public:
 	void Update(float deltaTime, FastClip& mClip, unsigned int texWidth);
 	void SetUniforms(Shader* shader);
 
+	void RandomizeTimes(FastClip& clip);
+	void RandomizePositions(std::vector<vec3>& existing, const vec3& min, const vec3& max, float radius);
+
 protected:
 	float AdjustTime(float t, float start, float end, bool looping);
 
@@ -31,7 +34,7 @@ protected:
 
 	// This function will convert the current play time into pixel coordinates along the animation texture's x axis
 	void UpdateFrameIndices(float start, float duration, unsigned int texWidth);
-	
+
 	// This function should find the interpolation time between the current and next animated frames
 	void UpdateInterpolationTimes(float start, float duration, unsigned int texWidth);
 
